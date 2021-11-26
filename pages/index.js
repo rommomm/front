@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 
 function Page({ posts_ }) {
   const [posts, setPosts] = useState(posts_);
-  const [name, setName] = useState("");
   const [text, setText] = useState("");
-
-  // useEffect(() => {
-  //   setPosts(_posts);
-  // }, []);
 
   const deletepost = (id) => {
     fetch(`http://localhost:8000/api/posts/${id}`, { method: "delete" }).then(
@@ -17,6 +12,21 @@ function Page({ posts_ }) {
     );
   };
 
+  const requestOptions = () => {
+    fetch(`http://localhost:8000/api/posts`, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({ text }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setText([...posts, res]);
+      });
+  };
+
   const add = () => {
     fetch(`http://localhost:8000/api/posts`, {
       method: "post",
@@ -24,22 +34,16 @@ function Page({ posts_ }) {
         "Content-Type": "application/json",
       },
 
-      body: JSON.stringify({ name, text }),
+      body: JSON.stringify({ text }),
     })
       .then((res) => res.json())
       .then((res) => {
         setPosts([...posts, res]);
       });
   };
-  console.log("name", name);
   console.log("text", text);
   return (
     <>
-      <input
-        type="text"
-        placeholder="Name"
-        onChange={(e) => setName(e.target.value)}
-      />
       <input
         type="text"
         placeholder="Text"
@@ -50,18 +54,14 @@ function Page({ posts_ }) {
       {posts.map((post) => {
         return (
           <div key={post.id}>
-            <div>Post ID {post.id}</div>
-            <div>Post name {post.name}</div>
+            <div>Post ID:{post.id}</div>
+            <div>Post text:{post.text}</div>
             <button onClick={() => deletepost(post.id)}>DELETE</button>
           </div>
         );
       })}
     </>
   );
-  // <div>
-  //     <div>Post ID {firstpost.id}</div>
-  //     <div>Post name {firstpost.name}</div>
-  // </div>
 }
 
 Page.getInitialProps = async (ctx) => {
