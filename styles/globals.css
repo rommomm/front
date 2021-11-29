@@ -18,11 +18,10 @@ a {
 
 
 .block{
-  height:  100vh;
+  height:  auto;
 
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 .tablePost {
   border: solid 1px black;

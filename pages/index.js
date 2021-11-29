@@ -17,9 +17,8 @@ function App() {
       .then((res) => res.json())
       .then((res) => {
         setPost([...posts, res]);
-        
       });
-  };
+  }
 
   useEffect(() => {
     getPosts();
@@ -40,21 +39,21 @@ function App() {
         setPost(posts.filter((p) => p.id !== id));
       }
     );
-  };
+  }
   function selectPost(id) {
-    const selectedPost = posts.find(post => post.id === id)
-    let item=selectedPost;
+    const selectedPost = posts.find((post) => post.id === id);
+    let item = selectedPost;
     setText(item.text);
     setPostId(item.id);
   }
   function updatePost() {
     fetch(`http://localhost:8000/api/posts/${postId}`, {
       method: "PUT",
-      headers:{
-        'Accept':'application/json',
-        'Content-Type':'application/json'
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({text}),
+      body: JSON.stringify({ text }),
     }).then((result) => {
       result.json().then((resp) => {
         getPosts();
@@ -62,47 +61,43 @@ function App() {
     });
   }
   return (
-  <div class="block">
-<div class="tablePost">
-
-    <div>
-<h1 >ADD POST </h1>
-      <input
-        type="text"
-        value={text}
-        placeholder="Text"
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button onClick={() => saveData()}>Add</button>
-      <button onClick={updatePost}>Update Post</button>
-</div><br/>
-     <table border="1" style={{ float: "left" }}>
-        <tbody>
-          <tr>
-            <td>ID</td>
-            <td>Text</td>
-          </tr>
-          {posts.map((item, i) => (
-            <tr key={i}>
-              <td>{item.id}</td>
-              <td>{item.text}</td>
-              <td>
-                <button onClick={() => deletePost(item.id)}>Delete</button>
-              </td>
-              <td>
-                <button onClick={() => selectPost(item.id)}>Update</button>
-              </td>
+    <div class="block">
+      <div class="tablePost">
+        <div>
+          <h1>ADD POST </h1>
+          <input
+            type="text"
+            value={text}
+            placeholder="Text"
+            onChange={(e) => setText(e.target.value)}
+          />
+          <button onClick={() => saveData()}>Add</button>
+          <button onClick={updatePost}>Update Post</button>
+        </div>
+        <br />
+        <table border="1" style={{ float: "left" }}>
+          <tbody>
+            <tr>
+              <td>ID</td>
+              <td>Text</td>
             </tr>
-          ))}
-        </tbody>
-      </table>
+            {posts.map((item, i) => (
+              <tr key={i}>
+                <td>{item.id}</td>
+                <td>{item.text}</td>
+                <td>
+                  <button onClick={() => deletePost(item.id)}>Delete</button>
+                </td>
+                <td>
+                  <button onClick={() => selectPost(item.id)}>Update</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      </div>
-
-    
-   
+    </div>
   );
 }
-
 
 export default App;
