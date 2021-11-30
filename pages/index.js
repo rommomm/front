@@ -1,35 +1,30 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
+import PostsList from "../components/PostsList";
 
-function App() {
-  const [posts, setPost] = useState([]);
+function App({posts}) {
+  const [posts, setPost] = useState(posts);
   const [text, setText] = useState("");
 
-  const saveData = () => {
-    axios
-      .post(`http://localhost:8000/api/posts`, {
+  const handleSavePost = async () => {
+    try {
+      const response = await axios.post(`http://localhost:8000/api/posts`, {
         text,
-      })
-      .then((res) => {
-        setPost([...posts, res.data]);
       });
+      setPost([...posts, response.data]);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  useEffect(() => {
-    getPosts();
-  }, []);
-
-  function getPosts() {
-    axios.get(`http://localhost:8000/api/posts/`).then((res) => {
-      setPost(res.data);
-    });
-  }
-
-  function deletePost(id) {
-    axios.delete(`http://localhost:8000/api/posts/${id}`).then(() => {
+  async function deletePost(id) {
+    try {
+      await axios.delete(`http://localhost:8000/api/posts/${id}`);
       setPost(posts.filter((p) => p.id !== id));
-    });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
@@ -43,7 +38,7 @@ function App() {
             placeholder="Text"
             onChange={(e) => setText(e.target.value)}
           />
-          <button onClick={() => saveData()}>Add</button>
+          <button onClick={() => handleSavePost()}>Add</button>
         </div>
         <br />
         <table border="1" style={{ float: "left" }}>
@@ -53,28 +48,18 @@ function App() {
               <td>Text</td>
               <td className="blocktext">Optional</td>
             </tr>
-            {posts.map((item, i) => (
-              <tr key={i}>
-                <td>{item.id}</td>
-                <td>{item.text}</td>
-                <td>
-                  <button onClick={() => deletePost(item.id)}>Delete</button>
-                  <Link
-                    href={{
-                      pathname: "/post/[id]",
-                      query: { id: item.id },
-                    }}
-                  >
-                    <button>View</button>
-                  </Link>
-                </td>
-              </tr>
-            ))}
+            <PostsList posts={posts} onDeletePost={deletePost} />
           </tbody>
         </table>
       </div>
     </div>
   );
 }
+
+App.getInitialProps = async (ctx) => {
+  const response = await axios.get(`http://localhost:8000/api/posts/`);
+
+  return { posts: response.data };
+};
 
 export default App;
