@@ -1,43 +1,39 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: `http://localhost:8000/api/posts`,
+});
 
 function App() {
   const [posts, setPost] = useState([]);
   const [text, setText] = useState("");
-  function saveData() {
-    fetch(`http://localhost:8000/api/posts`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
 
-      body: JSON.stringify({ text }),
-    })
-      .then((res) => res.json())
+  const saveData = () => {
+    axios
+      .post(`http://localhost:8000/api/posts`, {
+        text,
+      })
       .then((res) => {
-        setPost([...posts, res]);
+        setPost([...posts, res.data]);
       });
-  }
+  };
 
   useEffect(() => {
     getPosts();
   }, []);
 
   function getPosts() {
-    fetch("http://localhost:8000/api/posts")
-      .then((res) => res.json())
-      .then((res) => {
-        setPost(res);
-        setText(res[0].text);
-      });
+    axios.get(`http://localhost:8000/api/posts/`).then((res) => {
+      setPost(res.data);
+    });
   }
 
   function deletePost(id) {
-    fetch(`http://localhost:8000/api/posts/${id}`, { method: "delete" })
-    .then(() => {
-        setPost(posts.filter((p) => p.id !== id));
-      }
-    );
+    axios.delete(`http://localhost:8000/api/posts/${id}`).then(() => {
+      setPost(posts.filter((p) => p.id !== id));
+    });
   }
 
   return (
