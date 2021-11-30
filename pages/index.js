@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: `http://localhost:8000/api/posts`,
-});
-
 function App() {
   const [posts, setPost] = useState([]);
   const [text, setText] = useState("");
