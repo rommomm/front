@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function AddPost({ post, setPost }) {
+function AddPost({ posts, setPosts }) {
   const [text, setText] = useState("");
 
   const handleSavePost = async () => {
@@ -9,7 +9,7 @@ function AddPost({ post, setPost }) {
       const response = await axios.post(`http://localhost:8000/api/posts`, {
         text,
       });
-      setPost([...post, response.data]);
+      setPosts([...posts, response.data]);
     } catch (e) {
       console.log(e);
     }
@@ -19,7 +19,7 @@ function AddPost({ post, setPost }) {
   return (
     <div>
       <input value={text} onChange={(e) => setText(e.target.value)} />
-      <button onClick={handleSavePost}>Save</button>
+      <button onClick={handleSavePost}>Create</button>
     </div>
   );
 }

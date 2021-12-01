@@ -1,43 +1,31 @@
-import React, { useState, useEffect } from "react";
-import PostForm from "./PostForm";
-import axios from "axios";
-import Link from "next/link";
-import PostsList from "./PostListed";
+import React, { useState } from "react";
+function Post({ post, onDeletePost, onUpdatePost }) {
+  const [edit, setEdit] = useState(false);
+  const [value, setValue] = useState(post.text);
 
-function Post() {
-  const [posts, setPost] = useState([]);
-  useEffect(() => {
-    getPosts();
-  }, []);
-
-  function getPosts() {
-    axios.get(`http://localhost:8000/api/posts/`).then((res) => {
-      setPost(res.data);
-    });
-  }
-
-  async function deletePost(id) {
-    try {
-      await axios.delete(`http://localhost:8000/api/posts/${id}`);
-      setPost(posts.filter((p) => p.id !== id));
-    } catch (e) {
-      console.log(e);
-    }
+  function handleUpdatePost() {
+    const newPost = { ...post, text: value };
+    onUpdatePost(newPost);
+    setEdit(false);
   }
 
   return (
-    <div>
-      <table border="1" style={{ float: "left" }}>
-        <tbody>
-          <tr>
-            <td>ID</td>
-            <td>Text</td>
-            <td className="blocktext">Optional</td>
-          </tr>
-          <PostsList posts={posts} onDeletePost={deletePost} />
-        </tbody>
-      </table>
-    </div>
+    <tr>
+      <td>{post.id}</td>
+      {edit ? (
+        <input value={value} onChange={(e) => setValue(e.target.value)} />
+      ) : (
+        <td>{post.text}</td>
+      )}
+
+      {edit ? (
+        <button onClick={handleUpdatePost}>Save</button>
+      ) : (
+        <button onClick={() => onDeletePost(post.id)}>Delete</button>
+      )}
+
+      <button onClick={() => setEdit(!edit)}>{edit ? "Cancel" : "Edit"}</button>
+    </tr>
   );
 }
 
