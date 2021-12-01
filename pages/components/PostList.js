@@ -62,12 +62,67 @@ function PostList({ post, setPost }) {
   //   });
   //   setValue(newPost);
   //   setEdit(null);
+  //   console.log(id);
   // }
 
-  function updatePost() {
-    axios.put(`http://localhost:8000/api/posts/170`, { value, text });
+  // function updatePost() {
+  //   axios.put(`http://localhost:8000/api/posts/${id}`, { value });
+  //   let newPost = [...post].map((item) => {
+  //     if (item.id == id) {
+  //       item.text = value;
+  //     }
+  //     return item;
+  //   });
+  //   setValue(newPost);
+  //   setEdit(null);
+  //   console.log(id);
+  // }
+
+  // function updatePost(id) {
+  //   const newPost = [...post].map((item) => {
+  //     if (item.id == id) {
+  //       item.text = value;
+  //     }
+  //     return item;
+  //   });
+  //   setValue(newPost);
+  //   setEdit(null);
+  //   console.log(id);
+  // }
+
+  // function updatePost(id) {
+  //   axios.put(`http://localhost:8000/api/posts/${id}`, { value });
+  // }
+
+  // function updatePost() {
+  //   let item = { edit, value };
+  //   console.warn("item", item);
+  //   fetch(`http://localhost:8000/api/posts/${post.id}`, {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(item),
+  //   }).then((result) => {
+  //     result.json().then((resp) => {
+  //       console.warn(resp);
+  //     });
+  //   });
+  //   setValue(item);
+  //   setEdit(null);
+  // }
+
+  function updatePost(id) {
+    const newPost = [...post].map((item) => {
+      if (item.id == id) {
+        item.text = value;
+      }
+      return item;
+    });
     setValue(newPost);
     setEdit(null);
+    console.log(id);
+    console.log(newPost);
   }
 
   return (
