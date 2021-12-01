@@ -1,9 +1,5 @@
-
-
-
 html,
 body {
-
 }
 
 a {
@@ -15,20 +11,14 @@ a {
   box-sizing: border-box;
 }
 
-
-
-.block{
-  height:  auto;
-
+.block {
+  height: auto;
   display: flex;
   justify-content: center;
 }
 .tablePost {
   border: solid 1px black;
-margin: 10px;
-padding: 10px;
+  margin: 10px;
+  padding: 10px;
 }
-.blocktext {
- 
-  text-align: center;
-}
+
