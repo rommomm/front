@@ -20,8 +20,54 @@ function PostList({ post, setPost }) {
   //   axios.put(`http://localhost:8000/api/posts/${id}`, { value, edit });
   // }
 
+  // function updatePostcall() {
+  //   updatePost(value);
+  // }
+
+  // async function updatePost(text) {
+  //   const {
+  //     data: { data },
+  //   } = await axios.put(`http://localhost:8000/api/posts/`, {
+  //     text,
+  //     value,
+  //     edit,
+  //     post,
+  //   });
+  //   setValue(data);
+  //   setEdit(null);
+  // }
+
+  // async function updatePost(id) {
+  //   let newPost = await axios.put(`http://localhost:8000/api/posts/161`, {
+  //     text,
+  //     value,
+  //     edit,
+  //   });
+  //   [...post].map((item) => {
+  //     if (item.id == id) {
+  //       item.text = value;
+  //     }
+  //     return item;
+  //   });
+  //   setValue(newPost);
+  //   setEdit(null);
+  // }
+
+  // function updatePost(id) {
+  //   let newPost = [...post].map((item) => {
+  //     if (item.id == id) {
+  //       item.text = value;
+  //     }
+  //     return item;
+  //   });
+  //   setValue(newPost);
+  //   setEdit(null);
+  // }
+
   function updatePost() {
-    axios.put(`http://localhost:8000/api/posts/${post.id}`, { edit, value });
+    axios.put(`http://localhost:8000/api/posts/170`, { value, text });
+    setValue(newPost);
+    setEdit(null);
   }
 
   return (
@@ -41,7 +87,7 @@ function PostList({ post, setPost }) {
 
           {edit === item.id ? (
             <div>
-              <button onClick={updatePost}>Save</button>
+              <button onClick={() => updatePost(item.id)}>Save</button>
             </div>
           ) : (
             <div>
