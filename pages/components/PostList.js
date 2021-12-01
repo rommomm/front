@@ -112,18 +112,38 @@ function PostList({ post, setPost }) {
   //   setEdit(null);
   // }
 
-  function updatePost(id) {
-    const newPost = [...post].map((item) => {
-      if (item.id == id) {
-        item.text = value;
-      }
-      return item;
-    });
-    setValue(newPost);
-    setEdit(null);
-    console.log(id);
-    console.log(newPost);
-  }
+  // function updatePost(id) {
+  //   const newPost = [...post].map((item) => {
+  //     if (item.id == id) {
+  //       item.text = value;
+  //     }
+  //     return item;
+  //   });
+  //   setValue(newPost);
+  //   setEdit(null);
+  //   console.log(id);
+  //   console.log(newPost);
+  // }
+
+  const updateEmployeeWage = (id) => {
+    axios
+      .put(`http://localhost:3001/api/posts/${id}`, {
+        value,
+        edit,
+      })
+      .then(() => {
+        const newPost = [...post].map((item) => {
+          if (item.id == id) {
+            item.text = value;
+          }
+          return item;
+        });
+        setValue(newPost);
+        setEdit(null);
+        console.log(id);
+        console.log(newPost);
+      });
+  };
 
   return (
     <div>
@@ -142,7 +162,7 @@ function PostList({ post, setPost }) {
 
           {edit === item.id ? (
             <div>
-              <button onClick={() => updatePost(item.id)}>Save</button>
+              <button onClick={() => updateEmployeeWage(item.id)}>Save</button>
             </div>
           ) : (
             <div>
