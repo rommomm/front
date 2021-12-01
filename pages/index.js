@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import axios from "axios";
+import AddPost from "./components/AddPost";
+import PostList from "./components/PostList";
 
 function App() {
-  const [posts, setPost] = useState([]);
-  const [text, setText] = useState("");
-
-  const saveData = () => {
-    axios
-      .post(`http://localhost:8000/api/posts`, {
-        text,
-      })
-      .then((res) => {
-        setPost([...posts, res.data]);
-      });
-  };
+  const [post, setPost] = useState([]);
 
   useEffect(() => {
     getPosts();
@@ -26,52 +16,11 @@ function App() {
     });
   }
 
-  function deletePost(id) {
-    axios.delete(`http://localhost:8000/api/posts/${id}`).then(() => {
-      setPost(posts.filter((p) => p.id !== id));
-    });
-  }
-
   return (
     <div className="block">
       <div className="tablePost">
-        <div>
-          <h1>ADD POST </h1>
-          <input
-            type="text"
-            value={text}
-            placeholder="Text"
-            onChange={(e) => setText(e.target.value)}
-          />
-          <button onClick={() => saveData()}>Add</button>
-        </div>
-        <br />
-        <table border="1" style={{ float: "left" }}>
-          <tbody>
-            <tr>
-              <td>ID</td>
-              <td>Text</td>
-              <td className="blocktext">Optional</td>
-            </tr>
-            {posts.map((item, i) => (
-              <tr key={i}>
-                <td>{item.id}</td>
-                <td>{item.text}</td>
-                <td>
-                  <button onClick={() => deletePost(item.id)}>Delete</button>
-                  <Link
-                    href={{
-                      pathname: "/post/[id]",
-                      query: { id: item.id },
-                    }}
-                  >
-                    <button>View</button>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <AddPost post={post} setPost={setPost} />
+        <PostList post={post} setPost={setPost} />
       </div>
     </div>
   );
