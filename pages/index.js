@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import AddPost from "./components/AddPost";
-import PostList from "./components/PostList";
+import PostsList from "./components/PostList";
+import Sidebar from "./components/Sidebar";
+import Head from "next/head";
 
-function App({ postsResponse = [] }) {
-  const [posts, setPosts] = useState(postsResponse);
+function App({ initialPosts = [] }) {
+  const [posts, setPosts] = useState(initialPosts);
 
   return (
-    <div className="block">
-      <div className="tablePost">
-        <AddPost posts={posts} setPosts={setPosts} />
-        <PostList posts={posts} setPosts={setPosts} />
-      </div>
+    <div className="">
+      <Head>
+        <title>Home</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className="bg-[#000] min-h-screen flex max-w-[1500px] mx-auto">
+        <Sidebar />
+
+        <PostsList posts={posts} setPosts={setPosts} />
+      </main>
     </div>
   );
 }
-
 App.getInitialProps = async (ctx) => {
   const response = await axios.get("http://localhost:8000/api/posts");
 
-  return { postsResponse: response.data };
+  return { initialPosts: response.data };
 };
 
 export default App;
