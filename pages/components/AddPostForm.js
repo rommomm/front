@@ -1,18 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 function AddPostForm({ onCreate }) {
   const [content, setContent] = useState("");
-  const handleSavePost = async () => {
-    try {
-      const response = await axios.post(`http://localhost:8000/api/posts`, {
-        content,
-        text,
-      });
-      onCreate([response.data, ...content]);
-    } catch (e) {
-      console.log(e);
-    }
+
+  const handleCreate = () => {
+    onCreate(content);
     setContent("");
   };
 
@@ -30,7 +22,7 @@ function AddPostForm({ onCreate }) {
         <div>
           <button
             className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md"
-            onClick={handleSavePost}
+            onClick={handleCreate}
           >
             Create
           </button>{" "}

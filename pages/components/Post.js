@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-function Post({ post, onUpdate, onDelete }) {
+function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const [editableContent, setEditableContent] = useState(post.content);
+  const [editableContent, setEditableContent] = useState(post.text);
 
   function handleUpdatePost() {
-    const updatedPost = { ...post, content: editableContent };
+    const updatedPost = { ...post, text: editableContent };
     onUpdate(updatedPost);
     setEditMode(false);
   }
@@ -21,7 +21,7 @@ function Post({ post, onUpdate, onDelete }) {
               className="h-12 w-12 rounded-full mr-4"
             />
           )}
-          <div className="text-[#6e767d]">
+          <div className="text-[#6e767d] w-full">
             <div className="inline-block group">
               <h4
                 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${
@@ -48,11 +48,11 @@ function Post({ post, onUpdate, onDelete }) {
                   value={editableContent}
                   onChange={(e) => setEditableContent(e.target.value)}
                   rows="4"
-                  className="bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
+                  className="border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
                 />
               </div>
             ) : (
-              <p className="break-normal md:break-all">{post.content}</p>
+              <p className="break-normal md:break-all">{post.text}</p>
             )}
           </div>
           <div className="icon group flex-shrink-0 ml-auto pl-2">
