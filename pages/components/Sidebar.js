@@ -9,7 +9,7 @@ import { Settings } from "@material-ui/icons";
 
 function Sidebar() {
   return (
-    <div className="sticky top-0 hidden sm:flex flex-col items-center xl:items-start xl:w-[340px] p-2 h-screen ">
+    <div className="sticky top-0 hidden sm:flex flex-col items-center   p-2 h-screen ">
       <div className="space-y-2.5 xl:ml-24 flex flex-col justify-between h-screen">
         <div>
           <SidebarLink text="Home" Icon={HomeIcon} />

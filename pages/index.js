@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PostsList from "./components/PostList";
 import Sidebar from "./components/Sidebar";
 import Head from "next/head";
+import RouteComponent from "./components/RouteComponent";
+
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
+  const [token, setToken] = useState()
+  const [role, setRole] = useState()
 
+  useEffect(() => {
+    getRole();
+  },[]);
+
+  useEffect(() => {
+    getToken()
+  },[])
+
+  function getToken() {
+    setToken(localStorage.getItem('token'))
+  }
+
+  function getRole() {
+    setRole(localStorage.getItem('role'))
+  }
+
+  console.log(role)
+  console.log(token)
   async function handleDeletePost(id) {
     try {
       await axios.delete(`http://localhost:8000/api/posts/${id}`);
@@ -51,6 +73,7 @@ function App({ initialPosts = [] }) {
         <title>Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      
       <main className="bg-[#000] min-h-screen flex max-w-[1500px] mx-auto">
         <Sidebar />
         <PostsList
@@ -60,6 +83,7 @@ function App({ initialPosts = [] }) {
           onCreate={handleSavePost}
         />
       </main>
+      {/* <RouteComponent token={token} setToken={setToken} role={role} setRole={setRole}/> */}
     </div>
   );
 }
