@@ -6,16 +6,18 @@ import {
   UserIcon,
 } from "@heroicons/react/outline";
 import { Settings } from "@material-ui/icons";
+import Link from "next/link";
 
 function Sidebar() {
   return (
     <div className="sticky top-0 hidden sm:flex flex-col items-center   p-2 h-screen ">
       <div className="space-y-2.5 xl:ml-24 flex flex-col justify-between h-screen">
         <div>
-          <SidebarLink text="Home" Icon={HomeIcon} />
+                     <Link href="/"><a>
+ <SidebarLink text="Home" Icon={HomeIcon}/></a></Link>
           <SidebarLink text="Messages" Icon={MailIcon} />
-          <SidebarLink text="Users" Icon={UserIcon} />
-          <SidebarLink text="Profile" Icon={InboxIcon} />
+           <SidebarLink text="Users" Icon={UserIcon} />
+           <Link href="/user/13"><a><SidebarLink text="Profile" Icon={InboxIcon} /></a></Link>
           <SidebarLink text="Settings" Icon={Settings} />
         </div>
 

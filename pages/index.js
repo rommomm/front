@@ -8,27 +8,25 @@ import RouteComponent from "./components/RouteComponent";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
-  const [token, setToken] = useState()
-  const [role, setRole] = useState()
+  // const [token, setToken] = useState()
+  // const [role, setRole] = useState()
 
-  useEffect(() => {
-    getRole();
-  },[]);
+  // useEffect(() => {
+  //   getRole();
+  // },[]);
 
-  useEffect(() => {
-    getToken()
-  },[])
+  // useEffect(() => {
+  //   getToken()
+  // },[])
 
-  function getToken() {
-    setToken(localStorage.getItem('token'))
-  }
+  // function getToken() {
+  //   setToken(localStorage.getItem('token'))
+  // }
 
-  function getRole() {
-    setRole(localStorage.getItem('role'))
-  }
+  // function getRole() {
+  //   setRole(localStorage.getItem('role'))
+  // }
 
-  console.log(role)
-  console.log(token)
   async function handleDeletePost(id) {
     try {
       await axios.delete(`http://localhost:8000/api/posts/${id}`);
@@ -89,7 +87,7 @@ function App({ initialPosts = [] }) {
 }
 
 export async function getServerSideProps() {
-  const response = await axios.get("http://localhost:8000/api/posts");
+  const response = await axios.get("http://localhost:8000/api/3/posts");
 
   return { props: { initialPosts: response.data } };
 }

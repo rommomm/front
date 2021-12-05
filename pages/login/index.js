@@ -61,7 +61,7 @@ function Login(props) {
           </div>
 
           <div className="text-grey-dark mt-6">
-            <Link href="/sign-up/register">
+            <Link href="/register">
               <a className="no-underline border-b border-blue text-blue">
                 Register
               </a>

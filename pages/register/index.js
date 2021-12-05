@@ -104,7 +104,7 @@ function Register(props) {
             </button>
           </div>
           <div className="text-grey-dark mt-6 items-center ">
-            <Link href="/sign-up/login">
+            <Link href="/login">
               <a className="no-underline border-b border-blue text-blue">
                 Sign Up
               </a>
