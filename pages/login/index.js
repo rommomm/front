@@ -26,6 +26,34 @@ function Login(props) {
       });
   }
 
+  // const logIn = () => {
+  //   Cookies.set("ticket_management_is_user_logged_in", true, {
+  //     expires: 86400,
+  //     sameSite: "lax",
+  //   });
+
+  //   router.push("/");
+  // };
+
+  // const signUp = (e) => {
+  //   e.preventDefault();
+
+  //   axios.get("http://localhost:8000/sanctum/csrf-cookie").then(() => {
+  //     axios
+  //       .post("http://localhost:8000/api/login", {
+  //         email: email,
+  //         password: password,
+  //       })
+  //       .then((response) => {
+  //         if (response.data.error) {
+  //           console.log(response.data.error);
+  //         } else {
+  //           logIn();
+  //         }
+  //       });
+  //   });
+  // };
+
   return (
     <div>
       <div className="bg-grey-lighter min-h-screen flex flex-col">

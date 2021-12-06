@@ -5,27 +5,18 @@ import Sidebar from "./components/Sidebar";
 import Head from "next/head";
 import RouteComponent from "./components/RouteComponent";
 
-
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
-  // const [token, setToken] = useState()
-  // const [role, setRole] = useState()
+  const [token, setToken] = useState();
 
-  // useEffect(() => {
-  //   getRole();
-  // },[]);
+  useEffect(() => {
+    getToken();
+  }, []);
 
-  // useEffect(() => {
-  //   getToken()
-  // },[])
-
-  // function getToken() {
-  //   setToken(localStorage.getItem('token'))
-  // }
-
-  // function getRole() {
-  //   setRole(localStorage.getItem('role'))
-  // }
+  function getToken() {
+    setToken(localStorage.getItem("token"));
+  }
+  console.log(token);
 
   async function handleDeletePost(id) {
     try {
@@ -42,13 +33,11 @@ function App({ initialPosts = [] }) {
         `http://localhost:8000/api/posts/${post.id}`,
         post
       );
-      console.log(post);
 
       const newPosts = [...posts];
       const postIndex = posts.findIndex((p) => p.id === post.id);
       newPosts[postIndex] = response.data;
       setPosts(newPosts);
-      console.log(newPosts);
     } catch (e) {
       console.log(e);
     }
@@ -71,7 +60,7 @@ function App({ initialPosts = [] }) {
         <title>Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      
+
       <main className="bg-[#000] min-h-screen flex max-w-[1500px] mx-auto">
         <Sidebar />
         <PostsList
@@ -87,7 +76,7 @@ function App({ initialPosts = [] }) {
 }
 
 export async function getServerSideProps() {
-  const response = await axios.get("http://localhost:8000/api/3/posts");
+  const response = await axios.get("http://localhost:8000/api/posts");
 
   return { props: { initialPosts: response.data } };
 }

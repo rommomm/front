@@ -3,7 +3,7 @@ import { IconButton } from "@material-ui/core";
 import { HomeIcon } from "@heroicons/react/outline";
 import { AddLocation, AddLocationAlt } from "@material-ui/icons";
 
-function UserHeader() {
+function UserHeader({ userInfo }) {
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-2 px-3  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
@@ -37,22 +37,26 @@ function UserHeader() {
           </div>
           <div class="buttons  absolute pt-20 left-0 space-x-0 my-3.5 ml-3 text-black ">
             <div className="pr-4">
-              <h2 className="text-2xl font-bold ">Vasya</h2>{" "}
+              <h2 className="text-2xl font-bold ">
+                {userInfo.initialUser.first_name}
+              </h2>{" "}
             </div>
             <div>
               {" "}
-              <p className="text-base ">@Vasya</p>
+              <p className="text-base ">@{userInfo.initialUser.first_name}</p>
             </div>
           </div>
           <div class="buttons  absolute pt-36 left-0 space-x-0 my-3.5 ml-3 text-black ">
             <div className="pr-4">
-              <h2 className="text-base "><AddLocation className="h-7"/>Monaco</h2>{" "}
+              <h2 className="text-base ">
+                <AddLocation className="h-7" />
+                Monaco
+              </h2>{" "}
             </div>
             <div>
               {" "}
               <span className="text-base ">
                 <span className="text-xl pr-1 font-bold">420</span>Following
-
               </span>
               <span className="text-base ">
                 <span className="text-xl pl-5 pr-1 font-bold">400</span>
