@@ -30,7 +30,7 @@ function App({ initialPosts = [] }) {
       const response = await instance.post(`/posts`, {
         text,
       });
-      setPosts([response.data, ...posts]);
+      setPosts([...posts, response.data]);
     } catch (e) {
       console.log(e);
     }
