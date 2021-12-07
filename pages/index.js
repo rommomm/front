@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import axios from "axios";
 import PostsList from "./components/PostList";
 import Sidebar from "./components/Sidebar";
 import Head from "next/head";
+import instance from "../libs/axiosInstance";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
 
   async function handleDeletePost(id) {
     try {
-      await axios.delete(`http://localhost:8000/api/posts/${id}`);
+      await instance.delete(`/posts/${id}`);
       setPosts(posts.filter((p) => p.id !== id));
     } catch (e) {
       console.log(e);
@@ -18,17 +18,8 @@ function App({ initialPosts = [] }) {
 
   async function handleUpdatePost(post) {
     try {
-      const response = await axios.put(
-        `http://localhost:8000/api/posts/${post.id}`,
-        post
-      );
-      console.log(post);
-
-      const newPosts = [...posts];
-      const postIndex = posts.findIndex((p) => p.id === post.id);
-      newPosts[postIndex] = response.data;
-      setPosts(newPosts);
-      console.log(newPosts);
+      await instance.put(`/posts/${post.id}`, post);
+      setPosts(posts.map((p) => (p.id === post.id ? post : p)));
     } catch (e) {
       console.log(e);
     }
@@ -36,7 +27,7 @@ function App({ initialPosts = [] }) {
 
   const handleSavePost = async (text) => {
     try {
-      const response = await axios.post(`http://localhost:8000/api/posts`, {
+      const response = await instance.post(`/posts`, {
         text,
       });
       setPosts([response.data, ...posts]);
@@ -65,7 +56,7 @@ function App({ initialPosts = [] }) {
 }
 
 export async function getServerSideProps() {
-  const response = await axios.get("http://localhost:8000/api/posts");
+  const response = await instance.get("/posts");
 
   return { props: { initialPosts: response.data } };
 }

@@ -13,7 +13,7 @@ function Post({ post, onDelete, onUpdate }) {
   return (
     <div className=" flex p-2   cursor-pointer border-b border-gray-700">
       <div className=" m-2 space-y-2 w-full">
-        <div className={`flex ${!editMode && ""}`}>
+        <div className="flex">
           {!editMode && (
             <img
               src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
@@ -66,7 +66,7 @@ function Post({ post, onDelete, onUpdate }) {
             <div className="border p-1 m-1 rounded-lg px-4 py-1.5 shadow-md">
               <button onClick={() => setEditMode(!editMode)}>
                 {editMode ? "Cancel" : "Edit"}
-              </button>{" "}
+              </button>
             </div>
           </div>
         </div>
