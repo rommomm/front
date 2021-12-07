@@ -26,6 +26,25 @@ function Login(props) {
       });
   }
 
+  // const signUp = (e) => {
+  //   e.preventDefault();
+
+  //   axios.get("http://localhost:8000/sanctum/csrf-cookie").then(() => {
+  //     axios
+  //       .post("http://localhost:8000/api/login", {
+  //         email: email,
+  //         password: password,
+  //       })
+  //       .then((response) => {
+  //         if (response.data.error) {
+  //           console.log(response.data.error);
+  //         } else {
+  //           console.log("error");
+  //         }
+  //       });
+  //   });
+  // };
+
   // const logIn = () => {
   //   Cookies.set("ticket_management_is_user_logged_in", true, {
   //     expires: 86400,
