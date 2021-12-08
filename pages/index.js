@@ -3,27 +3,14 @@ import axios from "axios";
 import PostsList from "./components/PostList";
 import Sidebar from "./components/Sidebar";
 import Head from "next/head";
-
-axios.defaults.headers.post["Content-Type"] = "application/json";
-axios.defaults.headers.post["Accept"] = "application/json";
-axios.defaults.withCredentials = true;
+import api from '../libs/api'
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
-  const [token, setToken] = useState();
-
-  useEffect(() => {
-    getToken();
-  }, []);
-
-  function getToken() {
-    setToken(localStorage.getItem("token"));
-  }
-  console.log(token);
 
   async function handleDeletePost(id) {
     try {
-      await axios.delete(`http://localhost:8000/api/posts/${id}`);
+      await api.delete(`/posts/${id}`);
       setPosts(posts.filter((p) => p.id !== id));
     } catch (e) {
       console.log(e);
@@ -32,8 +19,8 @@ function App({ initialPosts = [] }) {
 
   async function handleUpdatePost(post) {
     try {
-      const response = await axios.put(
-        `http://localhost:8000/api/posts/${post.id}`,
+      const response = await api.put(
+        `/posts/${post.id}`,
         post
       );
 
@@ -48,7 +35,7 @@ function App({ initialPosts = [] }) {
 
   const handleSavePost = async (text) => {
     try {
-      const response = await axios.post(`http://localhost:8000/api/posts`, {
+      const response = await api.post(`/posts`, {
         text,
       });
       setPosts([response.data, ...posts]);
@@ -79,7 +66,7 @@ function App({ initialPosts = [] }) {
 }
 
 export async function getServerSideProps() {
-  const response = await axios.get("http://localhost:8000/api/posts");
+  const response = await api.get("/posts");
 
   return { props: { initialPosts: response.data } };
 }

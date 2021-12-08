@@ -2,18 +2,17 @@ import Sidebar from "../components/Sidebar";
 import Head from "next/dist/shared/lib/head";
 import AddPostForm from "../components/AddPostForm";
 import UserHeader from "../components/UserHeader";
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import PostUserList from "../components/PostUserList";
+import api from "../../libs/api";
 
-function Profile({ initialPosts = [] }) {
-  const [posts, setPosts] = useState(initialPosts);
-  // const [userInfo, setUserInfo] = useState(initialUser);
+function Profile({ userInfo, userPost = [] }) {
+  const [posts, setPosts] = useState(userPost);
+  const [information, setInformation] = useState(userInfo);
 
-  console.log(initialPosts);
   async function handleDeletePost(id) {
     try {
-      await axios.delete(`http://localhost:8000/api/posts/${id}`);
+      await api.delete(`/posts/${id}`);
       setPosts(posts.filter((p) => p.id !== id));
     } catch (e) {
       console.log(e);
@@ -22,10 +21,7 @@ function Profile({ initialPosts = [] }) {
 
   async function handleUpdatePost(post) {
     try {
-      const response = await axios.put(
-        `http://localhost:8000/api/posts/${post.id}`,
-        post
-      );
+      const response = await api.put(`/posts/${post.id}`, post);
 
       const newPosts = [...posts];
       const postIndex = posts.findIndex((p) => p.id === post.id);
@@ -38,10 +34,10 @@ function Profile({ initialPosts = [] }) {
 
   const handleSavePost = async (text) => {
     try {
-      const response = await axios.post(`http://localhost:8000/api/posts`, {
+      const response = await api.post(`/posts`, {
         text,
       });
-      setPosts([initialUser.initialPosts, ...posts]);
+      setPosts([response.data, ...posts]);
     } catch (e) {
       console.log(e);
     }
@@ -60,7 +56,7 @@ function Profile({ initialPosts = [] }) {
         <main className=" min-h-screen flex w-full mx-auto">
           <Sidebar />
           <div className="border-black border-l border-r w-full max-w-screen-md	">
-            <UserHeader />
+            <UserHeader userInfo={userInfo} />
             <AddPostForm onCreate={handleSavePost} />
             <PostUserList
               posts={posts}
@@ -75,10 +71,15 @@ function Profile({ initialPosts = [] }) {
   );
 }
 
-export async function getServerSideProps() {
-  const response = await axios.get("http://localhost:8000/api/posts");
+export async function getServerSideProps(ctx) {
+  console.log(ctx.request);
+  const userPost = await api.get(`/8/posts`);
+  const userInfo = await api.get("/user/8");
+  const [post, user] = await Promise.all([userPost, userInfo]);
 
-  return { props: { initialPosts: response.data } };
+  return {
+    props: { userPost: post.data, userInfo: user.data },
+  };
 }
 
 export default Profile;

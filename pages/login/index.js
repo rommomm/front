@@ -1,26 +1,25 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import router, { useRouter } from "next/router";
-import axios from "axios";
+import Cookies from "js-cookie";
+import api from "../../libs/api";
 
 function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function signUp() {
-    axios
-      .post("http://localhost:8000/api/login", {
+  function signIn() {
+    api
+      .post("/login", {
         email: email,
         password: password,
       })
-      .then(function (response) {
+      .then((response) => {
         console.log(response);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.data.role_id);
-        props.setToken(response.data.token);
-        props.setRole(response.data.role_id);
+        Cookies.set("token", response.data.token);
+        router.push("/");
       })
-      .then(router.push("/"))
+
       .catch(function (error) {
         console.log(error);
       });
@@ -99,11 +98,11 @@ function Login(props) {
             />
 
             <button
-              onClick={signUp}
+              onClick={signIn}
               type="submit"
               className="w-full bg-blue-400 rounded-lg px-4 py-3 shadow-md"
             >
-              Sign Up{" "}
+              Sign In{" "}
             </button>
           </div>
 

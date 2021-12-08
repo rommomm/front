@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Post({ post, onDelete, onUpdate }) {
+function Post({ post, onDelete, onUpdate, userInfo }) {
   const [editMode, setEditMode] = useState(false);
   const [editableContent, setEditableContent] = useState(post.text);
 

@@ -13,7 +13,7 @@ function Register(props) {
 
   function signUp(props) {
     axios
-      .post("http://localhost:8000/api/register", {
+      .post("http://127.0.0.1:8000/api/register", {
         first_name: firstName,
         last_name: lastName,
         user_name: userName,
