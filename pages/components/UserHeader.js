@@ -38,12 +38,12 @@ function UserHeader({ userInfo }) {
           <div class="buttons  absolute pt-20 left-0 space-x-0 my-3.5 ml-3 text-black ">
             <div className="pr-4">
               <h2 className="text-2xl font-bold ">
-                {userInfo.initialUser.first_name}
+                Name
               </h2>{" "}
             </div>
             <div>
               {" "}
-              <p className="text-base ">@{userInfo.initialUser.first_name}</p>
+              <p className="text-base ">@Name</p>
             </div>
           </div>
           <div class="buttons  absolute pt-36 left-0 space-x-0 my-3.5 ml-3 text-black ">

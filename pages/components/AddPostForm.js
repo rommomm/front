@@ -25,7 +25,7 @@ function AddPostForm({ onCreate }) {
             onClick={handleCreate}
           >
             Create
-          </button>{" "}
+          </button>
         </div>
       </div>
     </div>

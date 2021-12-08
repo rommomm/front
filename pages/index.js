@@ -3,7 +3,10 @@ import axios from "axios";
 import PostsList from "./components/PostList";
 import Sidebar from "./components/Sidebar";
 import Head from "next/head";
-import RouteComponent from "./components/RouteComponent";
+
+axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.headers.post["Accept"] = "application/json";
+axios.defaults.withCredentials = true;
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
