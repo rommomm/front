@@ -8,7 +8,7 @@ import api from "../../libs/api";
 
 function Profile({ userInfo, userPost = [] }) {
   const [posts, setPosts] = useState(userPost);
-  const [information, setInformation] = useState(userInfo);
+  const [information, setInformation] = useState([userInfo]);
 
   async function handleDeletePost(id) {
     try {
@@ -54,7 +54,7 @@ function Profile({ userInfo, userPost = [] }) {
         </Head>
 
         <main className=" min-h-screen flex w-full mx-auto">
-          <Sidebar />
+          <Sidebar information={information} />
           <div className="border-black border-l border-r w-full max-w-screen-md	">
             <UserHeader userInfo={userInfo} />
             <AddPostForm onCreate={handleSavePost} />
@@ -73,8 +73,8 @@ function Profile({ userInfo, userPost = [] }) {
 
 export async function getServerSideProps(ctx) {
   console.log(ctx.request);
-  const userPost = await api.get(`/8/posts`);
-  const userInfo = await api.get("/user/8");
+  const userPost = await api.get(`/1/posts`);
+  const userInfo = await api.get("/user/1");
   const [post, user] = await Promise.all([userPost, userInfo]);
 
   return {

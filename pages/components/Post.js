@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import Link from "next/link";
 
 function Post({ post, onDelete, onUpdate, userInfo }) {
   const [editMode, setEditMode] = useState(false);
   const [editableContent, setEditableContent] = useState(post.text);
-
   function handleUpdatePost() {
     const updatedPost = { ...post, text: editableContent };
     onUpdate(updatedPost);
@@ -28,7 +28,9 @@ function Post({ post, onDelete, onUpdate, userInfo }) {
                   !editMode && "inline-block"
                 }`}
               >
-                Vasya
+                <Link href="/profile">
+                  <a>Vasya</a>
+                </Link>
               </h4>
               <span
                 className={`text-sm sm:text-[15px] ${!editMode && "ml-1.5"}`}

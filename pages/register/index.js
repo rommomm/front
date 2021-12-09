@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import axios from "axios";
 import router from "next/router";
+import api from "../../libs/api";
+import Cookies from "js-cookie";
 
 function Register(props) {
   const [firstName, setFirstName] = useState("");
@@ -11,9 +12,9 @@ function Register(props) {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
-  function signUp(props) {
-    axios
-      .post("http://127.0.0.1:8000/api/register", {
+  function signUp() {
+    api
+      .post("/register", {
         first_name: firstName,
         last_name: lastName,
         user_name: userName,
@@ -21,14 +22,11 @@ function Register(props) {
         password: password,
         password_confirmation: passwordConfirmation,
       })
-      .then(function (response) {
+      .then((response) => {
         console.log(response);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.data.role_id);
-        props.setToken(response.data.token);
-        props.setRole(response.data.role_id);
+        Cookies.set("token", response.data.token);
+        router.push("/");
       })
-      .then(router.push("/"))
 
       .catch(function (error) {
         console.log(error);
