@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import Example from "./DropMenu";
+import { DotsHorizontalIcon } from "@heroicons/react/solid";
 
 function Post({ post, onDelete, onUpdate, userInfo }) {
   const [editMode, setEditMode] = useState(false);
@@ -57,15 +59,17 @@ function Post({ post, onDelete, onUpdate, userInfo }) {
               <p className="break-normal md:break-all">{post.text}</p>
             )}
           </div>
-          <div className="icon group flex-shrink-0 ml-auto pl-2">
-            <div className="border p-1 m-1 rounded-lg px-4 py-1.5 shadow-md">
+          <div className="icon group flex-shrink-0">
+            <div className="border p-1 m-1 rounded-lg px-4 shadow-md">
               {editMode ? (
                 <button onClick={handleUpdatePost}>Save</button>
               ) : (
-                <button onClick={() => onDelete(post.id)}>Delete</button>
+                <button onClick={() => onDelete(post.id)}>
+                  Delete
+                </button>
               )}
             </div>
-            <div className="border p-1 m-1 rounded-lg px-4 py-1.5 shadow-md">
+            <div className="border p-1 m-1 rounded-lg px-4  shadow-md">
               <button onClick={() => setEditMode(!editMode)}>
                 {editMode ? "Cancel" : "Edit"}
               </button>{" "}

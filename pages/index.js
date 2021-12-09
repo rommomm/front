@@ -7,7 +7,6 @@ import api from "../libs/api";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
-
   async function handleDeletePost(id) {
     try {
       await api.delete(`/posts/${id}`);

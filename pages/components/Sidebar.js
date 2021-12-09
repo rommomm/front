@@ -7,6 +7,9 @@ import {
 } from "@heroicons/react/outline";
 import { Settings } from "@material-ui/icons";
 import Link from "next/link";
+import Example from "./DropMenu";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/solid";
 
 function Sidebar({ information }) {
   return (
@@ -45,11 +48,12 @@ function Sidebar({ information }) {
             className="h-10 w-10 rounded-full xl:mr-2.5"
           />
           <div className="hidden xl:inline leading-5">
-            <h4 className="font-bold">Vasya</h4>
+            <Example text="Vasya" />
+
             <p className="text-[#6e767d]">@Vasya</p>
           </div>
           <div>
-            <div className="flex-grow border-l border-r border-gray-700  ">
+            {/* <div className="flex-grow border-l border-r border-gray-700  ">
               <div className=" text-[#d9d9d9] flex items-center sm:justify-between py-4 px-3  z-50  border-b border-gray-700  bg-gray-700 text-white fixed bottom-0 right-0 w-full">
                 <div className="flex items-center sm:justify-between ">
                   <div class="flex col ">
@@ -72,7 +76,7 @@ function Sidebar({ information }) {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
