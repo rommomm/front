@@ -7,8 +7,6 @@ import api from "../libs/api";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
-  const response = posts.map((info) => info.user);
-  const [postsUserInfo, setPostsUser] = useState(response);
 
   async function handleDeletePost(id) {
     try {

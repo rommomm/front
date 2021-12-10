@@ -21,10 +21,10 @@ function PostsList({ posts, onDelete, onUpdate, onCreate, userInfo }) {
       {isLoggedIn && <AddPostForm onCreate={onCreate} />}
       <div className="pb-72">
         {posts.length
-          ? posts.map((post, i) => (
+          ? posts.map((post, post_id) => (
               <Post
                 post={post}
-                key={i}
+                key={post_id}
                 onDelete={onDelete}
                 onUpdate={onUpdate}
                 userInfo={userInfo}

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Example from "./DropMenu";
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import Cookies from "js-cookie";
 
 function Post({ post, onDelete, onUpdate }) {
@@ -22,7 +20,7 @@ function Post({ post, onDelete, onUpdate }) {
     onUpdate(updatedPost);
     setEditMode(false);
   }
-  console.log(userInfo);
+
   return (
     <div className=" flex p-2   cursor-pointer border-b border-gray-700">
       <div className=" m-2 space-y-2 w-full">
