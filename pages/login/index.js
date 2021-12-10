@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import router, { useRouter } from "next/router";
+import router from "next/router";
 import Cookies from "js-cookie";
 import api from "../../libs/api";
 
@@ -55,7 +55,7 @@ function Login() {
               type="submit"
               className="w-full bg-blue-400 rounded-lg px-4 py-3 shadow-md"
             >
-              Sign In{" "}
+              Sign In
             </button>
           </div>
 

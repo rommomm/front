@@ -1,21 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Example from "./DropMenu";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
+import Cookies from "js-cookie";
 
-function Post({ post, onDelete, onUpdate, userInfo }) {
+function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
   const [editableContent, setEditableContent] = useState(post.text);
+  const [userInfo, setUserInfo] = useState(post.user);
+  const [isLoggedIn, setisLoggedIn] = useState(true);
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (typeof token === "undefined") {
+      setisLoggedIn(false);
+    }
+  }, []);
+
   function handleUpdatePost() {
     const updatedPost = { ...post, text: editableContent };
     onUpdate(updatedPost);
     setEditMode(false);
   }
-
+  console.log(userInfo);
   return (
     <div className=" flex p-2   cursor-pointer border-b border-gray-700">
       <div className=" m-2 space-y-2 w-full">
-        <div className={`flex ${!editMode && ""}`}>
+        <div className="flex">
           {!editMode && (
             <img
               src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
@@ -30,14 +41,14 @@ function Post({ post, onDelete, onUpdate, userInfo }) {
                   !editMode && "inline-block"
                 }`}
               >
-                <Link href="/profile">
-                  <a>Vasya</a>
+                <Link href={"/profile/" + userInfo.user_name}>
+                  <a>{userInfo.first_name}</a>
                 </Link>
               </h4>
               <span
                 className={`text-sm sm:text-[15px] ${!editMode && "ml-1.5"}`}
               >
-                @Vasya
+                @{userInfo.user_name}
               </span>
             </div>
 
@@ -59,22 +70,24 @@ function Post({ post, onDelete, onUpdate, userInfo }) {
               <p className="break-normal md:break-all">{post.text}</p>
             )}
           </div>
-          <div className="icon group flex-shrink-0">
-            <div className="border p-1 m-1 rounded-lg px-4 shadow-md">
-              {editMode ? (
-                <button onClick={handleUpdatePost}>Save</button>
-              ) : (
-                <button onClick={() => onDelete(post.id)}>
-                  Delete
+          {isLoggedIn && (
+            <div className="icon group flex-shrink-0">
+              <div className="border p-1 m-1 rounded-lg px-4 shadow-md">
+                {editMode ? (
+                  <button onClick={handleUpdatePost}>Save</button>
+                ) : (
+                  <button onClick={() => onDelete(post.id)}>Delete</button>
+                )}
+              </div>
+              <div className="border p-1 m-1 rounded-lg px-4  shadow-md">
+                (
+                <button onClick={() => setEditMode(!editMode)}>
+                  {editMode ? "Cancel" : "Edit"}
                 </button>
-              )}
+                )
+              </div>
             </div>
-            <div className="border p-1 m-1 rounded-lg px-4  shadow-md">
-              <button onClick={() => setEditMode(!editMode)}>
-                {editMode ? "Cancel" : "Edit"}
-              </button>{" "}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

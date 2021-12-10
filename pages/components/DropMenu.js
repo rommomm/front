@@ -1,18 +1,31 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-
+import api from "../../libs/api";
+import Cookies from "js-cookie";
+import router from "next/router";
+import Link from "next/link";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
+}
+
+function logout() {
+  api
+    .post("/logout")
+    .then(function (response) {
+      Cookies.remove("token");
+      router.push("/login");
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }
 
 export default function Example({ text, Icon }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="font-bold">
-          {text}
-        </Menu.Button>
+        <Menu.Button className="font-bold">{text}</Menu.Button>
       </div>
 
       <Transition
@@ -29,17 +42,18 @@ export default function Example({ text, Icon }) {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  href="#"
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block px-2 py-2 text-sm"
                   )}
                 >
-                  Profile
+                  <Link href="/profile">
+                    <a>Profile</a>
+                  </Link>
                 </a>
               )}
             </Menu.Item>
-            <form method="POST" action="#">
+            <form method="POST">
               <Menu.Item>
                 {({ active }) => (
                   <button
@@ -49,7 +63,7 @@ export default function Example({ text, Icon }) {
                       "block w-full text-left px-2 py-2 text-sm border-t"
                     )}
                   >
-                    Sign out
+                    <button onClick={logout}>Logout</button>
                   </button>
                 )}
               </Menu.Item>

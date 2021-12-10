@@ -7,6 +7,9 @@ import api from "../libs/api";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
+  const response = posts.map((info) => info.user);
+  const [postsUserInfo, setPostsUser] = useState(response);
+
   async function handleDeletePost(id) {
     try {
       await api.delete(`/posts/${id}`);
@@ -19,11 +22,7 @@ function App({ initialPosts = [] }) {
   async function handleUpdatePost(post) {
     try {
       const response = await api.put(`/posts/${post.id}`, post);
-
-      const newPosts = [...posts];
-      const postIndex = posts.findIndex((p) => p.id === post.id);
-      newPosts[postIndex] = response.data;
-      setPosts(newPosts);
+      setPosts(posts.map((p) => (p.id === post.id ? post : p)));
     } catch (e) {
       console.log(e);
     }
@@ -56,7 +55,6 @@ function App({ initialPosts = [] }) {
           onCreate={handleSavePost}
         />
       </main>
-      {/* <RouteComponent token={token} setToken={setToken} role={role} setRole={setRole}/> */}
     </div>
   );
 }
@@ -66,5 +64,4 @@ export async function getServerSideProps() {
 
   return { props: { initialPosts: response.data } };
 }
-
 export default App;

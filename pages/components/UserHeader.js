@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { IconButton } from "@material-ui/core";
-import { HomeIcon } from "@heroicons/react/outline";
 import { AddLocation } from "@material-ui/icons";
 
 function UserHeader({ userInfo }) {
@@ -27,20 +25,19 @@ function UserHeader({ userInfo }) {
             <div className="pr-4">
               <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md ">
                 Message
-              </button>{" "}
+              </button>
             </div>
             <div>
               <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md">
                 Follow
-              </button>{" "}
-            </div>{" "}
+              </button>
+            </div>
           </div>
           <div class="buttons  absolute pt-20 left-0 space-x-0 my-3.5 ml-3 text-black ">
             <div className="pr-4">
-              <h2 className="text-2xl font-bold ">{userInfo.first_name}</h2>{" "}
+              <h2 className="text-2xl font-bold ">{userInfo.first_name}</h2>
             </div>
             <div>
-              {" "}
               <p className="text-base ">@{userInfo.first_name}</p>
             </div>
           </div>
@@ -49,10 +46,9 @@ function UserHeader({ userInfo }) {
               <h2 className="text-base ">
                 <AddLocation className="h-7" />
                 Monaco
-              </h2>{" "}
+              </h2>
             </div>
             <div>
-              {" "}
               <span className="text-base ">
                 <span className="text-xl pr-1 font-bold">420</span>Following
               </span>
@@ -67,6 +63,5 @@ function UserHeader({ userInfo }) {
     </>
   );
 }
-
 
 export default UserHeader;
