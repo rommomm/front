@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import router from "next/router";
 import api from "../../libs/api";
 import Cookies from "js-cookie";
+import UserContext from "../components/UserContext";
 
 function Register(props) {
   const [firstName, setFirstName] = useState("");
@@ -11,6 +12,8 @@ function Register(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
+  const {setUser} = useContext(UserContext);
 
   function signUp() {
     api
@@ -23,8 +26,10 @@ function Register(props) {
         password_confirmation: passwordConfirmation,
       })
       .then((response) => {
+        setUser(response.data.user)
         console.log(response);
         Cookies.set("token", response.data.token);
+        Cookies.set("user", JSON.stringify(response.data.user))
         router.push("/");
       })
 

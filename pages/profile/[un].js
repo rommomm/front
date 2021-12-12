@@ -2,22 +2,16 @@ import Sidebar from "../components/Sidebar";
 import Head from "next/dist/shared/lib/head";
 import AddPostForm from "../components/AddPostForm";
 import UserHeader from "../components/UserHeader";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PostUserList from "../components/PostUserList";
 import api from "../../libs/api";
 import Cookies from "js-cookie";
+import UserContext from "../components/UserContext";
 
-function Profile({ userInfo, userPost = [] }) {
+function Profile({ userPost = [], user }) {
   const [posts, setPosts] = useState(userPost);
-  const [information, setInformation] = useState(userInfo);
-  const [isLoggedIn, setisLoggedIn] = useState(true);
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (typeof token === "undefined") {
-      setisLoggedIn(false);
-    }
-  }, []);
+  const { isLoggedIn } = useContext(UserContext);
 
   async function handleDeletePost(id) {
     try {
@@ -31,11 +25,7 @@ function Profile({ userInfo, userPost = [] }) {
   async function handleUpdatePost(post) {
     try {
       const response = await api.put(`/posts/${post.id}`, post);
-
-      const newPosts = [...posts];
-      const postIndex = posts.findIndex((p) => p.id === post.id);
-      newPosts[postIndex] = response.data;
-      setPosts(newPosts);
+      setPosts(posts.map((p) => (p.id === post.id ? post : p)));
     } catch (e) {
       console.log(e);
     }
@@ -46,7 +36,8 @@ function Profile({ userInfo, userPost = [] }) {
       const response = await api.post(`/posts`, {
         text,
       });
-      setPosts([response.data, ...posts]);
+      const newPost = { ...response.data, user };
+      setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
     }
@@ -56,16 +47,14 @@ function Profile({ userInfo, userPost = [] }) {
     <>
       <div className="">
         <Head>
-          <title>
-            {/* {userInfo.initialUser.first_name} {userInfo.initialUser.last_name} */}
-          </title>
+          <title></title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
         <main className=" min-h-screen flex w-full mx-auto">
-          <Sidebar information={information} />
+          <Sidebar />
           <div className="border-black border-l border-r w-full max-w-screen-md	">
-            <UserHeader userInfo={userInfo} />
+            <UserHeader user={user} />
             {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
             <PostUserList
               posts={posts}
@@ -81,13 +70,14 @@ function Profile({ userInfo, userPost = [] }) {
 }
 
 export async function getServerSideProps(ctx) {
-  console.log(ctx.request);
-  const userPost = await api.get(`/posts`);
-  const userInfo = await api.get("/users/1");
-  const [post, user] = await Promise.all([userPost, userInfo]);
-
+  const user = await api.get(`/users/${ctx.params.un}`);
+  const response = await api.get(`users/${user.data.id}/posts`);
+  const posts = response.data.map((post) => ({
+    ...post,
+    user: user.data,
+  }));
   return {
-    props: { userPost: post.data, userInfo: user.data },
+    props: { userPost: posts, user: user.data },
   };
 }
 

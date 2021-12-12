@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { Fragment } from "react";
+import { Menu } from "@headlessui/react";
+import { DotsHorizontalIcon } from "@heroicons/react/solid";
+import UserContext from "./UserContext";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
   const [editableContent, setEditableContent] = useState(post.text);
-  const [userInfo, setUserInfo] = useState(post.user);
-  const [isLoggedIn, setisLoggedIn] = useState(true);
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (typeof token === "undefined") {
-      setisLoggedIn(false);
-    }
-  }, []);
+  const { isLoggedIn, user } = useContext(UserContext);
 
   function handleUpdatePost() {
     const updatedPost = { ...post, text: editableContent };
@@ -22,7 +19,7 @@ function Post({ post, onDelete, onUpdate }) {
   }
 
   return (
-    <div className=" flex p-2   cursor-pointer border-b border-gray-700">
+    <div className=" flex p-2 cursor-pointer border-b border-gray-700">
       <div className=" m-2 space-y-2 w-full">
         <div className="flex">
           {!editMode && (
@@ -33,20 +30,22 @@ function Post({ post, onDelete, onUpdate }) {
             />
           )}
           <div className="text-[#6e767d] w-full">
-            <div className="inline-block group">
+            <div className="inline-block flex group">
               <h4
                 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${
                   !editMode && "inline-block"
                 }`}
               >
-                <Link href={"/profile/" + userInfo.user_name}>
-                  <a>{userInfo.first_name}</a>
+                <Link href={`/profile/` + post.user.user_name}>
+                  <a>{post.user.user_name}</a>
                 </Link>
               </h4>
               <span
-                className={`text-sm sm:text-[15px] ${!editMode && "ml-1.5"}`}
+                className={`text-sm sm:text-[15px] pl-1 ${
+                  !editMode && "ml-1.5"
+                }`}
               >
-                @{userInfo.user_name}
+                @{post.user.user_name}
               </span>
             </div>
 
@@ -57,36 +56,77 @@ function Post({ post, onDelete, onUpdate }) {
                   alt=""
                   className="h-12 w-12 rounded-full mr-4"
                 />
-                <textarea
-                  value={editableContent}
-                  onChange={(e) => setEditableContent(e.target.value)}
-                  rows="4"
-                  className="border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
-                />
+                <div>
+                  <div>
+                    <textarea
+                      value={editableContent}
+                      onChange={(e) => setEditableContent(e.target.value)}
+                      rows="4"
+                      className="border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
+                    />
+                  </div>
+                  <div className="ml-96 pl-32">
+                    {isLoggedIn && (
+                      <div className="icon group flex flex col">
+                        <div className=" bg-blue-400 border p-1 m-1 rounded-lg h-10 w-16 text-center py-1.5 ">
+                          {editMode ? (
+                            <button onClick={handleUpdatePost}>Save</button>
+                          ) : (
+                            <button onClick={() => onDelete(post.id)}>
+                              Delete
+                            </button>
+                          )}
+                        </div>
+                        <div className="bg-blue-400 border p-1 m-1 rounded-lg px-4 h-10 w-25 text-center py-1.5">
+                          <button onClick={() => setEditMode(!editMode)}>
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             ) : (
               <p className="break-normal md:break-all">{post.text}</p>
             )}
           </div>
-          {isLoggedIn && (
-            <div className="icon group flex-shrink-0">
-              <div className="border p-1 m-1 rounded-lg px-4 shadow-md">
-                {editMode ? (
-                  <button onClick={handleUpdatePost}>Save</button>
-                ) : (
-                  <button onClick={() => onDelete(post.id)}>Delete</button>
-                )}
-              </div>
-              <div className="border p-1 m-1 rounded-lg px-4  shadow-md">
-                (
-                <button onClick={() => setEditMode(!editMode)}>
-                  {editMode ? "Cancel" : "Edit"}
-                </button>
-                )
-              </div>
-            </div>
-          )}
         </div>
+      </div>
+      <div>
+        {isLoggedIn && (
+          <Menu as="div" className="relative bg-grey-dark inline-block ">
+            <div>
+              <Menu.Button className="inline-flex justify-center w-full px-2 py-1 bg-white text-sm font-medium text-gray-700 ">
+                <DotsHorizontalIcon className="h-5" />
+              </Menu.Button>
+            </div>
+
+            <Menu.Items className="z-50 absolute  right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div className="py-1">
+                <Menu.Item>
+                  <button
+                    className="text-gray-700
+                        block px-4 py-2 text-sm"
+                    onClick={() => onDelete(post.id)}
+                  >
+                    Delete
+                  </button>
+                </Menu.Item>
+
+                <Menu.Item>
+                  <button
+                    className="text-gray-700
+                     block px-4 py-2 text-sm"
+                    onClick={() => setEditMode(!editMode)}
+                  >
+                    {editMode ? "Cancel" : "Edit"}
+                  </button>
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Menu>
+        )}
       </div>
     </div>
   );

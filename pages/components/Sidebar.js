@@ -7,20 +7,13 @@ import {
 } from "@heroicons/react/outline";
 import { Settings } from "@material-ui/icons";
 import Link from "next/link";
-import Example from "./DropMenu";
-import { useState, useEffect } from "react";
+import DropMenu from "./DropMenu";
+import { useState, useEffect, useContext } from "react";
 import Cookies from "js-cookie";
+import UserContext from "./UserContext";
 
-function Sidebar({ information }) {
-  const [isLoggedIn, setisLoggedIn] = useState(true);
-
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (typeof token === "undefined") {
-      setisLoggedIn(false);
-    }
-  }, []);
-
+function Sidebar() {
+  const { isLoggedIn, user } = useContext(UserContext);
   return (
     <div className="sticky top-0 hidden sm:flex flex-col items-center   p-2 h-screen ">
       <div className="space-y-2.5 xl:ml-24 flex flex-col justify-between h-screen">
@@ -33,7 +26,7 @@ function Sidebar({ information }) {
           {isLoggedIn && <SidebarLink text="Messages" Icon={MailIcon} />}
           {isLoggedIn && <SidebarLink text="Users" Icon={UserIcon} />}
           {isLoggedIn && (
-            <Link href="/profile">
+            <Link href={`/profile/${user.user_name}`}>
               <a>
                 <SidebarLink text="Profile" Icon={InboxIcon} />
               </a>
@@ -43,16 +36,20 @@ function Sidebar({ information }) {
         </div>
 
         <div className="text-[#d9d9d9] flex items-center justify-center mt-auto hoverAnimation">
-          <img
-            src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
-            alt=""
-            className="h-10 w-10 rounded-full xl:mr-2.5"
-          />
-          <div className="hidden xl:inline leading-5">
-            <Example text="Vasya" />
-
-            <p className="text-[#6e767d]">@Vasya</p>
-          </div>
+          {isLoggedIn && (
+            <>
+              <img
+                src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
+                alt=""
+                className="h-10 w-10 rounded-full xl:mr-2.5"
+              />
+              <div className="hidden xl:inline leading-5">
+                <DropMenu text={user.first_name} />
+            
+                <p className="text-[#6e767d]">@{user.user_name}</p>
+              </div>
+            </>
+          )}
           <div>
             {!isLoggedIn && (
               <div className="flex-grow border-l border-r border-gray-700  ">

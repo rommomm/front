@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AddLocation } from "@material-ui/icons";
+import UserContext from "./UserContext";
 
-function UserHeader({ userInfo }) {
+function UserHeader({user}) {
+
+  if (!user) {
+    return null;
+  }
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-2 px-3  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
@@ -35,10 +40,10 @@ function UserHeader({ userInfo }) {
           </div>
           <div class="buttons  absolute pt-20 left-0 space-x-0 my-3.5 ml-3 text-black ">
             <div className="pr-4">
-              <h2 className="text-2xl font-bold ">{userInfo.first_name}</h2>
+              <h2 className="text-2xl font-bold ">{user.first_name}</h2>
             </div>
             <div>
-              <p className="text-base ">@{userInfo.first_name}</p>
+              <p className="text-base ">@{user.user_name}</p>
             </div>
           </div>
           <div class="buttons  absolute pt-36 left-0 space-x-0 my-3.5 ml-3 text-black ">

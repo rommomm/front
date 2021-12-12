@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
 import PostsList from "./components/PostList";
 import Sidebar from "./components/Sidebar";
 import Head from "next/head";
 import api from "../libs/api";
+import UserContext from "./components/UserContext";
+
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
+
+  const {isLoggedIn, user} = useContext(UserContext);
+
 
   async function handleDeletePost(id) {
     try {
@@ -31,12 +35,13 @@ function App({ initialPosts = [] }) {
       const response = await api.post(`/posts`, {
         text,
       });
-      setPosts([response.data, ...posts]);
+      const newPost = {...response.data, user}
+      setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
     }
   };
-
+console.log(posts)
   return (
     <div className="">
       <Head>
