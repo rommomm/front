@@ -2,8 +2,7 @@ import React, { useContext, useState } from "react";
 import { AddLocation } from "@material-ui/icons";
 import UserContext from "./UserContext";
 
-function UserHeader({user}) {
-
+function UserHeader({ user }) {
   if (!user) {
     return null;
   }

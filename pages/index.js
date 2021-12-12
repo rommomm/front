@@ -5,12 +5,10 @@ import Head from "next/head";
 import api from "../libs/api";
 import UserContext from "./components/UserContext";
 
-
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
 
-  const {isLoggedIn, user} = useContext(UserContext);
-
+  const { isLoggedIn, user } = useContext(UserContext);
 
   async function handleDeletePost(id) {
     try {
@@ -35,13 +33,13 @@ function App({ initialPosts = [] }) {
       const response = await api.post(`/posts`, {
         text,
       });
-      const newPost = {...response.data, user}
+      const newPost = { ...response.data, user };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
     }
   };
-console.log(posts)
+  console.log(posts);
   return (
     <div className="">
       <Head>

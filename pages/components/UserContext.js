@@ -1,5 +1,5 @@
-import Cookies from 'js-cookie';
-import React, { useEffect, useState } from 'react';
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
 
 const UserContext = React.createContext();
 
@@ -8,15 +8,15 @@ export const UserProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const user = Cookies.get("user")
-    if(user){
-      const parsedUser = JSON.parse(user)
-      console.log(parsedUser)
-      setUserData(parsedUser)
-      setIsLoggedIn(true)
+    const user = Cookies.get("user");
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      console.log(parsedUser);
+      setUserData(parsedUser);
+      setIsLoggedIn(true);
     }
-  }, [])
-  const setUser = user => {
+  }, []);
+  const setUser = (user) => {
     setUserData(user);
     setIsLoggedIn(true);
   };
@@ -32,7 +32,7 @@ export const UserProvider = ({ children }) => {
         user,
         isLoggedIn,
         setUser,
-        removeUser
+        removeUser,
       }}
     >
       {children}

@@ -45,7 +45,7 @@ function Sidebar() {
               />
               <div className="hidden xl:inline leading-5">
                 <DropMenu text={user.first_name} />
-            
+
                 <p className="text-[#6e767d]">@{user.user_name}</p>
               </div>
             </>

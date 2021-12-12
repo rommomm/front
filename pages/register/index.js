@@ -13,7 +13,7 @@ function Register(props) {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
-  const {setUser} = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   function signUp() {
     api
@@ -26,10 +26,10 @@ function Register(props) {
         password_confirmation: passwordConfirmation,
       })
       .then((response) => {
-        setUser(response.data.user)
+        setUser(response.data.user);
         console.log(response);
         Cookies.set("token", response.data.token);
-        Cookies.set("user", JSON.stringify(response.data.user))
+        Cookies.set("user", JSON.stringify(response.data.user));
         router.push("/");
       })
 

@@ -5,9 +5,7 @@ import Cookies from "js-cookie";
 import UserContext from "./UserContext";
 
 function PostsList({ posts, onDelete, onUpdate, onCreate, userInfo }) {
-
-const { isLoggedIn, user } = useContext(UserContext);
-
+  const { isLoggedIn, user } = useContext(UserContext);
 
   return (
     <div className="flex-grow border-l border-r border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px]">
