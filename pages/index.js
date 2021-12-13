@@ -2,24 +2,28 @@ import React, { useState } from "react";
 import PostsList from "../components/PostList";
 import Sidebar from "../components/Sidebar";
 import Head from "next/head";
-import instance from "../libs/axiosInstance";
+import api from "../libs/api";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
-
+  console.log(process.env.NEXT_PUBLIC_BASE_URL);
   async function handleDeletePost(id) {
     try {
-      await instance.delete(`/posts/${id}`);
+      await api.delete(`/posts/${id}`);
       setPosts(posts.filter((p) => p.id !== id));
     } catch (e) {
       console.log(e);
     }
   }
 
-  async function handleUpdatePost(post) {
+  async function handleUpdatePost(id, updatedContent) {
     try {
-      await instance.put(`/posts/${post.id}`, post);
-      setPosts(posts.map((p) => (p.id === post.id ? post : p)));
+      await api.put(`/posts/${id}`, { content: updatedContent });
+      setPosts(
+        posts.map((post) =>
+          post.id === id ? { ...post, content: updatedContent } : post
+        )
+      );
     } catch (e) {
       console.log(e);
     }
@@ -27,7 +31,7 @@ function App({ initialPosts = [] }) {
 
   const handleSavePost = async (text) => {
     try {
-      const response = await instance.post(`/posts`, {
+      const response = await api.post(`/posts`, {
         text,
       });
       setPosts([...posts, response.data]);
@@ -56,7 +60,7 @@ function App({ initialPosts = [] }) {
 }
 
 export async function getServerSideProps() {
-  const response = await instance.get("/posts");
+  const response = await api.get("/posts");
 
   return { props: { initialPosts: response.data } };
 }
