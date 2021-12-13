@@ -1,6 +1,5 @@
-import { Fragment, useContext } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import { useContext } from "react";
+import { Menu } from "@headlessui/react";
 import api from "../../libs/api";
 import Cookies from "js-cookie";
 import router from "next/router";

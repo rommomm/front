@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import { Fragment } from "react";
 import { Menu } from "@headlessui/react";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import UserContext from "./UserContext";
