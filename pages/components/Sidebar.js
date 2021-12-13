@@ -24,7 +24,7 @@ function Sidebar() {
           </Link>
           {isLoggedIn && <SidebarLink text="Messages" Icon={MailIcon} />}
           {isLoggedIn && <SidebarLink text="Users" Icon={UserIcon} />}
-          {isLoggedIn && (
+          {isLoggedIn && user && (
             <Link href={`/profile/${user.user_name}`}>
               <a>
                 <SidebarLink text="Profile" Icon={InboxIcon} />
@@ -35,7 +35,7 @@ function Sidebar() {
         </div>
 
         <div className="text-[#d9d9d9] flex items-center justify-center mt-auto hoverAnimation">
-          {isLoggedIn && (
+          {isLoggedIn && user && (
             <>
               <img
                 src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"

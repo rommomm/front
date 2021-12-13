@@ -29,7 +29,7 @@ export const UserProvider = ({ children }) => {
     <UserContext.Provider
       value={{
         user,
-        isLoggedIn,
+        isLoggedIn: isLoggedIn && user,
 
         setUser,
         removeUser,

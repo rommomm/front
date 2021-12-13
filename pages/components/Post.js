@@ -9,7 +9,6 @@ import UserContext from "./UserContext";
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
   const [editableContent, setEditableContent] = useState(post.text);
-
   const { isLoggedIn, user } = useContext(UserContext);
 
   function handleUpdatePost() {
