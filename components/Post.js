@@ -5,8 +5,8 @@ function Post({ post, onDelete, onUpdate }) {
   const [editableContent, setEditableContent] = useState(post.text);
 
   function handleUpdatePost() {
-    const updatedPost = { ...post, text: editableContent };
-    onUpdate(updatedPost);
+    const updatedPost = { text: editableContent };
+    onUpdate(post.id, updatedPost);
     setEditMode(false);
   }
 

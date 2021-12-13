@@ -2,25 +2,26 @@ import React, { useState } from "react";
 import PostsList from "../components/PostList";
 import Sidebar from "../components/Sidebar";
 import Head from "next/head";
-import api from "../libs/api";
+import apiClient from "../libs/apiClient";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
+
   async function handleDeletePost(id) {
     try {
-      await api.delete(`/posts/${id}`);
+      await apiClient.delete(`/posts/${id}`);
       setPosts(posts.filter((p) => p.id !== id));
     } catch (e) {
       console.log(e);
     }
   }
 
-  async function handleUpdatePost(id, updatedContent) {
+  async function handleUpdatePost(id, updatedData) {
     try {
-      await api.put(`/posts/${id}`, { content: updatedContent });
+      await apiClient.put(`/posts/${id}`, updatedData);
       setPosts(
         posts.map((post) =>
-          post.id === id ? { ...post, content: updatedContent } : post
+          post.id === id ? { ...post, ...updatedData } : post
         )
       );
     } catch (e) {
@@ -30,7 +31,7 @@ function App({ initialPosts = [] }) {
 
   const handleSavePost = async (text) => {
     try {
-      const response = await api.post(`/posts`, {
+      const response = await apiClient.post(`/posts`, {
         text,
       });
       setPosts([...posts, response.data]);
@@ -59,7 +60,7 @@ function App({ initialPosts = [] }) {
 }
 
 export async function getServerSideProps() {
-  const response = await api.get("/posts");
+  const response = await apiClient.get("/posts");
 
   return { props: { initialPosts: response.data } };
 }
