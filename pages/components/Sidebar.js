@@ -10,6 +10,7 @@ import Link from "next/link";
 import DropMenu from "./DropMenu";
 import { useContext } from "react";
 import UserContext from "./UserContext";
+import router from "next/router";
 
 function Sidebar() {
   const { isLoggedIn, user } = useContext(UserContext);
@@ -43,7 +44,7 @@ function Sidebar() {
                 className="h-10 w-10 rounded-full xl:mr-2.5"
               />
               <div className="hidden xl:inline leading-5">
-                <DropMenu text={user.first_name} />
+                <DropMenu name={user.first_name} />
 
                 <p className="text-[#6e767d]">@{user.user_name}</p>
               </div>

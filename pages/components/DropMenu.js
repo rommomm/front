@@ -6,7 +6,7 @@ import router from "next/router";
 import Link from "next/link";
 import UserContext from "./UserContext";
 
-export default function DropMenu({ text }) {
+export default function DropMenu({ name }) {
   const { removeUser, user } = useContext(UserContext);
 
   function logout() {
@@ -16,6 +16,8 @@ export default function DropMenu({ text }) {
         Cookies.remove("token");
         Cookies.remove("user");
         removeUser();
+      })
+      .then(() => {
         router.push("/");
       })
       .catch(function (error) {
@@ -26,7 +28,7 @@ export default function DropMenu({ text }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="font-bold">{text}</Menu.Button>
+        <Menu.Button className="font-bold">{name}</Menu.Button>
       </div>
 
       <Menu.Items className="origin-top-right absolute bottom-0 mb-7 mr-20 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
