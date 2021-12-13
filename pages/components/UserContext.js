@@ -11,7 +11,6 @@ export const UserProvider = ({ children }) => {
     const user = Cookies.get("user");
     if (user) {
       const parsedUser = JSON.parse(user);
-      console.log(parsedUser);
       setUserData(parsedUser);
       setIsLoggedIn(true);
     }
@@ -31,6 +30,7 @@ export const UserProvider = ({ children }) => {
       value={{
         user,
         isLoggedIn,
+
         setUser,
         removeUser,
       }}

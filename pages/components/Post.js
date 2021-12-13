@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
-import Cookies from "js-cookie";
-import { Fragment } from "react";
 import { Menu } from "@headlessui/react";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import UserContext from "./UserContext";
@@ -94,7 +92,7 @@ function Post({ post, onDelete, onUpdate }) {
         </div>
       </div>
       <div>
-        {isLoggedIn && (
+        {isLoggedIn && user.id === post.user.id && (
           <Menu as="div" className="relative bg-grey-dark inline-block ">
             <div>
               <Menu.Button className="inline-flex justify-center w-full px-2 py-1 bg-white text-sm font-medium text-gray-700 ">
@@ -117,7 +115,7 @@ function Post({ post, onDelete, onUpdate }) {
                 <Menu.Item>
                   <button
                     className="text-gray-700
-                     block px-4 py-2 text-sm"
+                    block px-4 py-2 text-sm"
                     onClick={() => setEditMode(!editMode)}
                   >
                     {editMode ? "Cancel" : "Edit"}

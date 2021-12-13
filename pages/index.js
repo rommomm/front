@@ -8,7 +8,7 @@ import UserContext from "./components/UserContext";
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
 
-  const { isLoggedIn, user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   async function handleDeletePost(id) {
     try {
@@ -39,7 +39,6 @@ function App({ initialPosts = [] }) {
       console.log(e);
     }
   };
-  console.log(posts);
   return (
     <div className="">
       <Head>

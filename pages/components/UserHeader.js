@@ -2,10 +2,12 @@ import React, { useContext, useState } from "react";
 import { AddLocation } from "@material-ui/icons";
 import UserContext from "./UserContext";
 
-function UserHeader({ user }) {
-  if (!user) {
+function UserHeader({ userInfo }) {
+  const { isLoggedIn, user } = useContext(UserContext);
+  if (!userInfo) {
     return null;
   }
+
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-2 px-3  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
@@ -25,24 +27,26 @@ function UserHeader({ user }) {
             src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
             alt=""
           />
-          <div class="buttons flex absolute pt-20 font-bold right-0  space-x-0 my-3.5 mr-3 ">
-            <div className="pr-4">
-              <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md ">
-                Message
-              </button>
+          {isLoggedIn && userInfo.id !== user.id && (
+            <div class="buttons flex absolute pt-20 font-bold right-0  space-x-0 my-3.5 mr-3 ">
+              <div className="pr-4">
+                <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md ">
+                  Message
+                </button>
+              </div>
+              <div>
+                <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md">
+                  Follow
+                </button>
+              </div>
             </div>
-            <div>
-              <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md">
-                Follow
-              </button>
-            </div>
-          </div>
+          )}
           <div class="buttons  absolute pt-20 left-0 space-x-0 my-3.5 ml-3 text-black ">
             <div className="pr-4">
-              <h2 className="text-2xl font-bold ">{user.first_name}</h2>
+              <h2 className="text-2xl font-bold ">{userInfo.first_name}</h2>
             </div>
             <div>
-              <p className="text-base ">@{user.user_name}</p>
+              <p className="text-base ">@{userInfo.user_name}</p>
             </div>
           </div>
           <div class="buttons  absolute pt-36 left-0 space-x-0 my-3.5 ml-3 text-black ">

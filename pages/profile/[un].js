@@ -5,14 +5,11 @@ import UserHeader from "../components/UserHeader";
 import React, { useState, useEffect, useContext } from "react";
 import PostUserList from "../components/PostUserList";
 import api from "../../libs/api";
-import Cookies from "js-cookie";
 import UserContext from "../components/UserContext";
 
 function Profile({ userPost = [], user }) {
   const [posts, setPosts] = useState(userPost);
-
-  const { isLoggedIn } = useContext(UserContext);
-
+  const { isLoggedIn, user: userInfo } = useContext(UserContext);
   async function handleDeletePost(id) {
     try {
       await api.delete(`/posts/${id}`);
@@ -54,8 +51,12 @@ function Profile({ userPost = [], user }) {
         <main className=" min-h-screen flex w-full mx-auto">
           <Sidebar />
           <div className="border-black border-l border-r w-full max-w-screen-md	">
-            <UserHeader user={user} />
-            {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
+            <UserHeader userInfo={user} />
+
+            {isLoggedIn && user.id == userInfo.id && (
+              <AddPostForm onCreate={handleSavePost} userInfo={user} />
+            )}
+
             <PostUserList
               posts={posts}
               onUpdate={handleUpdatePost}

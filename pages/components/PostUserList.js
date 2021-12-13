@@ -1,7 +1,5 @@
 import React from "react";
 import Post from "./Post";
-import AddPostForm from "./AddPostForm";
-import Link from "next/link";
 
 function PostUserList({ posts, onDelete, onUpdate, onCreate, userInfo }) {
   return (

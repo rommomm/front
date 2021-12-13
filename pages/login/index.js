@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import router from "next/router";
 import Cookies from "js-cookie";
 import api from "../../libs/api";
+import UserContext from "../components/UserContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { setUser } = useContext(UserContext);
 
   function signIn() {
     api
@@ -15,8 +18,9 @@ function Login() {
         password: password,
       })
       .then((response) => {
-        console.log(response);
+        setUser(response.data.user);
         Cookies.set("token", response.data.token);
+        Cookies.set("user", JSON.stringify(response.data.user));
         router.push("/");
       })
 

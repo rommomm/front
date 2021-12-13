@@ -27,7 +27,6 @@ function Register(props) {
       })
       .then((response) => {
         setUser(response.data.user);
-        console.log(response);
         Cookies.set("token", response.data.token);
         Cookies.set("user", JSON.stringify(response.data.user));
         router.push("/");

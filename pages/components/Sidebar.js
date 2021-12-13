@@ -8,8 +8,7 @@ import {
 import { Settings } from "@material-ui/icons";
 import Link from "next/link";
 import DropMenu from "./DropMenu";
-import { useState, useEffect, useContext } from "react";
-import Cookies from "js-cookie";
+import { useContext } from "react";
 import UserContext from "./UserContext";
 
 function Sidebar() {

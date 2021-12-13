@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import Post from "./Post";
 import AddPostForm from "./AddPostForm";
-import Cookies from "js-cookie";
 import UserContext from "./UserContext";
 
 function PostsList({ posts, onDelete, onUpdate, onCreate, userInfo }) {

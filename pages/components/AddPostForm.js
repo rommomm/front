@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 function AddPostForm({ onCreate }) {
   const [content, setContent] = useState("");
-
   const handleCreate = () => {
     onCreate(content);
     setContent("");
