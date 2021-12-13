@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import PostsList from "./components/PostList";
-import Sidebar from "./components/Sidebar";
+import PostsList from "../components/PostList";
+import Sidebar from "../components/Sidebar";
 import Head from "next/head";
 import instance from "../libs/axiosInstance";
 
