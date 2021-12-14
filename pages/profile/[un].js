@@ -40,6 +40,8 @@ function Profile({ userPost = [], user }) {
     }
   };
 
+  const showAddPost = isLoggedIn && user && userInfo && user.id === userInfo.id
+
   return (
     <>
       <div className="">
@@ -53,7 +55,7 @@ function Profile({ userPost = [], user }) {
           <div className="border-black border-l border-r w-full max-w-screen-md	">
             <UserHeader userInfo={user} />
 
-            {isLoggedIn && user.id == userInfo.id && (
+            {showAddPost && (
               <AddPostForm onCreate={handleSavePost} userInfo={user} />
             )}
 
