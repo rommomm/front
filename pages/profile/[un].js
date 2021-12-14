@@ -1,11 +1,11 @@
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../../components/Sidebar";
 import Head from "next/dist/shared/lib/head";
-import AddPostForm from "../components/AddPostForm";
-import UserHeader from "../components/UserHeader";
-import React, { useState, useEffect, useContext } from "react";
-import PostUserList from "../components/PostUserList";
+import AddPostForm from "../../components/AddPostForm";
+import UserHeader from "../../components/UserHeader";
+import React, { useState, useContext } from "react";
+import PostUserList from "../../components/PostUserList";
 import api from "../../libs/api";
-import UserContext from "../components/UserContext";
+import UserContext from "../../components/UserContext";
 
 function Profile({ userPost = [], user }) {
   const [posts, setPosts] = useState(userPost);
@@ -19,10 +19,14 @@ function Profile({ userPost = [], user }) {
     }
   }
 
-  async function handleUpdatePost(post) {
+  async function handleUpdatePost(id, updatedData) {
     try {
-      const response = await api.put(`/posts/${post.id}`, post);
-      setPosts(posts.map((p) => (p.id === post.id ? post : p)));
+      await api.put(`/posts/${id}`, updatedData);
+      setPosts(
+        posts.map((post) =>
+          post.id === id ? { ...post, ...updatedData } : post
+        )
+      );
     } catch (e) {
       console.log(e);
     }
@@ -40,7 +44,7 @@ function Profile({ userPost = [], user }) {
     }
   };
 
-  const showAddPost = isLoggedIn && user && userInfo && user.id === userInfo.id
+  const showAddPost = isLoggedIn && user && userInfo && user.id === userInfo.id;
 
   return (
     <>

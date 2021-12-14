@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
-import Cookies from "js-cookie";
-import { Fragment } from "react";
 import { Menu } from "@headlessui/react";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import UserContext from "./UserContext";
@@ -12,8 +10,8 @@ function Post({ post, onDelete, onUpdate }) {
   const { isLoggedIn, user } = useContext(UserContext);
 
   function handleUpdatePost() {
-    const updatedPost = { ...post, text: editableContent };
-    onUpdate(updatedPost);
+    const updatedPost = { text: editableContent };
+    onUpdate(post.id, updatedPost);
     setEditMode(false);
   }
 

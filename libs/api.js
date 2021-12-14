@@ -1,8 +1,9 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 const instance = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: `${baseURL}`,
 });
 
 instance.defaults.headers.common["Authorization"] = "AUTH TOKEN FROM INSTANCE";

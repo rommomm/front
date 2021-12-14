@@ -10,7 +10,6 @@ import Link from "next/link";
 import DropMenu from "./DropMenu";
 import { useContext } from "react";
 import UserContext from "./UserContext";
-import router from "next/router";
 
 function Sidebar() {
   const { isLoggedIn, user } = useContext(UserContext);
@@ -56,7 +55,7 @@ function Sidebar() {
                 <div className=" text-[#d9d9d9] flex items-center sm:justify-between py-4 px-3  z-50  border-b border-gray-700  bg-gray-700 text-white fixed bottom-0 right-0 w-full">
                   <div className="flex items-center sm:justify-between ">
                     <div class="flex col ">
-                      <div className="ml-52">
+                      <div className="ml-48">
                         <h2 className="absolute text-xl">Stay tuned!</h2>
                         <br />
                         <span className="text-sm">

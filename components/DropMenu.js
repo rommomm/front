@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Menu } from "@headlessui/react";
-import api from "../../libs/api";
+import api from "../libs/api";
 import Cookies from "js-cookie";
 import router from "next/router";
 import Link from "next/link";

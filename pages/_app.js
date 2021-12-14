@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import "tailwindcss/tailwind.css";
-import {UserProvider} from "./components/UserContext";
+import { UserProvider } from "../components/UserContext";
 
 function MyApp({ Component, pageProps }) {
   return (

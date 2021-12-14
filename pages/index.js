@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
-import PostsList from "./components/PostList";
-import Sidebar from "./components/Sidebar";
+import React, { useState, useContext } from "react";
+import PostsList from "../components/PostList";
+import Sidebar from "../components/Sidebar";
 import Head from "next/head";
 import api from "../libs/api";
-import UserContext from "./components/UserContext";
+import UserContext from "../components/UserContext";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
@@ -19,10 +19,14 @@ function App({ initialPosts = [] }) {
     }
   }
 
-  async function handleUpdatePost(post) {
+  async function handleUpdatePost(id, updatedData) {
     try {
-      const response = await api.put(`/posts/${post.id}`, post);
-      setPosts(posts.map((p) => (p.id === post.id ? post : p)));
+      await api.put(`/posts/${id}`, updatedData);
+      setPosts(
+        posts.map((post) =>
+          post.id === id ? { ...post, ...updatedData } : post
+        )
+      );
     } catch (e) {
       console.log(e);
     }
