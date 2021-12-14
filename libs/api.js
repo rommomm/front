@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 const instance = axios.create({
-  baseURL: `${baseURL}`,
+  baseURL,
 });
 
 instance.defaults.headers.common["Authorization"] = "AUTH TOKEN FROM INSTANCE";

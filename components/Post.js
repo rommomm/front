@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { Menu } from "@headlessui/react";
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
+import {
+  ChatAlt2Icon,
+  DotsHorizontalIcon,
+  HeartIcon,
+} from "@heroicons/react/solid";
 import UserContext from "./UserContext";
+import { ChatBubble, HearingTwoTone } from "@material-ui/icons";
+import { ChatAltIcon } from "@heroicons/react/outline";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -20,11 +26,15 @@ function Post({ post, onDelete, onUpdate }) {
       <div className=" m-2 space-y-2 w-full">
         <div className="flex">
           {!editMode && (
-            <img
-              src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
-              alt=""
-              className="h-12 w-12 rounded-full mr-4"
-            />
+            <Link href={`/profile/` + post.user.user_name}>
+              <a>
+                <img
+                  src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
+                  alt=""
+                  className="h-12 w-12 rounded-full mr-4"
+                />
+              </a>
+            </Link>
           )}
           <div className="text-[#6e767d] w-full">
             <div className="inline-block flex group">
@@ -45,7 +55,6 @@ function Post({ post, onDelete, onUpdate }) {
                 @{post.user.user_name}
               </span>
             </div>
-
             {editMode ? (
               <div className="flex">
                 <img

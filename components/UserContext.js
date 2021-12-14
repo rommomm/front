@@ -1,9 +1,12 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
+import Router from "next/router";
+import NProgress from "nprogress";
+import Head from "next/head";
 
 const UserContext = React.createContext();
 
-export const UserProvider = ({ children }) => {
+export const UserProvider = ({ children, title }) => {
   const [user, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 

@@ -107,7 +107,7 @@ export function Signup1() {
             />
             <TextField
               value={email}
-              type="text"
+              type="email"
               className="block border border-black w-full p-3 rounded mb-4"
               name="email"
               label="Email"
