@@ -3,7 +3,7 @@ import Link from "next/link";
 import router from "next/router";
 import Cookies from "js-cookie";
 import api from "../../libs/api";
-import UserContext from "../components/UserContext";
+import UserContext from "../../components/UserContext";
 
 function Login() {
   const [email, setEmail] = useState("");

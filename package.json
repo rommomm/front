@@ -16,6 +16,7 @@
     "alert-service": "^1.0.1",
     "axios": "^0.24.0",
     "cookies": "^0.8.0",
+    "formik": "^2.2.9",
     "js-cookie": "^3.0.1",
     "next": "12.0.4",
     "next-cookies": "^2.0.3",
