@@ -57,7 +57,7 @@ function Login() {
             <button
               onClick={signIn}
               type="submit"
-              className="w-full bg-blue-400 rounded-lg px-4 py-3 shadow-md"
+              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  rounded"
             >
               Sign In
             </button>
@@ -65,7 +65,7 @@ function Login() {
 
           <div className="text-grey-dark mt-6">
             <Link href="/register">
-              <a className="no-underline border-b border-blue text-blue">
+              <a className="no-underline  border-blue text-blue hover:underline">
                 Register
               </a>
             </Link>

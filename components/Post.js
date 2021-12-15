@@ -73,7 +73,7 @@ function Post({ post, onDelete, onUpdate }) {
                   <div className="ml-96 pl-32">
                     {isLoggedIn && (
                       <div className="icon group flex flex col">
-                        <div className=" bg-blue-400 border p-1 m-1 rounded-lg h-10 w-16 text-center py-1.5 ">
+                        <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mr-2">
                           {editMode ? (
                             <button onClick={handleUpdatePost}>Save</button>
                           ) : (
@@ -82,7 +82,7 @@ function Post({ post, onDelete, onUpdate }) {
                             </button>
                           )}
                         </div>
-                        <div className="bg-blue-400 border p-1 m-1 rounded-lg px-4 h-10 w-25 text-center py-1.5">
+                        <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
                           <button onClick={() => setEditMode(!editMode)}>
                             Cancel
                           </button>
@@ -108,12 +108,12 @@ function Post({ post, onDelete, onUpdate }) {
               </Menu.Button>
             </div>
 
-            <Menu.Items className="z-50 absolute  right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="z-50 absolute  right-0   rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
                 <Menu.Item>
                   <button
                     className="text-gray-700
-                        block px-4 py-2 text-sm"
+                        block px-4 py-2 text-sm hover:bg-gray-100 text-gray-800    "
                     onClick={() => onDelete(post.id)}
                   >
                     Delete
@@ -123,7 +123,7 @@ function Post({ post, onDelete, onUpdate }) {
                 <Menu.Item>
                   <button
                     className="text-gray-700
-                    block px-4 py-2 text-sm"
+                    block px-6 py-2 text-sm hover:bg-gray-100 text-gray-800"
                     onClick={() => setEditMode(!editMode)}
                   >
                     {editMode ? "Cancel" : "Edit"}

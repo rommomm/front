@@ -69,13 +69,13 @@ function Sidebar() {
                       </div>
                     </div>
 
-                    <div className="ml-52">
-                      <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md ">
+                    <div className="ml-48">
+                      <button className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4   rounded ">
                         <Link href="/login">
                           <a>Login</a>
                         </Link>
                       </button>
-                      <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md ml-4">
+                      <button className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4  rounded ml-4">
                         <Link href="/register">
                           <a>Register</a>
                         </Link>

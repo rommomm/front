@@ -20,7 +20,7 @@ function AddPostForm({ onCreate }) {
         <div></div>
         <div>
           <button
-            className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md"
+            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
             onClick={handleCreate}
           >
             Create

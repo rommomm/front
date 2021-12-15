@@ -28,15 +28,17 @@ export default function DropMenu({ name }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="font-bold">{name}</Menu.Button>
+        <Menu.Button className="font-bold no-underline hover:underline">
+          {name}
+        </Menu.Button>
       </div>
 
-      <Menu.Items className="origin-top-right absolute bottom-0 mb-7 mr-20 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+      <Menu.Items className="origin-top-right absolute bottom-0 mb-7 mr-20  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
         <div className="py-1">
           <Menu.Item>
             <a
               className="text-gray-700
-                    block px-2 py-2 text-sm"
+              block px-4 py-2 text-sm hover:bg-gray-100 text-gray-800"
             >
               <Link href={`/profile/${user.user_name}`}>
                 <a>Profile</a>
@@ -48,7 +50,7 @@ export default function DropMenu({ name }) {
               <button
                 type="submit"
                 className="text-gray-700
-                      block w-full text-left px-2 py-2 text-sm border-t"
+                block px-4 py-2 text-sm hover:bg-gray-100 text-gray-800"
               >
                 <button onClick={logout}>Logout</button>
               </button>

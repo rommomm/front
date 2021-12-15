@@ -30,12 +30,12 @@ function UserHeader({ userInfo }) {
           {isLoggedIn && userInfo.id !== user.id && (
             <div class="buttons flex absolute pt-20 font-bold right-0  space-x-0 my-3.5 mr-3 ">
               <div className="pr-4">
-                <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md ">
+                <button className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded ">
                   Message
                 </button>
               </div>
               <div>
-                <button className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md">
+                <button className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded">
                   Follow
                 </button>
               </div>

@@ -6,7 +6,9 @@ function SidebarLink({ Icon, text }) {
       className={` flex items-center justify-center xl:justify-start text-xl space-x-2`}
     >
       <Icon className="h-7" />
-      <span className="hidden xl:inline">{text}</span>
+      <span className="hidden xl:inline no-underline hover:underline">
+        {text}
+      </span>
     </div>
   );
 }

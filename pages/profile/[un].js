@@ -79,7 +79,7 @@ function Profile({ userPost = [], user }) {
 
 export async function getServerSideProps(ctx) {
   const user = await api.get(`/users/${ctx.params.un}`);
-  const response = await api.get(`users/${user.data.id}/posts`);
+  const response = await api.get(`users/${user.data.user_name}/posts`);
   const posts = response.data.map((post) => ({
     ...post,
     user: user.data,
