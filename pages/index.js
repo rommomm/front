@@ -1,80 +1,71 @@
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import axios from "axios";
+import React, { useState, useContext } from "react";
+import PostsList from "../components/PostList";
+import Sidebar from "../components/Sidebar";
+import Head from "next/head";
+import api from "../libs/api";
+import UserContext from "../components/UserContext";
 
-function App() {
-  const [posts, setPost] = useState([]);
-  const [text, setText] = useState("");
+function App({ initialPosts = [] }) {
+  const [posts, setPosts] = useState(initialPosts);
 
-  const saveData = () => {
-    axios
-      .post(`http://localhost:8000/api/posts`, {
+  const { user } = useContext(UserContext);
+
+  async function handleDeletePost(id) {
+    try {
+      await api.delete(`/posts/${id}`);
+      setPosts(posts.filter((p) => p.id !== id));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function handleUpdatePost(id, updatedData) {
+    try {
+      await api.put(`/posts/${id}`, updatedData);
+      setPosts(
+        posts.map((post) =>
+          post.id === id ? { ...post, ...updatedData } : post
+        )
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const handleSavePost = async (text) => {
+    try {
+      const response = await api.post(`/posts`, {
         text,
-      })
-      .then((res) => {
-        setPost([...posts, res.data]);
       });
+      const newPost = { ...response.data, user };
+      setPosts([newPost, ...posts]);
+    } catch (e) {
+      console.log(e);
+    }
   };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
-
-  function getPosts() {
-    axios.get(`http://localhost:8000/api/posts/`).then((res) => {
-      setPost(res.data);
-    });
-  }
-
-  function deletePost(id) {
-    axios.delete(`http://localhost:8000/api/posts/${id}`).then(() => {
-      setPost(posts.filter((p) => p.id !== id));
-    });
-  }
-
   return (
-    <div className="block">
-      <div className="tablePost">
-        <div>
-          <h1>ADD POST </h1>
-          <input
-            type="text"
-            value={text}
-            placeholder="Text"
-            onChange={(e) => setText(e.target.value)}
-          />
-          <button onClick={() => saveData()}>Add</button>
-        </div>
-        <br />
-        <table border="1" style={{ float: "left" }}>
-          <tbody>
-            <tr>
-              <td>ID</td>
-              <td>Text</td>
-              <td className="blocktext">Optional</td>
-            </tr>
-            {posts.map((item, i) => (
-              <tr key={i}>
-                <td>{item.id}</td>
-                <td>{item.text}</td>
-                <td>
-                  <button onClick={() => deletePost(item.id)}>Delete</button>
-                  <Link
-                    href={{
-                      pathname: "/post/[id]",
-                      query: { id: item.id },
-                    }}
-                  >
-                    <button>View</button>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="">
+      <Head>
+        <title>Home</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className="bg-[#000] min-h-screen flex max-w-[1500px] mx-auto">
+        <Sidebar />
+        <PostsList
+          posts={posts}
+          onUpdate={handleUpdatePost}
+          onDelete={handleDeletePost}
+          onCreate={handleSavePost}
+        />
+      </main>
     </div>
   );
 }
 
+export async function getServerSideProps() {
+  const response = await api.get("/posts");
+
+  return { props: { initialPosts: response.data } };
+}
 export default App;
