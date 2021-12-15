@@ -1,7 +1,7 @@
 import React from "react";
 import Post from "./Post";
 
-function PostUserList({ posts, onDelete, onUpdate, onCreate, userInfo }) {
+function PostUserList({ posts, onDelete, onUpdate, onCreate }) {
   return (
     <div className="pb-72">
       {posts.length

@@ -10,6 +10,7 @@ import UserContext from "../../components/UserContext";
 function Profile({ userPost = [], user }) {
   const [posts, setPosts] = useState(userPost);
   const { isLoggedIn, user: userInfo } = useContext(UserContext);
+
   async function handleDeletePost(id) {
     try {
       await api.delete(`/posts/${id}`);

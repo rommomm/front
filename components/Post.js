@@ -14,7 +14,6 @@ function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
   const [editableContent, setEditableContent] = useState(post.text);
   const { isLoggedIn, user } = useContext(UserContext);
-
   function handleUpdatePost() {
     const updatedPost = { text: editableContent };
     onUpdate(post.id, updatedPost);
@@ -99,6 +98,7 @@ function Post({ post, onDelete, onUpdate }) {
           </div>
         </div>
       </div>
+
       <div>
         {isLoggedIn && user.id === post.user.id && (
           <Menu as="div" className="relative bg-grey-dark inline-block ">
