@@ -20,7 +20,7 @@ function Post({ post, onDelete, onUpdate }) {
     onUpdate(post.id, updatedPost);
     setEditMode(false);
   }
-console.log(post.user)
+  console.log(post.user);
   return (
     <div className=" flex p-2 cursor-pointer border-b border-gray-700">
       <div className=" m-2 space-y-2 w-full">
@@ -54,7 +54,9 @@ console.log(post.user)
               >
                 @{post.user.user_name}
               </span>
-              <span className="ml-2">{moment(post.created_at).format("DD MMM YYYY")}</span>
+              <span className="ml-2">
+                {moment(post.created_at).format("DD MMM YYYY")}
+              </span>
             </div>
             {editMode ? (
               <div className="flex">
@@ -95,7 +97,7 @@ console.log(post.user)
                 </div>
               </div>
             ) : (
-              <p className="break-normal md:break-all">{post.text}</p>
+              <p className="break-words break-all">{post.text}</p>
             )}
           </div>
         </div>

@@ -6,7 +6,10 @@ import Cookies from "js-cookie";
 import UserContext from "../../components/UserContext";
 import Link from "next/link";
 import router from "next/router";
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
 const RegisterForm = () => {
   const { setUser } = useContext(UserContext);
 
@@ -42,23 +45,23 @@ const RegisterForm = () => {
         setUser(response.data.user);
         Cookies.set("token", response.data.token);
         Cookies.set("user", JSON.stringify(response.data.user));
-        NotificationManager.success('Success message', 'Title here');
+        NotificationManager.success("Success message", "Title here");
         // router.reload;
       })
       // .then(router.push("/"))
 
       .catch(function (error) {
         const errors = handleErrors(error.errors);
-        actions.setErrors(errors)
+        actions.setErrors(errors);
       });
   }
-
   const formValidationSchema = Yup.object({
     first_name: Yup.string()
       .min(3, "Must be 3 characters or less")
       .max(15, "Must be 15 characters or less")
       .required("Required"),
     last_name: Yup.string()
+      .min(3, "Must be 3 characters or less")
       .max(20, "Must be 20 characters or less")
       .required("Required"),
     user_name: Yup.string()

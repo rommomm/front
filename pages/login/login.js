@@ -21,9 +21,8 @@ const RegisterForm = () => {
         setUser(response.data.user);
         Cookies.set("token", response.data.token);
         Cookies.set("user", JSON.stringify(response.data.user));
+        router.push("/");
       })
-      .then(router.push("/"))
-
       .catch(function (error) {
         console.log(error);
       });
