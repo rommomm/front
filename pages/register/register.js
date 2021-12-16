@@ -6,9 +6,24 @@ import Cookies from "js-cookie";
 import UserContext from "../../components/UserContext";
 import Link from "next/link";
 import router from "next/router";
-
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 const RegisterForm = () => {
   const { setUser } = useContext(UserContext);
+
+  const handleErrors = (errors) => {
+    const _errors = {};
+    const errorEntries = Object.entries(errors);
+
+    errorEntries.forEach((err) => {
+      _errors[err[0]] = err[1][0];
+      // console.log("err", err);
+      // console.log("err0", err[0]);
+      // console.log("err1", err[1]);
+    });
+    // console.log(_errors);
+    return _errors;
+  };
+
   const formInitialSchema = {
     first_name: "",
     last_name: "",
@@ -18,19 +33,23 @@ const RegisterForm = () => {
     password_confirmation: "",
   };
 
-  function handleFormSubmit(values) {
+  function handleFormSubmit(values, actions) {
+    console.log(actions);
+    console.log(values);
     api
       .post("/register", values)
       .then((response) => {
         setUser(response.data.user);
         Cookies.set("token", response.data.token);
         Cookies.set("user", JSON.stringify(response.data.user));
-        router.reload;
+        NotificationManager.success('Success message', 'Title here');
+        // router.reload;
       })
-      .then(router.push("/"))
+      // .then(router.push("/"))
 
       .catch(function (error) {
-        console.log(error);
+        const errors = handleErrors(error.errors);
+        actions.setErrors(errors)
       });
   }
 
@@ -65,7 +84,7 @@ const RegisterForm = () => {
                 <Formik
                   initialValues={formInitialSchema}
                   validationSchema={formValidationSchema}
-                  onSubmit={(values) => handleFormSubmit(values)}
+                  onSubmit={handleFormSubmit}
                 >
                   <Form>
                     <div className="col-md-12 mt-4">
@@ -157,7 +176,7 @@ const RegisterForm = () => {
                     <div className="text-grey-dark mt-6 text-center ">
                       <Link href="/login">
                         <a className="no-underline border-blue text-blue hover:underline">
-                          Sign Up
+                          Sign In
                         </a>
                       </Link>
                     </div>

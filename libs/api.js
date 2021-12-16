@@ -27,7 +27,9 @@ instance.interceptors.response.use(
   (response) => {
     return response;
   },
-  async function (error) {}
+  async function (error) {
+    throw error.response.data;
+  }
 );
 
 export default instance;

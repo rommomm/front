@@ -12,9 +12,9 @@ function Register(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-
+  const [errors, setErrors] = useState([]);
   const { setUser } = useContext(UserContext);
-
+  console.log("errors", errors);
   function signUp() {
     api
       .post("/register", {
@@ -26,14 +26,15 @@ function Register(props) {
         password_confirmation: passwordConfirmation,
       })
       .then((response) => {
-        setUser(response.data.user);
-        Cookies.set("token", response.data.token);
-        Cookies.set("user", JSON.stringify(response.data.user));
-        router.push("/");
+        if (response?.data) {
+          setUser(response.data.user);
+          Cookies.set("token", response.data.token);
+          Cookies.set("user", JSON.stringify(response.data.user));
+          router.push("/");
+        }
       })
-
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        setErrors(error.errors);
       });
   }
 

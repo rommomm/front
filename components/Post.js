@@ -9,6 +9,7 @@ import {
 import UserContext from "./UserContext";
 import { ChatBubble, HearingTwoTone } from "@material-ui/icons";
 import { ChatAltIcon } from "@heroicons/react/outline";
+import moment from "moment";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -19,7 +20,7 @@ function Post({ post, onDelete, onUpdate }) {
     onUpdate(post.id, updatedPost);
     setEditMode(false);
   }
-
+console.log(post.user)
   return (
     <div className=" flex p-2 cursor-pointer border-b border-gray-700">
       <div className=" m-2 space-y-2 w-full">
@@ -53,6 +54,7 @@ function Post({ post, onDelete, onUpdate }) {
               >
                 @{post.user.user_name}
               </span>
+              <span className="ml-2">{moment(post.created_at).format("DD MMM YYYY")}</span>
             </div>
             {editMode ? (
               <div className="flex">
