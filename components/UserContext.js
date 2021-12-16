@@ -6,7 +6,7 @@ import Head from "next/head";
 
 const UserContext = React.createContext();
 
-export const UserProvider = ({ children, title }) => {
+export const UserProvider = ({ children }) => {
   const [user, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
