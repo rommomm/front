@@ -25,21 +25,22 @@ const RegisterForm = () => {
         setUser(response.data.user);
         Cookies.set("token", response.data.token);
         Cookies.set("user", JSON.stringify(response.data.user));
-        router.reload;
+        // router.reload;
+        router.push("/");
       })
-      .then(router.push("/"))
+      // .then(router.push("/"))
 
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   }
-
   const formValidationSchema = Yup.object({
     first_name: Yup.string()
       .min(3, "Must be 3 characters or less")
       .max(15, "Must be 15 characters or less")
       .required("Required"),
     last_name: Yup.string()
+      .min(3, "Must be 3 characters or less")
       .max(20, "Must be 20 characters or less")
       .required("Required"),
     user_name: Yup.string()

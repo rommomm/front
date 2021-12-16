@@ -36,23 +36,27 @@ function Post({ post, onDelete, onUpdate }) {
             </Link>
           )}
           <div className="text-[#6e767d] w-full">
-            <div className="inline-block flex group">
-              <h4
-                className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${
-                  !editMode && "inline-block"
-                }`}
-              >
-                <Link href={`/profile/` + post.user.user_name}>
-                  <a>{post.user.user_name}</a>
-                </Link>
-              </h4>
-              <span
-                className={`text-sm sm:text-[15px] pl-1 ${
-                  !editMode && "ml-1.5"
-                }`}
-              >
-                @{post.user.user_name}
-              </span>
+            <div className="flex group">
+              <div>
+                <h4
+                  className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${
+                    !editMode && "inline-block"
+                  }`}
+                >
+                  <Link href={`/profile/` + post.user.user_name}>
+                    <a>{post.user.user_name}</a>
+                  </Link>
+                </h4>
+              </div>
+              <div>
+                <span
+                  className={`text-sm sm:text-[15px] pl-1 ${
+                    !editMode && "ml-1.5"
+                  }`}
+                >
+                  @{post.user.user_name}
+                </span>
+              </div>
             </div>
             {editMode ? (
               <div className="flex">
@@ -93,7 +97,7 @@ function Post({ post, onDelete, onUpdate }) {
                 </div>
               </div>
             ) : (
-              <p className="break-normal md:break-all">{post.text}</p>
+              <p className="break-words break-all">{post.text}</p>
             )}
           </div>
         </div>
