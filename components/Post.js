@@ -1,26 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { Menu } from "@headlessui/react";
-import {
-  ChatAlt2Icon,
-  DotsHorizontalIcon,
-  HeartIcon,
-} from "@heroicons/react/solid";
+import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import UserContext from "./UserContext";
-import { ChatBubble, HearingTwoTone } from "@material-ui/icons";
-import { ChatAltIcon } from "@heroicons/react/outline";
 import moment from "moment";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
   const [editableContent, setEditableContent] = useState(post.text);
+
   const { isLoggedIn, user } = useContext(UserContext);
   function handleUpdatePost() {
     const updatedPost = { text: editableContent };
     onUpdate(post.id, updatedPost);
     setEditMode(false);
   }
-  console.log(post.user);
   return (
     <div className=" flex p-2 cursor-pointer border-b border-gray-700">
       <div className=" m-2 space-y-2 w-full">
@@ -57,6 +51,12 @@ function Post({ post, onDelete, onUpdate }) {
               <span className="ml-2">
                 {moment(post.created_at).format("DD MMM YYYY")}
               </span>
+              {moment(post.created_at).format("DD MMM YYYY HH:mm:ss") !==
+              moment(post.updated_at).format("DD MMM YYYY HH:mm:ss") ? (
+                <span className="ml-2">
+                  {moment(post.updated_at).format("DD MMM YYYY HH:mm")}
+                </span>
+              ) : null}
             </div>
             {editMode ? (
               <div className="flex">
@@ -71,7 +71,7 @@ function Post({ post, onDelete, onUpdate }) {
                       value={editableContent}
                       onChange={(e) => setEditableContent(e.target.value)}
                       rows="4"
-                      className="border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
+                      className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
                     />
                   </div>
                   <div className="ml-96 pl-32">
