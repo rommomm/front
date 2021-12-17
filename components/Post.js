@@ -108,7 +108,9 @@ function Post({ post, onDelete, onUpdate }) {
           <Menu as="div" className="relative bg-grey-dark inline-block ">
             <div>
               <Menu.Button className="inline-flex justify-center w-full px-2 py-1 bg-white text-sm font-medium text-gray-700 ">
-                <DotsHorizontalIcon className="h-5" />
+                <div className="icon group flex-shrink-0 ml-auto">
+                  <DotsHorizontalIcon className="h-5 text-[#6e767d] group-hover:text-[#1d9bf0]" />
+                </div>
               </Menu.Button>
             </div>
 

@@ -1,6 +1,7 @@
 import { Fragment, useContext, useState } from "react";
 import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { NotificationManager } from "react-notifications";
 
 function AddPostForm({ onCreate }) {
   const [content, setContent] = useState();
@@ -8,6 +9,7 @@ function AddPostForm({ onCreate }) {
   function handleCreate(value) {
     onCreate(value.text);
     setContent("");
+    NotificationManager.success("Post added");
   }
 
   const formValidationSchema = Yup.object({
