@@ -21,10 +21,11 @@ function App({ initialPosts = [] }) {
 
   async function handleUpdatePost(id, updatedData) {
     try {
-      await api.put(`/posts/${id}`, updatedData);
+      const response = await api.put(`/posts/${id}`, updatedData);
+
       setPosts(
         posts.map((post) =>
-          post.id === id ? { ...post, ...updatedData } : post
+          post.id === id ? { ...post, ...response.data } : post
         )
       );
     } catch (e) {

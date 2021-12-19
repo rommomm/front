@@ -1,20 +1,30 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import Link from "next/link";
 import { Menu } from "@headlessui/react";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import UserContext from "./UserContext";
 import moment from "moment";
+import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
+import * as Yup from "yup";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const [editableContent, setEditableContent] = useState(post.text);
-
   const { isLoggedIn, user } = useContext(UserContext);
-  function handleUpdatePost() {
-    const updatedPost = { text: editableContent };
-    onUpdate(post.id, updatedPost);
+  function handleUpdatePost(value) {
+    onUpdate(post.id, value);
     setEditMode(false);
   }
+  const formInitialSchema = {
+    text: post.text,
+  };
+
+  const formValidationSchema = Yup.object({
+    text: Yup.string()
+      .min(10, "* Too Short!")
+      .max(255, "* Too Long!")
+      .required("* Content is required"),
+  });
+
   return (
     <div className=" flex p-2 cursor-pointer border-b border-gray-700">
       <div className=" m-2 space-y-2 w-full">
@@ -67,32 +77,58 @@ function Post({ post, onDelete, onUpdate }) {
                 />
                 <div>
                   <div>
-                    <textarea
-                      value={editableContent}
-                      onChange={(e) => setEditableContent(e.target.value)}
-                      rows="4"
-                      className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
-                    />
-                  </div>
-                  <div className="ml-96 pl-32">
-                    {isLoggedIn && (
-                      <div className="icon group flex flex col">
-                        <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mr-2">
-                          {editMode ? (
-                            <button onClick={handleUpdatePost}>Save</button>
-                          ) : (
-                            <button onClick={() => onDelete(post.id)}>
-                              Delete
-                            </button>
-                          )}
-                        </div>
-                        <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                          <button onClick={() => setEditMode(!editMode)}>
-                            Cancel
-                          </button>
-                        </div>
+                    <Fragment>
+                      <div className="col-md-8 offset-md-2">
+                        <Formik
+                          initialValues={formInitialSchema}
+                          validationSchema={formValidationSchema}
+                          onSubmit={handleUpdatePost}
+                        >
+                          <Form>
+                            <Field
+                              component="textarea"
+                              type="text"
+                              name="text"
+                              rows="4"
+                              className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
+                            />
+                            <div>
+                              <p className=" text-sm pl-4 text-rose-500 text-red-600 absolute	">
+                                <ErrorMessage name="text" />
+                              </p>
+                            </div>
+                            <div className="flex justify-between pt-2.5 pr-2 pb-2">
+                              <div>
+                                <div className="ml-96 pl-28">
+                                  {isLoggedIn && (
+                                    <div className="icon group flex flex col">
+                                      <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mr-2">
+                                        {editMode ? (
+                                          <button type="submit">Save</button>
+                                        ) : (
+                                          <button
+                                            onClick={() => onDelete(post.id)}
+                                          >
+                                            Delete
+                                          </button>
+                                        )}
+                                      </div>
+                                      <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                                        <button
+                                          onClick={() => setEditMode(!editMode)}
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </Form>
+                        </Formik>
                       </div>
-                    )}
+                    </Fragment>
                   </div>
                 </div>
               </div>

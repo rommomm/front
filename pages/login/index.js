@@ -10,7 +10,7 @@ import router from "next/router";
 const RegisterForm = () => {
   const { setUser } = useContext(UserContext);
   const formInitialSchema = {
-    email: "",
+    login: "",
     password: "",
   };
 
@@ -39,10 +39,8 @@ const RegisterForm = () => {
       });
   }
   const formValidationSchema = Yup.object({
-    email: Yup.string().email("Email is invalid").required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 charaters")
-      .required("Password is required"),
+    login: Yup.string().required("Email or username is required"),
+    password: Yup.string().required("Password is required"),
   });
 
   return (
@@ -60,16 +58,16 @@ const RegisterForm = () => {
                 >
                   <Form>
                     <div className="col-md-12 mt-4">
-                      <span>Email</span>
+                      <span>Email or username</span>
 
                       <Field
-                        type="email"
-                        name="email"
+                        type="text"
+                        name="login"
                         className="block border border-black w-full p-3 rounded mb-4"
                       />
 
                       <p className=" text-sm pl-4 text-rose-500 text-red-600	">
-                        <ErrorMessage name="email" />
+                        <ErrorMessage name="login" />
                       </p>
                     </div>
                     <div className="col-md-12 mt-4">

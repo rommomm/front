@@ -1,28 +1,23 @@
 import { Fragment, useContext, useState } from "react";
 import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { NotificationManager } from "react-notifications";
 
 function AddPostForm({ onCreate }) {
-  const [content, setContent] = useState();
-
-  function handleCreate(value) {
+  function handleCreate(value, actions) {
     onCreate(value.text);
-    setContent("");
-    NotificationManager.success("Post added");
+    actions.resetForm(formInitialSchema);
   }
-
-  const formValidationSchema = Yup.object({
-    text: Yup.string()
-      .min(10, "* Content must be at least 10 charaters")
-      .max(255, "* Content must be at least 255 charaters")
-      .required("* Content is required"),
-  });
 
   const formInitialSchema = {
     text: "",
   };
 
+  const formValidationSchema = Yup.object({
+    text: Yup.string()
+      .min(10, "* Too Short!")
+      .max(255, "* Too Long!")
+      .required("* Content is required"),
+  });
   return (
     <div className=" w-full border-black border-b ">
       <Fragment>
@@ -37,7 +32,7 @@ function AddPostForm({ onCreate }) {
                 component="textarea"
                 type="text"
                 name="text"
-                placeholder="Content"
+                placeholder="Text"
                 rows="5"
                 className="resize-none bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
               />
