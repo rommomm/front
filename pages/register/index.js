@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import Link from "next/link";
 import router from "next/router";
 import api from "../../libs/api";
-import UserContext from "../../components/UserContext";
 
 function Register(props) {
   const [firstName, setFirstName] = useState("");
@@ -11,8 +10,6 @@ function Register(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-
-  const { setUser } = useContext(UserContext);
 
   function signUp() {
     api
@@ -24,8 +21,7 @@ function Register(props) {
         password: password,
         password_confirmation: passwordConfirmation,
       })
-      .then((response) => {
-        setUser(response.data.user);
+      .then(() => {
         router.push("/");
       })
 
@@ -48,7 +44,6 @@ function Register(props) {
               className="block border border-black w-full p-3 rounded mb-4"
               name="text"
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder=""
             />
             <span>Last name</span>
             <input
@@ -57,7 +52,6 @@ function Register(props) {
               className="block border border-black w-full p-3 rounded mb-4"
               name="text"
               onChange={(e) => setLastName(e.target.value)}
-              placeholder=""
             />
             <span>User name</span>
             <input
@@ -66,7 +60,6 @@ function Register(props) {
               className="block border border-black w-full p-3 rounded mb-4"
               name="text"
               onChange={(e) => setUserName(e.target.value)}
-              placeholder=""
             />
             <span>Email</span>
             <input
@@ -75,7 +68,6 @@ function Register(props) {
               className="block border border-black w-full p-3 rounded mb-4"
               name="email"
               onChange={(e) => setEmail(e.target.value)}
-              placeholder=""
             />
             <span>Password</span>
             <input
@@ -84,7 +76,6 @@ function Register(props) {
               className="block border border-black w-full p-3 rounded mb-4"
               name="password"
               onChange={(e) => setPassword(e.target.value)}
-              placeholder=""
             />
             <span>Password confirmation</span>
             <input
@@ -93,7 +84,6 @@ function Register(props) {
               className="block border border-black w-full p-3 rounded mb-4"
               name="password"
               onChange={(e) => setPasswordConfirmation(e.target.value)}
-              placeholder=""
             />
             <button
               onClick={signUp}

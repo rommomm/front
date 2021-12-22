@@ -18,7 +18,6 @@ function Login() {
         password: password,
       })
       .then((response) => {
-        setUser(response.data.user);
         Cookies.set("token", response.data.token);
         router.push("/");
       })
@@ -41,7 +40,6 @@ function Login() {
               name="text"
               value={login}
               onChange={(e) => setLogin(e.target.value)}
-              placeholder=""
             />
             <span>Password</span>
             <input
@@ -50,7 +48,6 @@ function Login() {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder=""
             />
 
             <button
