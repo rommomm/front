@@ -31,10 +31,9 @@ const RegisterForm = () => {
   function handleFormSubmit(values, actions) {
     api
       .post("/register", values)
-      .then((response) => {
-        Cookies.set("token", response.data.token);
+      .then(() => {
         NotificationManager.success("Successful registration");
-        router.push("/");
+        router.push("/login");
       })
       .catch((error) => {
         const errors = handleErrors(error.errors);
