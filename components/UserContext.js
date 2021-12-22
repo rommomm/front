@@ -3,15 +3,29 @@ import React, { useEffect, useState } from "react";
 import Router from "next/router";
 import NProgress from "nprogress";
 import Head from "next/head";
+import api from "../libs/api";
 
 const UserContext = React.createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [auth, setAuth] = useState();
+  console.log(auth.data);
 
+  function authMe() {
+    api
+      .get("/auth/me")
+      .then((response) => {
+        setAuth(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
-    const user = Cookies.get("user");
+    // const user = authMe();
+    authMe();
     if (user) {
       const parsedUser = JSON.parse(user);
       setUserData(parsedUser);
