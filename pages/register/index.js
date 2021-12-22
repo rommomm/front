@@ -16,9 +16,6 @@ const RegisterForm = () => {
 
     errorEntries.forEach((err) => {
       _errors[err[0]] = err[1];
-      // console.log("err", err);
-      // console.log("err0", err[0]);
-      // console.log("err1", err[1]);
     });
     console.log(_errors);
     return _errors;
@@ -37,9 +34,8 @@ const RegisterForm = () => {
     api
       .post("/register", values)
       .then((response) => {
-        setUser(response.data.user);
-        Cookies.set("token", response.data.token);
-        Cookies.set("user", JSON.stringify(response.data.user));
+        // Cookies.set("token", response.data.token);
+        // Cookies.set("user", JSON.stringify(response.data.user));
         NotificationManager.success("Successful registration");
         router.push("/");
       })

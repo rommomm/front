@@ -28,14 +28,14 @@ const RegisterForm = () => {
     api
       .post("/login", values)
       .then((response) => {
-        setUser(response.data.user);
         Cookies.set("token", response.data.token);
-        Cookies.set("user", JSON.stringify(response.data.user));
+        // Cookies.set("user", JSON.stringify(response.data.user));
         router.push("/");
       })
       .catch((error) => {
         const errors = handleErrors(error);
         actions.setErrors(errors);
+        console.log(error);
       });
   }
   const formValidationSchema = Yup.object({
@@ -83,9 +83,6 @@ const RegisterForm = () => {
                         <ErrorMessage name="password" />
                       </p>
                     </div>
-                    <p className=" text-sm pl-4 text-rose-500 text-red-600	">
-                      <ErrorMessage name="message" />
-                    </p>
 
                     <div className="col-md-12 mt-4">
                       <button
