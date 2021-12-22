@@ -6,7 +6,7 @@ import api from "../../libs/api";
 import UserContext from "../../components/UserContext";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
   const { setUser } = useContext(UserContext);
@@ -14,13 +14,12 @@ function Login() {
   function signIn() {
     api
       .post("/login", {
-        email: email,
+        login: login,
         password: password,
       })
       .then((response) => {
         setUser(response.data.user);
         Cookies.set("token", response.data.token);
-        Cookies.set("user", JSON.stringify(response.data.user));
         router.push("/");
       })
 
@@ -40,8 +39,8 @@ function Login() {
               type="text"
               className="block border border-black w-full p-3 rounded mb-4"
               name="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={login}
+              onChange={(e) => setLogin(e.target.value)}
               placeholder=""
             />
             <span>Password</span>

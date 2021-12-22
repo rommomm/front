@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Router from "next/router";
 import NProgress from "nprogress";
 import Head from "next/head";
+import api from "../libs/api";
 
 const UserContext = React.createContext();
 
@@ -11,6 +12,11 @@ export const UserProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    {
+      api.post("/auth/me", {}).then((response) => {
+        console.log(response);
+      });
+    }
     const user = Cookies.get("user");
     if (user) {
       const parsedUser = JSON.parse(user);

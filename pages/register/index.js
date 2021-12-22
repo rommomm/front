@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import Link from "next/link";
 import router from "next/router";
 import api from "../../libs/api";
-import Cookies from "js-cookie";
 import UserContext from "../../components/UserContext";
 
 function Register(props) {
@@ -27,8 +26,6 @@ function Register(props) {
       })
       .then((response) => {
         setUser(response.data.user);
-        Cookies.set("token", response.data.token);
-        Cookies.set("user", JSON.stringify(response.data.user));
         router.push("/");
       })
 
