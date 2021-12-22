@@ -3,13 +3,11 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import api from "../../libs/api";
 import Cookies from "js-cookie";
-import UserContext from "../../components/UserContext";
 import Link from "next/link";
 import router from "next/router";
 import { NotificationManager } from "react-notifications";
-const RegisterForm = () => {
-  const { setUser } = useContext(UserContext);
 
+const RegisterForm = () => {
   const handleErrors = (errors) => {
     const _errors = {};
     const errorEntries = Object.entries(errors);
@@ -34,8 +32,7 @@ const RegisterForm = () => {
     api
       .post("/register", values)
       .then((response) => {
-        // Cookies.set("token", response.data.token);
-        // Cookies.set("user", JSON.stringify(response.data.user));
+        Cookies.set("token", response.data.token);
         NotificationManager.success("Successful registration");
         router.push("/");
       })
