@@ -4,6 +4,7 @@ import router from "next/router";
 import Cookies from "js-cookie";
 import api from "../../libs/api";
 import UserContext from "../../components/UserContext";
+import useSWR from "swr";
 
 function Login() {
   const [login, setLogin] = useState("");
@@ -19,6 +20,10 @@ function Login() {
       })
       .then((response) => {
         Cookies.set("token", response.data.token);
+        return api.get("/auth/me");
+      })
+      .then((response) => {
+        setUser(response.data);
         router.push("/");
       })
 

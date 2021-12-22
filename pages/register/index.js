@@ -22,7 +22,7 @@ function Register(props) {
         password_confirmation: passwordConfirmation,
       })
       .then(() => {
-        router.push("/");
+        router.push("/login");
       })
 
       .catch(function (error) {

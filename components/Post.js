@@ -43,7 +43,7 @@ function Post({ post, onDelete, onUpdate }) {
                 }`}
               >
                 <Link href={`/profile/` + post.user.user_name}>
-                  <a>{post.user.user_name}</a>
+                  <a>{post.user.first_name}</a>
                 </Link>
               </h4>
               <span

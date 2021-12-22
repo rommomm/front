@@ -14,7 +14,6 @@ export default function DropMenu({ name }) {
       .post("/logout")
       .then(function (response) {
         Cookies.remove("token");
-        Cookies.remove("user");
         removeUser();
       })
       .then(() => {
