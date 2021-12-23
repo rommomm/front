@@ -30,6 +30,7 @@ export const UserProvider = ({ children }) => {
   if (data?.data && !user) {
     setUser(data.data);
   }
+
   return (
     <UserContext.Provider
       value={{
