@@ -22,6 +22,7 @@ function Login() {
         return api.get("/auth/me");
       })
       .then((response) => {
+        Cookies.set("user", JSON.stringify(response.data));
         setUser(response.data);
         router.push("/");
       })

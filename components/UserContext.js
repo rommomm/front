@@ -1,21 +1,16 @@
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import useSWR from "swr";
+import Router from "next/router";
+import NProgress from "nprogress";
+import Head from "next/head";
 import api from "../libs/api";
 
 const UserContext = React.createContext();
-
-async function authMe(url) {
-  const token = Cookies.get("token");
-  if (token) {
-    return api.get(url);
-  }
-}
 export const UserProvider = ({ children }) => {
-  const [user, setUserData] = useState(null);
+  const userFromCookie = Cookies.get("user");
+  const parsedUser = userFromCookie ? JSON.parse(userFromCookie) : null;
+  const [user, setUserData] = useState(parsedUser);
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get("token"));
-
-  const { data } = useSWR("/auth/me", authMe);
 
   const setUser = (user) => {
     setUserData(user);
@@ -27,15 +22,12 @@ export const UserProvider = ({ children }) => {
     setIsLoggedIn(false);
   };
 
-  if (data?.data && !user) {
-    setUser(data.data);
-  }
-
   return (
     <UserContext.Provider
       value={{
         user,
         isLoggedIn: isLoggedIn && user,
+
         setUser,
         removeUser,
       }}

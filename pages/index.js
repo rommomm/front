@@ -45,7 +45,7 @@ function App({ initialPosts = [] }) {
     }
   };
   return (
-    <Layout>
+    <Layout title="Home page">
       <PostsList
         posts={posts}
         onUpdate={handleUpdatePost}

@@ -11,7 +11,6 @@ import Layout from "../../components/Layout";
 function Profile({ userPost = [], user }) {
   const [posts, setPosts] = useState(userPost);
   const { isLoggedIn, user: userInfo } = useContext(UserContext);
-
   async function handleDeletePost(id) {
     try {
       await api.delete(`/posts/${id}`);
@@ -49,7 +48,7 @@ function Profile({ userPost = [], user }) {
   const showAddPost = isLoggedIn && user && userInfo && user.id === userInfo.id;
 
   return (
-    <Layout>
+    <Layout title={user.first_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
         <UserHeader userInfo={user} />
 

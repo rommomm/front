@@ -1,20 +1,19 @@
 import React, { useContext } from "react";
 import Sidebar from "./Sidebar";
 import Head from "next/head";
-import api from "../libs/api";
-import useSWR from "swr";
-import UserContext from "./UserContext";
+import GuestBanner from "../components/GuestBanner";
 
-function Layout({ children }) {
+function Layout({ children, title }) {
   return (
     <div>
       <Head>
-        <title></title>
+        <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg-[#000] min-h-screen flex max-w-[1500px] mx-auto">
         <Sidebar />
         {children}
+        <GuestBanner />
       </main>
     </div>
   );
