@@ -9,26 +9,22 @@ const UserContext = React.createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUserData] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [auth, setAuth] = useState();
-  console.log(auth.data);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get("token"));
 
-  function authMe() {
+  async function authMe() {
     api
       .get("/auth/me")
       .then((response) => {
-        setAuth(response);
+        setUserData(response.data);
+        setUser(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }
   useEffect(() => {
-    // const user = authMe();
     authMe();
     if (user) {
-      const parsedUser = JSON.parse(user);
-      setUserData(parsedUser);
       setIsLoggedIn(true);
     }
   }, []);
