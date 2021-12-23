@@ -14,9 +14,8 @@ async function authMe(url) {
 export const UserProvider = ({ children }) => {
   const [user, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get("token"));
-  console.log(!!Cookies.get("token"));
 
-  const { data, error } = useSWR("/auth/me", authMe);
+  const { data } = useSWR("/auth/me", authMe);
 
   const setUser = (user) => {
     setUserData(user);
@@ -31,7 +30,6 @@ export const UserProvider = ({ children }) => {
   if (data?.data && !user) {
     setUser(data.data);
   }
-
   return (
     <UserContext.Provider
       value={{

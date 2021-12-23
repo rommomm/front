@@ -19,15 +19,15 @@ function Login() {
         password: password,
       })
       .then((response) => {
-        Cookies.set("token", response.data.token);
+        setUser(response.data);
         return api.get("/auth/me");
       })
       .then((response) => {
-        setUser(response.data);
+        Cookies.set("token", response.data.token);
         router.push("/");
       })
 
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   }

@@ -25,7 +25,7 @@ function Register(props) {
         router.push("/login");
       })
 
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   }
