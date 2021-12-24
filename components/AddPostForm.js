@@ -27,14 +27,14 @@ function AddPostForm({ onCreate }) {
             validationSchema={formValidationSchema}
             onSubmit={handleCreate}
           >
-            <Form>
+            <Form className="w-full">
               <Field
                 component="textarea"
                 type="text"
                 name="text"
                 placeholder="Text"
                 rows="5"
-                className="resize-none bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
+                className="resize-none bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full"
               />
 
               <div className="flex justify-between pt-2.5 pr-2 pb-2">

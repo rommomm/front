@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import Head from "next/head";
 import api from "../libs/api";
 import UserContext from "../components/UserContext";
+import Layout from "../components/Layout";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
@@ -25,7 +26,7 @@ function App({ initialPosts = [] }) {
 
       setPosts(
         posts.map((post) =>
-          post.id === id ? { ...post, ...response.data } : post
+          post.id === id ? { ...post, ...response.data.data } : post
         )
       );
     } catch (e) {
@@ -45,22 +46,14 @@ function App({ initialPosts = [] }) {
     }
   };
   return (
-    <div className="">
-      <Head>
-        <title>Home</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="bg-[#000] min-h-screen flex max-w-[1500px] mx-auto">
-        <Sidebar />
-        <PostsList
-          posts={posts}
-          onUpdate={handleUpdatePost}
-          onDelete={handleDeletePost}
-          onCreate={handleSavePost}
-        />
-      </main>
-    </div>
+    <Layout title="Home page">
+      <PostsList
+        posts={posts}
+        onUpdate={handleUpdatePost}
+        onDelete={handleDeletePost}
+        onCreate={handleSavePost}
+      />
+    </Layout>
   );
 }
 

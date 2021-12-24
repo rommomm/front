@@ -6,6 +6,7 @@ import React, { useState, useContext } from "react";
 import PostUserList from "../../components/PostUserList";
 import api from "../../libs/api";
 import UserContext from "../../components/UserContext";
+import Layout from "../../components/Layout";
 
 function Profile({ userPost = [], user }) {
   const [posts, setPosts] = useState(userPost);
@@ -26,7 +27,7 @@ function Profile({ userPost = [], user }) {
 
       setPosts(
         posts.map((post) =>
-          post.id === id ? { ...post, ...response.data } : post
+          post.id === id ? { ...post, ...response.data.data } : post
         )
       );
     } catch (e) {
@@ -49,32 +50,22 @@ function Profile({ userPost = [], user }) {
   const showAddPost = isLoggedIn && user && userInfo && user.id === userInfo.id;
 
   return (
-    <>
-      <div className="">
-        <Head>
-          <title></title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+    <Layout title={user.first_name}>
+      <div className="border-black border-l border-r w-full max-w-screen-md	">
+        <UserHeader userInfo={user} />
 
-        <main className=" min-h-screen flex w-full mx-auto">
-          <Sidebar />
-          <div className="border-black border-l border-r w-full max-w-screen-md	">
-            <UserHeader userInfo={user} />
+        {showAddPost && (
+          <AddPostForm onCreate={handleSavePost} userInfo={user} />
+        )}
 
-            {showAddPost && (
-              <AddPostForm onCreate={handleSavePost} userInfo={user} />
-            )}
-
-            <PostUserList
-              posts={posts}
-              onUpdate={handleUpdatePost}
-              onDelete={handleDeletePost}
-              onCreate={handleSavePost}
-            />
-          </div>
-        </main>
+        <PostUserList
+          posts={posts}
+          onUpdate={handleUpdatePost}
+          onDelete={handleDeletePost}
+          onCreate={handleSavePost}
+        />
       </div>
-    </>
+    </Layout>
   );
 }
 

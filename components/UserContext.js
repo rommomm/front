@@ -6,28 +6,12 @@ import Head from "next/head";
 import api from "../libs/api";
 
 const UserContext = React.createContext();
-
 export const UserProvider = ({ children }) => {
-  const [user, setUserData] = useState(null);
+  const userFromCookie = Cookies.get("user");
+  const parsedUser = userFromCookie ? JSON.parse(userFromCookie) : null;
+  const [user, setUserData] = useState(parsedUser);
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get("token"));
 
-  async function authMe() {
-    api
-      .get("/auth/me")
-      .then((response) => {
-        setUserData(response.data);
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  useEffect(() => {
-    authMe();
-    if (user) {
-      setIsLoggedIn(true);
-    }
-  }, []);
   const setUser = (user) => {
     setUserData(user);
     setIsLoggedIn(true);

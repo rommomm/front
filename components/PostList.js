@@ -11,7 +11,7 @@ function PostsList({ posts, onDelete, onUpdate, onCreate, error }) {
         Explore
       </div>
       {isLoggedIn && <AddPostForm onCreate={onCreate} error={error} />}
-      <div className="pb-72">
+      <div>
         {posts.length
           ? posts.map((post) => (
               <Post

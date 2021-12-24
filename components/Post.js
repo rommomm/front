@@ -26,8 +26,8 @@ function Post({ post, onDelete, onUpdate }) {
   });
 
   return (
-    <div className=" flex p-2 cursor-pointer border-b border-gray-700">
-      <div className=" m-2 space-y-2 w-full">
+    <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">
+      <div className="m-2 space-y-2 w-full">
         <div className="flex">
           {!editMode && (
             <Link href={`/profile/` + post.user.user_name}>

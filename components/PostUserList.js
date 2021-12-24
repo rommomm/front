@@ -3,7 +3,7 @@ import Post from "./Post";
 
 function PostUserList({ posts, onDelete, onUpdate, onCreate }) {
   return (
-    <div className="pb-72">
+    <div>
       {posts.length
         ? posts.map((post) => (
             <Post
