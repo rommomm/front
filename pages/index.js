@@ -39,7 +39,7 @@ function App({ initialPosts = [] }) {
       const response = await api.post(`/posts`, {
         text,
       });
-      const newPost = { ...response.data, user };
+      const newPost = { ...response.data.data, user };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
@@ -60,6 +60,6 @@ function App({ initialPosts = [] }) {
 export async function getServerSideProps() {
   const response = await api.get("/posts");
 
-  return { props: { initialPosts: response.data } };
+  return { props: { initialPosts: response.data.data } };
 }
 export default App;
