@@ -37,7 +37,8 @@ const RegisterForm = () => {
         router.push("/");
       })
       .catch((error) => {
-        const errors = handleErrors(error);
+        console.log(error.errors);
+        const errors = handleErrors(error.errors);
         actions.setErrors(errors);
         console.log(error);
       });
