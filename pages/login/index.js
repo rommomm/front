@@ -32,8 +32,8 @@ const RegisterForm = () => {
         return api.get("/auth/me");
       })
       .then((response) => {
-        Cookies.set("user", JSON.stringify(response.data));
-        setUser(response.data);
+        Cookies.set("user", JSON.stringify(response.data.data));
+        setUser(response.data.data);
         router.push("/");
       })
       .catch((error) => {

@@ -34,10 +34,10 @@ function App({ initialPosts = [] }) {
     }
   }
 
-  const handleSavePost = async (text) => {
+  const handleSavePost = async (content) => {
     try {
       const response = await api.post(`/posts`, {
-        text,
+        content,
       });
       const newPost = { ...response.data.data, user };
       setPosts([newPost, ...posts]);

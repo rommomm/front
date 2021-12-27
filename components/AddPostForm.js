@@ -4,16 +4,16 @@ import * as Yup from "yup";
 
 function AddPostForm({ onCreate }) {
   function handleCreate(value, actions) {
-    onCreate(value.text);
+    onCreate(value.content);
     actions.resetForm(formInitialSchema);
   }
 
   const formInitialSchema = {
-    text: "",
+    content: "",
   };
 
   const formValidationSchema = Yup.object({
-    text: Yup.string()
+    content: Yup.string()
       .min(10, "* Too Short!")
       .max(255, "* Too Long!")
       .required("* Content is required"),
@@ -30,8 +30,8 @@ function AddPostForm({ onCreate }) {
             <Form className="w-full">
               <Field
                 component="textarea"
-                type="text"
-                name="text"
+                type="content"
+                name="content"
                 placeholder="Text"
                 rows="5"
                 className="resize-none bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full"
@@ -40,7 +40,7 @@ function AddPostForm({ onCreate }) {
               <div className="flex justify-between pt-2.5 pr-2 pb-2">
                 <div>
                   <p className=" text-sm pl-4 text-rose-500 text-red-600	">
-                    <ErrorMessage name="text" />
+                    <ErrorMessage name="content" />
                   </p>
                 </div>
                 <div>

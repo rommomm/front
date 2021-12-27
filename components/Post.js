@@ -8,6 +8,7 @@ import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 function Post({ post, onDelete, onUpdate }) {
+  console.log(post);
   const [editMode, setEditMode] = useState(false);
   const { isLoggedIn, user } = useContext(UserContext);
   function handleUpdatePost(value) {
@@ -15,11 +16,11 @@ function Post({ post, onDelete, onUpdate }) {
     setEditMode(false);
   }
   const formInitialSchema = {
-    text: post.text,
+    content: post.content,
   };
 
   const formValidationSchema = Yup.object({
-    text: Yup.string()
+    content: Yup.string()
       .min(10, "* Too Short!")
       .max(255, "* Too Long!")
       .required("* Content is required"),
@@ -87,14 +88,14 @@ function Post({ post, onDelete, onUpdate }) {
                           <Form>
                             <Field
                               component="textarea"
-                              type="text"
-                              name="text"
+                              type="content"
+                              name="content"
                               rows="4"
                               className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
                             />
                             <div>
                               <p className=" text-sm pl-4 text-rose-500 text-red-600 absolute	">
-                                <ErrorMessage name="text" />
+                                <ErrorMessage name="content" />
                               </p>
                             </div>
                             <div className="flex justify-between pt-2.5 pr-2 pb-2">
@@ -133,7 +134,7 @@ function Post({ post, onDelete, onUpdate }) {
                 </div>
               </div>
             ) : (
-              <p className="break-words break-all">{post.text}</p>
+              <p className="break-words break-all">{post.content}</p>
             )}
           </div>
         </div>
