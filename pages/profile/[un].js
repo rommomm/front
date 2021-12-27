@@ -74,7 +74,7 @@ export async function getServerSideProps(ctx) {
   const response = await api.get(`users/${user.data.data.user_name}/posts`);
   const posts = response.data.map((post) => ({
     ...post,
-    user: user.data,
+    user: user.data.data,
   }));
   return {
     props: { userPost: posts, user: user.data.data },
