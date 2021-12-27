@@ -38,7 +38,7 @@ function Profile({ userPost = [], user }) {
       const response = await api.post(`/posts`, {
         text,
       });
-      const newPost = { ...response.data, user };
+      const newPost = { ...response.data.data, user };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
@@ -69,13 +69,13 @@ function Profile({ userPost = [], user }) {
 
 export async function getServerSideProps(ctx) {
   const user = await api.get(`/users/${ctx.params.un}`);
-  const response = await api.get(`users/${user.data.user_name}/posts`);
+  const response = await api.get(`users/${user.data.data.user_name}/posts`);
   const posts = response.data.map((post) => ({
     ...post,
-    user: user.data,
+    user: user.data.data,
   }));
   return {
-    props: { userPost: posts, user: user.data },
+    props: { userPost: posts, user: user.data.data },
   };
 }
 
