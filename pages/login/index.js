@@ -24,7 +24,6 @@ const RegisterForm = () => {
   };
 
   function handleFormSubmit(values, actions) {
-    console.log(actions);
     api
       .post("/login", values)
       .then((response) => {

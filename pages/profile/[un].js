@@ -8,7 +8,7 @@ import api from "../../libs/api";
 import UserContext from "../../components/UserContext";
 import Layout from "../../components/Layout";
 
-function Profile({ userPost = [], user }) {
+function Profile({ userPost = [], author }) {
   const [posts, setPosts] = useState(userPost);
   const { isLoggedIn, user: userInfo } = useContext(UserContext);
 
@@ -40,22 +40,23 @@ function Profile({ userPost = [], user }) {
       const response = await api.post(`/posts`, {
         content,
       });
-      const newPost = { ...response.data.data, user };
+      const newPost = { ...response.data.data };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const showAddPost = isLoggedIn && user && userInfo && user.id === userInfo.id;
+  const showAddPost =
+    isLoggedIn && author && userInfo && author.id === userInfo.id;
 
   return (
-    <Layout title={user.first_name}>
+    <Layout title={author.first_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader userInfo={user} />
+        <UserHeader userInfo={author} />
 
         {showAddPost && (
-          <AddPostForm onCreate={handleSavePost} userInfo={user} />
+          <AddPostForm onCreate={handleSavePost} userInfo={author} />
         )}
 
         <PostUserList
@@ -70,14 +71,15 @@ function Profile({ userPost = [], user }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const user = await api.get(`/users/${ctx.params.un}`);
-  const response = await api.get(`users/${user.data.data.user_name}/posts`);
+  const author = await api.get(`/users/${ctx.params.un}`);
+  const response = await api.get(`users/${author.data.data.user_name}/posts`);
+
   const posts = response.data.map((post) => ({
     ...post,
-    user: user.data.data,
+    author: author.data.data,
   }));
   return {
-    props: { userPost: posts, user: user.data.data },
+    props: { userPost: posts, author: author.data.data },
   };
 }
 

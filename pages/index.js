@@ -9,8 +9,6 @@ import Layout from "../components/Layout";
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
 
-  const { user } = useContext(UserContext);
-
   async function handleDeletePost(id) {
     try {
       await api.delete(`/posts/${id}`);
@@ -39,7 +37,7 @@ function App({ initialPosts = [] }) {
       const response = await api.post(`/posts`, {
         content,
       });
-      const newPost = { ...response.data.data, user };
+      const newPost = { ...response.data.data };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);

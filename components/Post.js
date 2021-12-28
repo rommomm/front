@@ -8,7 +8,6 @@ import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 function Post({ post, onDelete, onUpdate }) {
-  console.log(post);
   const [editMode, setEditMode] = useState(false);
   const { isLoggedIn, user } = useContext(UserContext);
   function handleUpdatePost(value) {
@@ -31,7 +30,7 @@ function Post({ post, onDelete, onUpdate }) {
       <div className="m-2 space-y-2 w-full">
         <div className="flex">
           {!editMode && (
-            <Link href={`/profile/` + post.user.user_name}>
+            <Link href={`/profile/` + post.author.user_name}>
               <a>
                 <img
                   src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
@@ -48,8 +47,8 @@ function Post({ post, onDelete, onUpdate }) {
                   !editMode && "inline-block"
                 }`}
               >
-                <Link href={`/profile/` + post.user.user_name}>
-                  <a>{post.user.user_name}</a>
+                <Link href={`/profile/` + post.author.user_name}>
+                  <a>{post.author.first_name}</a>
                 </Link>
               </h4>
               <span
@@ -57,7 +56,7 @@ function Post({ post, onDelete, onUpdate }) {
                   !editMode && "ml-1.5"
                 }`}
               >
-                @{post.user.user_name}
+                @{post.author.user_name}
               </span>
               <span className="ml-2">
                 {moment(post.created_at).format("DD MMM YYYY")}
@@ -141,7 +140,7 @@ function Post({ post, onDelete, onUpdate }) {
       </div>
 
       <div>
-        {isLoggedIn && user.id === post.user.id && (
+        {isLoggedIn && user.id === post.author.id && (
           <Menu as="div" className="relative bg-grey-dark inline-block ">
             <div>
               <Menu.Button className="inline-flex justify-center w-full px-2 py-1 bg-white text-sm font-medium text-gray-700 ">
