@@ -12,10 +12,10 @@ import { ChatAltIcon } from "@heroicons/react/outline";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const [editableContent, setEditableContent] = useState(post.text);
+  const [editableContent, setEditableContent] = useState(post.content);
   const { isLoggedIn, user } = useContext(UserContext);
   function handleUpdatePost() {
-    const updatedPost = { text: editableContent };
+    const updatedPost = { content: editableContent };
     onUpdate(post.id, updatedPost);
     setEditMode(false);
   }
@@ -25,7 +25,7 @@ function Post({ post, onDelete, onUpdate }) {
       <div className=" m-2 space-y-2 w-full">
         <div className="flex">
           {!editMode && (
-            <Link href={`/profile/` + post.user.user_name}>
+            <Link href={`/profile/` + post.author.user_name}>
               <a>
                 <img
                   src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
@@ -42,8 +42,8 @@ function Post({ post, onDelete, onUpdate }) {
                   !editMode && "inline-block"
                 }`}
               >
-                <Link href={`/profile/` + post.user.user_name}>
-                  <a>{post.user.first_name}</a>
+                <Link href={`/profile/` + post.author.user_name}>
+                  <a>{post.author.first_name}</a>
                 </Link>
               </h4>
               <span
@@ -51,7 +51,7 @@ function Post({ post, onDelete, onUpdate }) {
                   !editMode && "ml-1.5"
                 }`}
               >
-                @{post.user.user_name}
+                @{post.author.user_name}
               </span>
             </div>
             {editMode ? (
@@ -93,14 +93,14 @@ function Post({ post, onDelete, onUpdate }) {
                 </div>
               </div>
             ) : (
-              <p className="break-normal md:break-all">{post.text}</p>
+              <p className="break-normal md:break-all">{post.content}</p>
             )}
           </div>
         </div>
       </div>
 
       <div>
-        {isLoggedIn && user.id === post.user.id && (
+        {isLoggedIn && user.id === post.author.id && (
           <Menu as="div" className="relative bg-grey-dark inline-block ">
             <div>
               <Menu.Button className="inline-flex justify-center w-full px-2 py-1 bg-white text-sm font-medium text-gray-700 ">

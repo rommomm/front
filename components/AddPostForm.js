@@ -2,10 +2,10 @@ import React, { useState } from "react";
 
 function AddPostForm({ onCreate }) {
   const [content, setContent] = useState("");
-  const handleCreate = () => {
+  function handleCreate() {
     onCreate(content);
     setContent("");
-  };
+  }
 
   return (
     <div className=" w-full border-black border-b ">

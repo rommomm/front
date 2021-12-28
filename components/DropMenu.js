@@ -12,7 +12,7 @@ export default function DropMenu({ name }) {
   function logout() {
     api
       .post("/logout")
-      .then(function (response) {
+      .then((response) => {
         Cookies.remove("token");
         Cookies.remove("user");
         removeUser();

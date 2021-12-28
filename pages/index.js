@@ -1,15 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import PostsList from "../components/PostList";
-import Sidebar from "../components/Sidebar";
-import Head from "next/head";
 import api from "../libs/api";
-import UserContext from "../components/UserContext";
 import Layout from "../components/Layout";
 
 function App({ initialPosts = [] }) {
   const [posts, setPosts] = useState(initialPosts);
-
-  const { user } = useContext(UserContext);
 
   async function handleDeletePost(id) {
     try {
@@ -22,10 +17,10 @@ function App({ initialPosts = [] }) {
 
   async function handleUpdatePost(id, updatedData) {
     try {
-      await api.put(`/posts/${id}`, updatedData);
+      const response = await api.put(`/posts/${id}`, updatedData);
       setPosts(
         posts.map((post) =>
-          post.id === id ? { ...post, ...updatedData } : post
+          post.id === id ? { ...post, ...response.data.data } : post
         )
       );
     } catch (e) {
@@ -33,12 +28,12 @@ function App({ initialPosts = [] }) {
     }
   }
 
-  const handleSavePost = async (text) => {
+  const handleSavePost = async (content) => {
     try {
       const response = await api.post(`/posts`, {
-        text,
+        content,
       });
-      const newPost = { ...response.data, user };
+      const newPost = { ...response.data.data };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
@@ -59,6 +54,6 @@ function App({ initialPosts = [] }) {
 export async function getServerSideProps() {
   const response = await api.get("/posts");
 
-  return { props: { initialPosts: response.data } };
+  return { props: { initialPosts: response.data.data } };
 }
 export default App;
