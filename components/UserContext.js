@@ -1,9 +1,5 @@
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
-import Router from "next/router";
-import NProgress from "nprogress";
-import Head from "next/head";
-import api from "../libs/api";
+import React, { useState } from "react";
 
 const UserContext = React.createContext();
 export const UserProvider = ({ children }) => {

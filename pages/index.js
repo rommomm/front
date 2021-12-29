@@ -1,9 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import PostsList from "../components/PostList";
-import Sidebar from "../components/Sidebar";
-import Head from "next/head";
 import api from "../libs/api";
-import UserContext from "../components/UserContext";
 import Layout from "../components/Layout";
 
 function App({ initialPosts = [] }) {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { AddLocation } from "@material-ui/icons";
 import UserContext from "./UserContext";
 

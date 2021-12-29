@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useContext } from "react";
 import Link from "next/link";
-import { Menu } from "@headlessui/react";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import UserContext from "./UserContext";
 import moment from "moment";
-import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { Menu, Dropdown } from "antd";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -25,25 +25,36 @@ function Post({ post, onDelete, onUpdate }) {
       .required("* Content is required"),
   });
 
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <button onClick={() => onDelete(post.id)}>Delete</button>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <button onClick={() => setEditMode(!editMode)}>
+          {editMode ? "Cancel" : "Edit"}
+        </button>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">
       <div className="m-2 space-y-2 w-full">
         <div className="flex">
           {!editMode && (
             <Link href={`/profile/` + post.author.user_name}>
-              <a>
-                <img
-                  src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
-                  alt=""
-                  className="h-12 w-12 rounded-full mr-4"
-                />
-              </a>
+              <img
+                src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
+                alt=""
+                className="h-12 w-12 rounded-full mr-4"
+              />
             </Link>
           )}
           <div className="text-[#6e767d] w-full">
             <div className="inline-block flex group">
               <h4
-                className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${
+                className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] ${
                   !editMode && "inline-block"
                 }`}
               >
@@ -51,13 +62,13 @@ function Post({ post, onDelete, onUpdate }) {
                   <a>{post.author.first_name}</a>
                 </Link>
               </h4>
-              <span
+              <p
                 className={`text-sm sm:text-[15px] pl-1 ${
                   !editMode && "ml-1.5"
                 }`}
               >
                 @{post.author.user_name}
-              </span>
+              </p>
               <span className="ml-2">
                 {moment(post.created_at).format("DD MMM YYYY")}
               </span>
@@ -141,39 +152,14 @@ function Post({ post, onDelete, onUpdate }) {
 
       <div>
         {isLoggedIn && user.id === post.author.id && (
-          <Menu as="div" className="relative bg-grey-dark inline-block ">
-            <div>
-              <Menu.Button className="inline-flex justify-center w-full px-2 py-1 bg-white text-sm font-medium text-gray-700 ">
-                <div className="icon group flex-shrink-0 ml-auto">
-                  <DotsHorizontalIcon className="h-5 text-[#6e767d] group-hover:text-[#1d9bf0]" />
-                </div>
-              </Menu.Button>
-            </div>
-
-            <Menu.Items className="z-50 absolute  right-0   rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div className="py-1">
-                <Menu.Item>
-                  <button
-                    className="text-gray-700
-                        block px-4 py-2 text-sm hover:bg-gray-100 text-gray-800    "
-                    onClick={() => onDelete(post.id)}
-                  >
-                    Delete
-                  </button>
-                </Menu.Item>
-
-                <Menu.Item>
-                  <button
-                    className="text-gray-700
-                    block px-6 py-2 text-sm hover:bg-gray-100 text-gray-800"
-                    onClick={() => setEditMode(!editMode)}
-                  >
-                    {editMode ? "Cancel" : "Edit"}
-                  </button>
-                </Menu.Item>
-              </div>
-            </Menu.Items>
-          </Menu>
+          <Dropdown overlay={menu} trigger={["click"]}>
+            <a
+              className="ant-dropdown-link"
+              onClick={(e) => e.preventDefault()}
+            >
+              <DotsHorizontalIcon className="h-5 text-[#6e767d] group-hover:text-[#1d9bf0]" />
+            </a>
+          </Dropdown>
         )}
       </div>
     </div>

@@ -1,11 +1,9 @@
-import { Fragment, useContext, useState } from "react";
+import { Fragment } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import api from "../../libs/api";
-import Cookies from "js-cookie";
 import Link from "next/link";
 import router from "next/router";
-import { NotificationManager } from "react-notifications";
 
 const RegisterForm = () => {
   const handleErrors = (errors) => {
@@ -32,7 +30,6 @@ const RegisterForm = () => {
     api
       .post("/register", values)
       .then(() => {
-        NotificationManager.success("Successful registration");
         router.push("/login");
       })
       .catch((error) => {

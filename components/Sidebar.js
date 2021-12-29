@@ -10,7 +10,6 @@ import Link from "next/link";
 import DropMenu from "./DropMenu";
 import { useContext } from "react";
 import UserContext from "./UserContext";
-import Cookies from "js-cookie";
 function Sidebar() {
   const { isLoggedIn, user } = useContext(UserContext);
   return (

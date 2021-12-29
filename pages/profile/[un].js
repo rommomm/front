@@ -1,5 +1,3 @@
-import Sidebar from "../../components/Sidebar";
-import Head from "next/dist/shared/lib/head";
 import AddPostForm from "../../components/AddPostForm";
 import UserHeader from "../../components/UserHeader";
 import React, { useState, useContext } from "react";
