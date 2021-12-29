@@ -42,15 +42,13 @@ function Post({ post, onDelete, onUpdate }) {
     <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">
       <div className="m-2 space-y-2 w-full">
         <div className="flex">
-          {!editMode && (
-            <Link href={`/profile/` + post.author.user_name}>
-              <img
-                src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
-                alt=""
-                className="h-12 w-12 rounded-full mr-4"
-              />
-            </Link>
-          )}
+          <Link href={`/profile/` + post.author.user_name}>
+            <img
+              src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
+              alt=""
+              className="h-12 w-12 rounded-full mr-4"
+            />
+          </Link>
           <div className="text-[#6e767d] w-full">
             <div className="inline-block flex group">
               <h4
@@ -81,66 +79,55 @@ function Post({ post, onDelete, onUpdate }) {
             </div>
             {editMode ? (
               <div className="flex">
-                <img
-                  src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
-                  alt=""
-                  className="h-12 w-12 rounded-full mr-4"
-                />
-                <div>
-                  <div>
-                    <Fragment>
-                      <div className="col-md-8 offset-md-2">
-                        <Formik
-                          initialValues={formInitialSchema}
-                          validationSchema={formValidationSchema}
-                          onSubmit={handleUpdatePost}
-                        >
-                          <Form>
-                            <Field
-                              component="textarea"
-                              type="content"
-                              name="content"
-                              rows="4"
-                              className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
-                            />
+                <div className="w-full">
+                  <Fragment>
+                    <div className="col-md-8 offset-md-2">
+                      <Formik
+                        initialValues={formInitialSchema}
+                        validationSchema={formValidationSchema}
+                        onSubmit={handleUpdatePost}
+                      >
+                        <Form>
+                          <Field
+                            component="textarea"
+                            type="content"
+                            name="content"
+                            rows="4"
+                            className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
+                          />
+                          <div>
+                            <p className=" text-sm pl-4 text-rose-500 text-red-600 absolute	">
+                              <ErrorMessage name="content" />
+                            </p>
+                          </div>
+                          <div className="flex justify-end pt-2.5 pr-2 pb-2">
                             <div>
-                              <p className=" text-sm pl-4 text-rose-500 text-red-600 absolute	">
-                                <ErrorMessage name="content" />
-                              </p>
-                            </div>
-                            <div className="flex justify-between pt-2.5 pr-2 pb-2">
-                              <div>
-                                <div className="ml-96 pl-28">
-                                  {isLoggedIn && (
-                                    <div className="icon group flex flex col">
-                                      <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mr-2">
-                                        {editMode ? (
-                                          <button type="submit">Save</button>
-                                        ) : (
-                                          <button
-                                            onClick={() => onDelete(post.id)}
-                                          >
-                                            Delete
-                                          </button>
-                                        )}
-                                      </div>
-                                      <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                                        <button
-                                          onClick={() => setEditMode(!editMode)}
-                                        >
-                                          Cancel
-                                        </button>
-                                      </div>
-                                    </div>
-                                  )}
+                              {isLoggedIn && (
+                                <div className="icon group flex flex col">
+                                  <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mr-2">
+                                    {editMode ? (
+                                      <button type="submit">Save</button>
+                                    ) : (
+                                      <button onClick={() => onDelete(post.id)}>
+                                        Delete
+                                      </button>
+                                    )}
+                                  </div>
+                                  <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                                    <button
+                                      onClick={() => setEditMode(!editMode)}
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
+                              )}
                             </div>
-                          </Form>
-                        </Formik>
-                      </div>
-                    </Fragment>
-                  </div>
+                          </div>
+                        </Form>
+                      </Formik>
+                    </div>
+                  </Fragment>
                 </div>
               </div>
             ) : (

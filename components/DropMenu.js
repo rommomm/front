@@ -6,7 +6,7 @@ import Link from "next/link";
 import UserContext from "./UserContext";
 import { Menu, Dropdown } from "antd";
 
-export default function DropMenu({ name }) {
+export default function DropMenu({ children }) {
   const { removeUser, user } = useContext(UserContext);
 
   function logout() {
@@ -39,9 +39,14 @@ export default function DropMenu({ name }) {
   );
 
   return (
-    <Dropdown overlay={menu} trigger={["click"]} placement="topCenter">
+    <Dropdown
+      overlay={menu}
+      trigger={["click"]}
+      placement="topCenter"
+      getPopupContainer={(trigger) => trigger.parentNode}
+    >
       <a className="ant-dropdown-link " onClick={(e) => e.preventDefault()}>
-        {name}
+        <a>{children}</a>
       </a>
     </Dropdown>
   );

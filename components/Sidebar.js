@@ -10,6 +10,8 @@ import Link from "next/link";
 import DropMenu from "./DropMenu";
 import { useContext } from "react";
 import UserContext from "./UserContext";
+import UserDropDown from "./UserDropDown";
+
 function Sidebar() {
   const { isLoggedIn, user } = useContext(UserContext);
   return (
@@ -34,25 +36,7 @@ function Sidebar() {
         </div>
 
         <div className="text-[#d9d9d9] flex items-center justify-center mt-auto hoverAnimation">
-          {isLoggedIn && user && (
-            <>
-              <Link href={`/profile/${user.user_name}`}>
-                <a>
-                  <img
-                    src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
-                    alt=""
-                    className="h-10 w-10 rounded-full xl:mr-2.5"
-                  />
-                </a>
-              </Link>
-              <div className="hidden xl:inline leading-5">
-                <DropMenu name={user.first_name} />
-
-                <p className="text-[#6e767d]">@{user.user_name}</p>
-              </div>
-            </>
-          )}
-          <div></div>
+          <UserDropDown />
         </div>
       </div>
     </div>
