@@ -8,8 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroicons/react": "^1.0.5",
-    "@material-ui/icons": "^4.11.2",
+    "@ant-design/icons": "^4.7.0",
     "antd": "^4.18.0",
     "axios": "^0.24.0",
     "cookies": "^0.8.0",

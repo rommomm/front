@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useContext } from "react";
-import Link from "next/link";
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
-import UserContext from "./UserContext";
-import moment from "moment";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from "yup";
 import { Menu, Dropdown } from "antd";
+import Link from "next/link";
+import moment from "moment";
+import * as Yup from "yup";
+import UserContext from "./UserContext";
+import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -144,7 +144,7 @@ function Post({ post, onDelete, onUpdate }) {
               className="ant-dropdown-link"
               onClick={(e) => e.preventDefault()}
             >
-              <DotsHorizontalIcon className="h-5 text-[#6e767d] group-hover:text-[#1d9bf0]" />
+              <EllipsisOutlined style={{ fontSize: "22px" }} />
             </a>
           </Dropdown>
         )}

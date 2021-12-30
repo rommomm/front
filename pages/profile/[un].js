@@ -51,7 +51,7 @@ function Profile({ userPost = [], author }) {
   return (
     <Layout title={author.first_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader userInfo={author} />
+        <UserHeader userInfo={author} posts={posts} />
 
         {showAddPost && (
           <AddPostForm onCreate={handleSavePost} userInfo={author} />

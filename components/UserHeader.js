@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { AddLocation } from "@material-ui/icons";
 import UserContext from "./UserContext";
 
-function UserHeader({ userInfo }) {
+function UserHeader({ userInfo, posts }) {
   const { isLoggedIn, user } = useContext(UserContext);
   if (!userInfo) {
     return null;
@@ -10,8 +10,14 @@ function UserHeader({ userInfo }) {
 
   return (
     <>
-      <div className="text-[#d9d9d9] flex items-center sm:justify-between py-2 px-3  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
-        Explore
+      <div className="text-[#d9d9d9] flex items-center sm:justify-between py-1 px-1  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
+        <div className="pl-2">
+          <p className="text-lg">
+            {userInfo.first_name}&nbsp;
+            {userInfo.last_name}
+          </p>
+          <p>{posts.length}&nbsp; posts</p>
+        </div>
       </div>
 
       <div class=" relative flex flex-col mx-auto  w-full border-black border-b">
