@@ -27,12 +27,12 @@ const RegisterForm = () => {
     api
       .post("/login", values)
       .then((response) => {
-        Cookies.set("token", response.data.token);
+        Cookies.set("token", response.token);
         return api.get("/auth/me");
       })
       .then((response) => {
-        Cookies.set("user", JSON.stringify(response.data.data));
-        setUser(response.data.data);
+        Cookies.set("user", JSON.stringify(response.data));
+        setUser(response.data);
         router.push("/");
       })
       .catch((error) => {

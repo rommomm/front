@@ -25,7 +25,7 @@ function Profile({ userPost = [], author }) {
 
       setPosts(
         posts.map((post) =>
-          post.id === id ? { ...post, ...response.data.data } : post
+          post.id === id ? { ...post, ...response.data } : post
         )
       );
     } catch (e) {
@@ -38,7 +38,7 @@ function Profile({ userPost = [], author }) {
       const response = await api.post(`/posts`, {
         content,
       });
-      const newPost = { ...response.data.data };
+      const newPost = { ...response.data };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
@@ -70,14 +70,14 @@ function Profile({ userPost = [], author }) {
 
 export async function getServerSideProps(ctx) {
   const author = await api.get(`/users/${ctx.params.un}`);
-  const response = await api.get(`users/${author.data.data.user_name}/posts`);
+  const response = await api.get(`users/${author.data.user_name}/posts`);
 
   const posts = response.data.map((post) => ({
     ...post,
-    author: author.data.data,
+    author: author.data,
   }));
   return {
-    props: { userPost: posts, author: author.data.data },
+    props: { userPost: posts, author: author.data },
   };
 }
 

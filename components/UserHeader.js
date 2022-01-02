@@ -1,5 +1,5 @@
+import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
 import React, { useContext } from "react";
-import { AddLocation } from "@material-ui/icons";
 import UserContext from "./UserContext";
 
 function UserHeader({ userInfo, posts }) {
@@ -63,7 +63,7 @@ function UserHeader({ userInfo, posts }) {
             <div class="buttons left-0 space-x-0 my-3.5 ml-3 text-black ">
               <div className="pr-4">
                 <h2 className="text-base ">
-                  <AddLocation className="h-7" />
+                  <EnvironmentOutlined />
                   Monaco
                 </h2>
               </div>

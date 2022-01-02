@@ -21,7 +21,7 @@ function App({ initialPosts = [] }) {
 
       setPosts(
         posts.map((post) =>
-          post.id === id ? { ...post, ...response.data.data } : post
+          post.id === id ? { ...post, ...response.data } : post
         )
       );
     } catch (e) {
@@ -34,7 +34,7 @@ function App({ initialPosts = [] }) {
       const response = await api.post(`/posts`, {
         content,
       });
-      const newPost = { ...response.data.data };
+      const newPost = { ...response.data };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
@@ -55,6 +55,6 @@ function App({ initialPosts = [] }) {
 export async function getServerSideProps() {
   const response = await api.get("/posts");
 
-  return { props: { initialPosts: response.data.data } };
+  return { props: { initialPosts: response.data } };
 }
 export default App;
