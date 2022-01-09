@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import PostsList from "../components/PostList";
+import PostsList from "../components/PostsList";
 import api from "../libs/api";
 import Layout from "../components/Layout";
 

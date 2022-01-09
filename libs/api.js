@@ -6,15 +6,11 @@ const instance = axios.create({
   baseURL,
 });
 
-instance.defaults.headers.common["Authorization"] = "AUTH TOKEN FROM INSTANCE";
-
 instance.interceptors.request.use(
-  async (config) => {
+  (config) => {
     const token = Cookies.get("token");
     config.headers = {
       Authorization: `Bearer ${token}`,
-      Accept: "application/json",
-      "Content-Type": "application/json",
     };
     return config;
   },

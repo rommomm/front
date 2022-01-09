@@ -2,8 +2,11 @@ import React, { useContext } from "react";
 import Sidebar from "./Sidebar";
 import Head from "next/head";
 import GuestBanner from "../components/GuestBanner";
+import UserContext from "./UserContext";
 
 function Layout({ children, title }) {
+  const { isLoggedIn } = useContext(UserContext);
+
   return (
     <div>
       <Head>
@@ -13,7 +16,7 @@ function Layout({ children, title }) {
       <main className="bg-[#000] min-h-screen flex max-w-[1500px] mx-auto">
         <Sidebar />
         {children}
-        <GuestBanner />
+        {!isLoggedIn && <GuestBanner />}
       </main>
     </div>
   );

@@ -28,11 +28,6 @@ const RegisterForm = () => {
       .post("/login", values)
       .then((response) => {
         Cookies.set("token", response.token);
-        return api.get("/auth/me");
-      })
-      .then((response) => {
-        Cookies.set("user", JSON.stringify(response.data));
-        setUser(response.data);
         router.push("/");
       })
       .catch((error) => {

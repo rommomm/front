@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Row } from "antd";
-import DropMenu from "./DropMenu";
+import DropDownMenu from "./DropDownMenu";
 import UserContext from "./UserContext";
 
 function UserDropDown() {
@@ -10,7 +10,7 @@ function UserDropDown() {
     return null;
   }
   return (
-    <DropMenu>
+    <DropDownMenu>
       <Row>
         <img
           src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
@@ -22,7 +22,7 @@ function UserDropDown() {
           <p className="text-[#6e767d]">@{user.user_name}</p>
         </div>
       </Row>
-    </DropMenu>
+    </DropDownMenu>
   );
 }
 

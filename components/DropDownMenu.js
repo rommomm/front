@@ -6,23 +6,19 @@ import Link from "next/link";
 import UserContext from "./UserContext";
 import { Menu, Dropdown } from "antd";
 
-export default function DropMenu({ children }) {
+export default function DropDownMenu({ children }) {
   const { removeUser, user } = useContext(UserContext);
 
-  function logout() {
-    api
-      .post("/logout")
-      .then(function (response) {
-        Cookies.remove("token");
-        Cookies.remove("user");
-        removeUser();
-      })
-      .then(() => {
-        router.push("/");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  async function logout() {
+    try {
+      await api.post("/logout");
+      Cookies.remove("token");
+      Cookies.remove("user");
+      removeUser();
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const menu = (

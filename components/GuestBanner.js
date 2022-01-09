@@ -1,14 +1,7 @@
 import React, { useContext } from "react";
-import UserContext from "./UserContext";
 import Link from "next/link";
 
 function GuestBanner() {
-  const { isLoggedIn } = useContext(UserContext);
-
-  if (isLoggedIn) {
-    return null;
-  }
-
   return (
     <div className="flex-grow border-l border-r border-gray-700  ">
       <div className=" text-[#d9d9d9] flex justify-center items-center py-4 px-3  z-50  border-b border-gray-700  bg-gray-700 text-white fixed bottom-0 right-0 w-full">

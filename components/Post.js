@@ -1,11 +1,12 @@
-import React, { Fragment, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { Menu, Dropdown } from "antd";
 import Link from "next/link";
-import moment from "moment";
 import * as Yup from "yup";
 import UserContext from "./UserContext";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
+import useFormateDate from "../hooks/useFormatDate";
+import PostEditForm from "./PostEditForm";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -14,16 +15,10 @@ function Post({ post, onDelete, onUpdate }) {
     onUpdate(post.id, value);
     setEditMode(false);
   }
-  const formInitialSchema = {
+
+  const formInitialValues = {
     content: post.content,
   };
-
-  const formValidationSchema = Yup.object({
-    content: Yup.string()
-      .min(10, "* Too Short!")
-      .max(255, "* Too Long!")
-      .required("* Content is required"),
-  });
 
   const menu = (
     <Menu>
@@ -36,6 +31,13 @@ function Post({ post, onDelete, onUpdate }) {
         </button>
       </Menu.Item>
     </Menu>
+  );
+
+  const formattedCreateAt = useFormateDate(post.created_at, "dd LLL yyyy");
+
+  const formattedUpdateAt = useFormateDate(
+    post.updated_at,
+    "dd LLL yyyy HH:mm:ss"
   );
 
   return (
@@ -67,70 +69,64 @@ function Post({ post, onDelete, onUpdate }) {
               >
                 @{post.author.user_name}
               </p>
-              <span className="ml-2">
-                {moment(post.created_at).format("DD MMM YYYY")}
-              </span>
-              {moment(post.created_at).format("DD MMM YYYY HH:mm:ss") !==
-              moment(post.updated_at).format("DD MMM YYYY HH:mm:ss") ? (
-                <span className="ml-2">
-                  {moment(post.updated_at).format("DD MMM YYYY HH:mm")}
-                </span>
-              ) : null}
+              <span className="ml-2">{formattedCreateAt}</span>
+              {post.created_at !== post.updated_at && (
+                <span className="ml-2">{formattedUpdateAt}</span>
+              )}
             </div>
             {editMode ? (
-              <div className="flex">
-                <div className="w-full">
-                  <Fragment>
-                    <div className="col-md-8 offset-md-2">
-                      <Formik
-                        initialValues={formInitialSchema}
-                        validationSchema={formValidationSchema}
-                        onSubmit={handleUpdatePost}
-                      >
-                        <Form>
-                          <Field
-                            component="textarea"
-                            type="content"
-                            name="content"
-                            rows="4"
-                            className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
-                          />
-                          <div>
-                            <p className=" text-sm pl-4 text-rose-500 text-red-600 absolute	">
-                              <ErrorMessage name="content" />
-                            </p>
-                          </div>
-                          <div className="flex justify-end pt-2.5 pr-2 pb-2">
-                            <div>
-                              {isLoggedIn && (
-                                <div className="icon group flex flex col">
-                                  <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mr-2">
-                                    {editMode ? (
-                                      <button type="submit">Save</button>
-                                    ) : (
-                                      <button onClick={() => onDelete(post.id)}>
-                                        Delete
-                                      </button>
-                                    )}
-                                  </div>
-                                  <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                                    <button
-                                      onClick={() => setEditMode(!editMode)}
-                                    >
-                                      Cancel
-                                    </button>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </Form>
-                      </Formik>
-                    </div>
-                  </Fragment>
-                </div>
-              </div>
+              <PostEditForm value={post.content} onSave={handleUpdatePost} />
             ) : (
+              // <div className="flex">
+              //   <div className="w-full">
+              //     <div className="col-md-8 offset-md-2">
+              //       <Formik
+              //         initialValues={formInitialValues}
+              //         validationSchema={formValidationSchema}
+              //         onSubmit={handleUpdatePost}
+              //       >
+              //         <Form>
+              //           <Field
+              //             component="textarea"
+              //             type="content"
+              //             name="content"
+              //             rows="4"
+              //             className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
+              //           />
+              //           <div>
+              //             <p className=" text-sm pl-4 text-rose-500 text-red-600 absolute	">
+              //               <ErrorMessage name="content" />
+              //             </p>
+              //           </div>
+              //           <div className="flex justify-end pt-2.5 pr-2 pb-2">
+              //             <div>
+              //               {isLoggedIn && (
+              //                 <div className="icon group flex flex col">
+              //                   <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mr-2">
+              //                     {editMode ? (
+              //                       <button type="submit">Save</button>
+              //                     ) : (
+              //                       <button onClick={() => onDelete(post.id)}>
+              //                         Delete
+              //                       </button>
+              //                     )}
+              //                   </div>
+              //                   <div className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+              //                     <button
+              //                       onClick={() => setEditMode(!editMode)}
+              //                     >
+              //                       Cancel
+              //                     </button>
+              //                   </div>
+              //                 </div>
+              //               )}
+              //             </div>
+              //           </div>
+              //         </Form>
+              //       </Formik>
+              //     </div>
+              //   </div>
+              // </div>
               <p className="break-words break-all">{post.content}</p>
             )}
           </div>
