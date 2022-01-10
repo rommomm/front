@@ -4,7 +4,7 @@ import Link from "next/link";
 import UserContext from "./UserContext";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
-import PostEditForm from "./PostEditForm";
+import CommentEditForm from "./CommentEditForm";
 
 function Post({ comment, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -69,7 +69,7 @@ function Post({ comment, onDelete, onUpdate }) {
               )}
             </div>
             {editMode ? (
-              <PostEditForm
+              <CommentEditForm
                 value={comment.content}
                 onSave={handleUpdatePost}
                 isLoggedIn={isLoggedIn}

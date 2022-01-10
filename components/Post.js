@@ -5,6 +5,7 @@ import UserContext from "./UserContext";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import PostEditForm from "./PostEditForm";
+// import CommentsCount from "./CommentsCount";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -81,8 +82,11 @@ function Post({ post, onDelete, onUpdate }) {
             )}
           </div>
         </div>
+        {/* <CommentsCount
+          counterComments={post.comments_count}
+          showComments={showComments}
+        /> */}
       </div>
-
       <div>
         {isLoggedIn && user.id === post.author.id && (
           <Dropdown overlay={menu} trigger={["click"]}>
@@ -95,6 +99,11 @@ function Post({ post, onDelete, onUpdate }) {
           </Dropdown>
         )}
       </div>
+      {/* <div className="relative">
+        {editComment && openedPostComments === post.id && (
+          <CommentsSystem post={post} />
+        )}
+      </div> */}
     </div>
   );
 }
