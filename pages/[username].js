@@ -1,57 +1,42 @@
 import AddPostForm from "../components/AddPostForm";
 import UserHeader from "../components/UserHeader";
-import React, { useState, useContext } from "react";
+import React from "react";
 import PostsList from "../components/PostsList";
-import UserContext from "../components/UserContext";
 import Layout from "../components/Layout";
 import API from "../api";
+import { withRedux } from "../redux";
+import {
+  getUserPosts,
+  createPost,
+  deletePost,
+  updatePost,
+} from "../redux/posts/actions";
+import { useDispatch, useSelector } from "react-redux";
 
-function Profile({ userPost = [], author }) {
-  const [posts, setPosts] = useState(userPost);
-  const { isLoggedIn, user: userInfo } = useContext(UserContext);
+function Profile() {
+  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
+  const { all: posts, author } = useSelector(({ posts }) => posts);
+  const dispatch = useDispatch();
 
-  async function handleDeletePost(id) {
-    try {
-      await API.posts.DeletePost(id);
-      setPosts(posts.filter((p) => p.id !== id));
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  const handleDeletePost = async (id) => {
+    dispatch(deletePost(id));
+  };
 
-  async function handleUpdatePost(id, updatedData) {
-    try {
-      const response = await API.posts.updatePost(id, updatedData);
-      setPosts(
-        posts.map((post) =>
-          post.id === id ? { ...post, ...response.data } : post
-        )
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  const handleUpdatePost = async (id, updatedData) => {
+    dispatch(updatePost(id, updatedData));
+  };
 
-  async function handleSavePost(content) {
-    try {
-      const response = await API.posts.createPost({ content });
-      const newPost = { ...response.data };
-      setPosts([newPost, ...posts]);
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  const handleSavePost = async (post) => {
+    dispatch(createPost(post));
+  };
 
-  const showAddPost =
-    isLoggedIn && author && userInfo && author.id === userInfo.id;
+  const showAddPost = isLoggedIn && author && author.id === user.id;
 
   return (
     <Layout title={author.first_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
         <UserHeader userInfo={author} posts={posts} />
-        {showAddPost && (
-          <AddPostForm onCreate={handleSavePost} userInfo={author} />
-        )}
+        {showAddPost && <AddPostForm onCreate={handleSavePost} />}
         <PostsList
           posts={posts}
           onUpdate={handleUpdatePost}
@@ -62,17 +47,11 @@ function Profile({ userPost = [], author }) {
   );
 }
 
-export async function getServerSideProps(ctx) {
-  const author = await API.profile.getUser(ctx.params.username);
-  const response = await API.posts.getUserPosts(author.data.user_name);
+export const getServerSideProps = withRedux(async (ctx, store) => {
+  await store.dispatch(getUserPosts(ctx));
 
-  const posts = response.data.map((post) => ({
-    ...post,
-    author: author.data,
-  }));
   return {
-    props: { userPost: posts, author: author.data },
+    props: {},
   };
-}
-
+});
 export default Profile;

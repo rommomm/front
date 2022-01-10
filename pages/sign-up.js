@@ -6,15 +6,23 @@ import router from "next/router";
 import { signUpValidationSchema } from "../validationSchema/signUp";
 import { handleErrors } from "../helpers/handleError";
 import API from "../api";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../redux/auth/actions";
+import { message } from "antd";
 
 const SignUp = () => {
+  const { user } = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
+
   async function handleFormSubmit(values, actions) {
     try {
-      await API.auth.signUp(values);
+      dispatch(register(values));
+      message.success("SUCCESSFUL REGISTRATION");
       router.push("/sign-in");
     } catch (error) {
       const errors = handleErrors(error.errors);
       actions.setErrors(errors);
+      console.log(error);
     }
   }
 

@@ -5,12 +5,13 @@ import UserContext from "./UserContext";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import CommentEditForm from "./CommentEditForm";
+import { useSelector } from "react-redux";
 
-function Post({ comment, onDelete, onUpdate }) {
+function Comment({ comment, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const { isLoggedIn, user } = useContext(UserContext);
-  function handleUpdatePost(value) {
-    onUpdate(comment.id, value);
+  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
+  function handleUpdatePost(values) {
+    onUpdate(comment.id, values);
     setEditMode(false);
   }
 
@@ -35,38 +36,38 @@ function Post({ comment, onDelete, onUpdate }) {
   );
 
   return (
-    <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">
-      <div className="m-2 space-y-2 w-full">
-        <div className="flex">
+    <div className=" flex  justify-between p-2 cursor-pointer border-b">
+      <div className="w-full ">
+        <div className=" pl-12 flex ">
           <Link href={`/` + comment.author.user_name}>
             <img
               src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
               alt=""
-              className="h-12 w-12 rounded-full mr-4"
+              className="h-10 w-10 rounded-full mr-4"
             />
           </Link>
           <div className="text-[#6e767d] w-full">
-            <div className="inline-block flex group">
-              <h4
-                className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] ${
-                  !editMode && "inline-block"
-                }`}
-              >
+            <div className="flex">
+              <div>
                 <Link href={`/` + comment.author.user_name}>
-                  <a>{comment.author.first_name}</a>
+                  <a className="font-bold text-[15px]">
+                    {comment.author.first_name}
+                  </a>
                 </Link>
-              </h4>
-              <p
-                className={`text-sm sm:text-[15px] pl-1 ${
-                  !editMode && "ml-1.5"
-                }`}
-              >
-                @{comment.author.user_name}
-              </p>
-              <span className="ml-2">{formattedCreateAt}</span>
-              {comment.created_at !== comment.updated_at && (
-                <span className="ml-2">{formattedUpdateAt}</span>
-              )}
+              </div>
+              <div>
+                <span className="text-xs	 pl-1 $">
+                  @{comment.author.user_name}
+                </span>
+              </div>
+              <div>
+                <span className="ml-2 text-xs	">{formattedCreateAt}</span>
+                {comment.created_at !== comment.updated_at && (
+                  <span className="ml-2 border text-xs	">
+                    {formattedUpdateAt}
+                  </span>
+                )}
+              </div>
             </div>
             {editMode ? (
               <CommentEditForm
@@ -77,7 +78,12 @@ function Post({ comment, onDelete, onUpdate }) {
                 setEditMode={setEditMode}
               />
             ) : (
-              <p className="break-words break-all">{comment.content}</p>
+              <p
+                className="break-words break-all text-xs	
+              "
+              >
+                {comment.content}
+              </p>
             )}
           </div>
         </div>
@@ -99,4 +105,4 @@ function Post({ comment, onDelete, onUpdate }) {
   );
 }
 
-export default Post;
+export default Comment;

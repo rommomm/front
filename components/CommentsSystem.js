@@ -6,7 +6,7 @@ import {
   updateComment,
 } from "../redux/posts/actions";
 import AddComment from "./AddComment";
-import CommentList from "./CommentList";
+import CommentsList from "./CommentsList";
 
 function CommentsSystem({ post }) {
   const { comments } = useSelector(({ posts }) => posts);
@@ -26,7 +26,7 @@ function CommentsSystem({ post }) {
   return (
     <div>
       <AddComment onCreate={handleSaveComment} post={post} />
-      <CommentList
+      <CommentsList
         comments={comments}
         onUpdate={handleUpdateComment}
         onDelete={handleDeleteComment}

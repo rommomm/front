@@ -1,9 +1,9 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
-import React, { useContext } from "react";
-import UserContext from "./UserContext";
+import React from "react";
+import { useSelector } from "react-redux";
 
 function UserHeader({ userInfo, posts }) {
-  const { isLoggedIn, user } = useContext(UserContext);
+  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
 
   return (
     <>

@@ -2,15 +2,17 @@ import React, { useContext } from "react";
 import Sidebar from "./Sidebar";
 import Head from "next/head";
 import GuestBanner from "../components/GuestBanner";
-import UserContext from "./UserContext";
 import UserDropDown from "./UserDropDown";
 import { Spin } from "antd";
+import { useSelector } from "react-redux";
 
 function Layout({ children, title }) {
-  const { isLoggedIn, user, loading } = useContext(UserContext);
+  const { isLoading } = useSelector(({ posts }) => posts);
+  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
+
   return (
     <div>
-      {loading ? (
+      {isLoading ? (
         <div className=" fixed inset-1/2 ">
           <Spin tip="Loading..." size="large" />
         </div>

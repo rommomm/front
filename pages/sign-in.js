@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Cookies from "js-cookie";
 import Link from "next/link";
@@ -6,16 +6,21 @@ import router from "next/router";
 import { signInValidationSchema } from "../validationSchema/signIn";
 import { handleErrors } from "../helpers/handleError";
 import API from "../api";
+import { useDispatch, useSelector } from "react-redux";
+import { Spin } from "antd";
+import { login } from "../redux/auth/actions";
 
 function SignIn() {
+  const dispatch = useDispatch();
+
   async function handleFormSubmit(values, actions) {
     try {
-      const response = await API.auth.signIn(values);
-      Cookies.set("token", response.token);
+      dispatch(login(values));
       router.push("/");
     } catch (error) {
       const errors = handleErrors(error.errors);
       actions.setErrors(errors);
+      console.log(error);
     }
   }
 
@@ -23,10 +28,6 @@ function SignIn() {
     login: "",
     password: "",
   };
-
-  function redirectHome() {
-    router.push("/");
-  }
 
   return (
     <div className="bg-grey-lighter min-h-screen flex flex-col">

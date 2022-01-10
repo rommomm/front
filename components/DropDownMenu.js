@@ -3,19 +3,17 @@ import api from "../libs/api";
 import Cookies from "js-cookie";
 import router from "next/router";
 import Link from "next/link";
-import UserContext from "./UserContext";
 import { Menu, Dropdown } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/auth/actions";
 
 export default function DropDownMenu({ children }) {
-  const { removeUser, user } = useContext(UserContext);
+  const { user } = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
 
-  async function signOut() {
+  async function handleLogout() {
     try {
-      await api.post("/logout");
-      Cookies.remove("token");
-      Cookies.remove("user");
-      removeUser();
-      router.push("/");
+      dispatch(logout());
     } catch (error) {
       console.log(error);
     }
@@ -29,7 +27,7 @@ export default function DropDownMenu({ children }) {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <a onClick={signOut}>Logout</a>
+        <a onClick={handleLogout}>Logout</a>
       </Menu.Item>
     </Menu>
   );
