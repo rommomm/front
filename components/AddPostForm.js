@@ -1,6 +1,5 @@
-import { Fragment } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { formValidationSchema } from "../validationSchema/postFormSchema";
+import { postValidationSchema } from "../validationSchema/post";
 
 function AddPostForm({ onCreate }) {
   function handleCreate(value, actions) {
@@ -17,7 +16,7 @@ function AddPostForm({ onCreate }) {
       <div className="col-md-8 offset-md-2">
         <Formik
           initialValues={formInitialValues}
-          validationSchema={formValidationSchema}
+          validationSchema={postValidationSchema}
           onSubmit={handleCreate}
         >
           <Form className="w-full">

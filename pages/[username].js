@@ -1,10 +1,10 @@
-import AddPostForm from "../../components/AddPostForm";
-import UserHeader from "../../components/UserHeader";
+import AddPostForm from "../components/AddPostForm";
+import UserHeader from "../components/UserHeader";
 import React, { useState, useContext } from "react";
-import PostUserList from "../../components/PostUserList";
-import api from "../../libs/api";
-import UserContext from "../../components/UserContext";
-import Layout from "../../components/Layout";
+import PostsList from "../components/PostsList";
+import UserContext from "../components/UserContext";
+import Layout from "../components/Layout";
+import API from "../api";
 
 function Profile({ userPost = [], author }) {
   const [posts, setPosts] = useState(userPost);
@@ -12,7 +12,7 @@ function Profile({ userPost = [], author }) {
 
   async function handleDeletePost(id) {
     try {
-      await api.delete(`/posts/${id}`);
+      await API.posts.DeletePost(id);
       setPosts(posts.filter((p) => p.id !== id));
     } catch (e) {
       console.log(e);
@@ -21,8 +21,7 @@ function Profile({ userPost = [], author }) {
 
   async function handleUpdatePost(id, updatedData) {
     try {
-      const response = await api.put(`/posts/${id}`, updatedData);
-
+      const response = await API.posts.updatePost(id, updatedData);
       setPosts(
         posts.map((post) =>
           post.id === id ? { ...post, ...response.data } : post
@@ -33,17 +32,15 @@ function Profile({ userPost = [], author }) {
     }
   }
 
-  const handleSavePost = async (content) => {
+  async function handleSavePost(content) {
     try {
-      const response = await api.post(`/posts`, {
-        content,
-      });
+      const response = await API.posts.createPost({ content });
       const newPost = { ...response.data };
       setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
   const showAddPost =
     isLoggedIn && author && userInfo && author.id === userInfo.id;
@@ -52,16 +49,13 @@ function Profile({ userPost = [], author }) {
     <Layout title={author.first_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
         <UserHeader userInfo={author} posts={posts} />
-
         {showAddPost && (
           <AddPostForm onCreate={handleSavePost} userInfo={author} />
         )}
-
-        <PostUserList
+        <PostsList
           posts={posts}
           onUpdate={handleUpdatePost}
           onDelete={handleDeletePost}
-          onCreate={handleSavePost}
         />
       </div>
     </Layout>
@@ -69,8 +63,8 @@ function Profile({ userPost = [], author }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const author = await api.get(`/users/${ctx.params.un}`);
-  const response = await api.get(`users/${author.data.user_name}/posts`);
+  const author = await API.profile.getUser(ctx.params.username);
+  const response = await API.posts.getUserPosts(author.data.user_name);
 
   const posts = response.data.map((post) => ({
     ...post,

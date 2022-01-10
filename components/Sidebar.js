@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useContext } from "react";
 import UserContext from "./UserContext";
-import UserDropDown from "./UserDropDown";
 import SidebarLink from "./SidebarLink";
 import {
   HomeOutlined,
@@ -29,17 +28,13 @@ function Sidebar() {
             </>
           )}
           {isLoggedIn && user && (
-            <Link href={`/profile/${user.user_name}`}>
+            <Link href={`/${user.user_name}`}>
               <a>
                 <SidebarLink text="Profile" Icon={ProfileOutlined} />
               </a>
             </Link>
           )}
           {isLoggedIn && <SidebarLink text="Settings" Icon={SettingOutlined} />}
-        </div>
-
-        <div className="text-[#d9d9d9] flex items-center justify-center mt-auto hoverAnimation">
-          <UserDropDown />
         </div>
       </div>
     </div>

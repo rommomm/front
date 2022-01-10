@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import api from "../libs/api";
+import API from "../api";
 
 const UserContext = React.createContext();
 export const UserProvider = ({ children }) => {
@@ -9,21 +9,25 @@ export const UserProvider = ({ children }) => {
   const parsedUser = userFromCookie ? JSON.parse(userFromCookie) : null;
   const [user, setUserData] = useState(parsedUser);
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get("token"));
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   async function authMe() {
     try {
-      const response = await api.get("/auth/me");
-      setUser(response.data);
+      setLoading(true);
+      if (Cookies?.get && Cookies.get("token")) {
+        const response = await API.profile.get();
+        setUser(response.data);
+      }
+      setLoading(false);
     } catch (error) {
+      Cookies.remove("token");
       console.log(error);
     }
   }
 
   useEffect(() => {
-    if (Cookies.get("token")) {
-      authMe();
-    }
+    authMe();
   }, [router.route]);
 
   const setUser = (user) => {
@@ -41,9 +45,11 @@ export const UserProvider = ({ children }) => {
       value={{
         user,
         isLoggedIn: isLoggedIn && user,
+        loading,
 
         setUser,
         removeUser,
+        setLoading,
       }}
     >
       {children}

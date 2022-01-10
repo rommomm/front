@@ -1,23 +1,24 @@
 import { Fragment } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import api from "../../libs/api";
+import api from "../libs/api";
 import Link from "next/link";
 import router from "next/router";
+import { signUpValidationSchema } from "../validationSchema/signUp";
+import { handleErrors } from "../helpers/handleError";
+import API from "../api";
 
-const RegisterForm = () => {
-  const handleErrors = (errors) => {
-    const _errors = {};
-    const errorEntries = Object.entries(errors);
+const SignUp = () => {
+  async function handleFormSubmit(values, actions) {
+    try {
+      await API.auth.signUp(values);
+      router.push("/sign-in");
+    } catch (error) {
+      const errors = handleErrors(error.errors);
+      actions.setErrors(errors);
+    }
+  }
 
-    errorEntries.forEach((err) => {
-      _errors[err[0]] = err[1];
-    });
-    console.log(_errors);
-    return _errors;
-  };
-
-  const formInitialSchema = {
+  const formInitialValue = {
     first_name: "",
     last_name: "",
     user_name: "",
@@ -25,38 +26,6 @@ const RegisterForm = () => {
     password: "",
     password_confirmation: "",
   };
-
-  function handleFormSubmit(values, actions) {
-    api
-      .post("/register", values)
-      .then(() => {
-        router.push("/login");
-      })
-      .catch((error) => {
-        const errors = handleErrors(error.errors);
-        actions.setErrors(errors);
-      });
-  }
-  const formValidationSchema = Yup.object({
-    first_name: Yup.string()
-      .min(3, "Must be 3 characters or less")
-      .max(15, "Must be 15 characters or less")
-      .required("Required"),
-    last_name: Yup.string()
-      .min(3, "Must be 3 characters or less")
-      .max(20, "Must be 20 characters or less")
-      .required("Required"),
-    user_name: Yup.string()
-      .max(15, "Must be 15 characters or less")
-      .required("Required"),
-    email: Yup.string().email("Email is invalid").required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 charaters")
-      .required("Password is required"),
-    password_confirmation: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Password must match")
-      .required("Confirm password is required"),
-  });
 
   return (
     <div>
@@ -67,8 +36,8 @@ const RegisterForm = () => {
             <Fragment>
               <div className="col-md-8 offset-md-2">
                 <Formik
-                  initialValues={formInitialSchema}
-                  validationSchema={formValidationSchema}
+                  initialValues={formInitialValue}
+                  validationSchema={signUpValidationSchema}
                   onSubmit={handleFormSubmit}
                 >
                   <Form>
@@ -159,7 +128,7 @@ const RegisterForm = () => {
                       </button>
                     </div>
                     <div className="text-grey-dark mt-6 text-center ">
-                      <Link href="/login">
+                      <Link href="/sign-in">
                         <a className="no-underline border-blue text-blue hover:underline">
                           Sign In
                         </a>
@@ -176,4 +145,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default SignUp;

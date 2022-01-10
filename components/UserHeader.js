@@ -4,9 +4,6 @@ import UserContext from "./UserContext";
 
 function UserHeader({ userInfo, posts }) {
   const { isLoggedIn, user } = useContext(UserContext);
-  if (!userInfo) {
-    return null;
-  }
 
   return (
     <>

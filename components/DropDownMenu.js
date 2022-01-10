@@ -9,7 +9,7 @@ import { Menu, Dropdown } from "antd";
 export default function DropDownMenu({ children }) {
   const { removeUser, user } = useContext(UserContext);
 
-  async function logout() {
+  async function signOut() {
     try {
       await api.post("/logout");
       Cookies.remove("token");
@@ -24,12 +24,12 @@ export default function DropDownMenu({ children }) {
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link href={`/profile/${user.user_name}`}>
+        <Link href={`/${user.user_name}`}>
           <a>Profile</a>
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <a onClick={logout}>Logout</a>
+        <a onClick={signOut}>Logout</a>
       </Menu.Item>
     </Menu>
   );
