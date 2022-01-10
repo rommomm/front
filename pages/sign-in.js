@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Cookies from "js-cookie";
 import Link from "next/link";
@@ -7,7 +7,7 @@ import { signInValidationSchema } from "../validationSchema/signIn";
 import { handleErrors } from "../helpers/handleError";
 import API from "../api";
 
-const SignIn = () => {
+function SignIn() {
   async function handleFormSubmit(values, actions) {
     try {
       const response = await API.auth.signIn(values);
@@ -89,6 +89,6 @@ const SignIn = () => {
       </div>
     </div>
   );
-};
+}
 
 export default SignIn;
