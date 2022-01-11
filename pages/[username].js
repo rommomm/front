@@ -49,7 +49,6 @@ function Profile() {
 
 export const getServerSideProps = withRedux(async (ctx, store) => {
   await store.dispatch(getUserPosts(ctx));
-
   return {
     props: {},
   };

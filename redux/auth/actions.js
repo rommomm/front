@@ -18,7 +18,6 @@ export const authMe = () => async (dispatch) => {
 
 export const signIn = (credentials, callback) => async (dispatch) => {
   try {
-    dispatch({ type: types.START_LOADING });
     const response = await API.auth.signIn(credentials);
     Cookies.set("token", response.token);
 
@@ -26,7 +25,6 @@ export const signIn = (credentials, callback) => async (dispatch) => {
       type: types.SIGN_IN,
       payload: response.data,
     });
-    dispatch({ type: types.END_LOADING });
   } catch (error) {
     throw error;
   }
@@ -45,13 +43,11 @@ export const login = (credentials, callback) => async (dispatch) => {
 
 export const signUp = (credentials, callback) => async (dispatch) => {
   try {
-    dispatch({ type: types.START_LOADING });
     const response = await API.auth.signUp(credentials);
     dispatch({
       type: types.SIGN_UP,
       payload: response.data,
     });
-    dispatch({ type: types.END_LOADING });
   } catch (error) {
     throw error;
   }
