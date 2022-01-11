@@ -3,7 +3,7 @@ import * as types from "./types";
 
 const initialState = {
   isLoading: false,
-  isLoadingContent: false,
+  isLoadingPosts: false,
   isLoadingComments: false,
   all: [],
   comments: [],
@@ -14,9 +14,9 @@ const initialState = {
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case types.START_LOADING_POST:
-      return { ...state, isLoadingContent: true };
+      return { ...state, isLoadingPosts: true };
     case types.END_LOADING_POST:
-      return { ...state, isLoadingContent: false };
+      return { ...state, isLoadingPosts: false };
     case types.START_LOADING_COMMENTS:
       return { ...state, isLoadingComments: true };
     case types.END_LOADING_COMMENTS:
@@ -81,7 +81,19 @@ export default (state = initialState, { type, payload }) => {
     case types.DELETE_COMMENT:
       return {
         ...state,
-        comments: state.comments.filter((comment) => comment.id !== payload),
+        comments: state.comments.filter((comment) => comment.id !== payload.id),
+        all: state.all.map((post) => {
+          if (post.id === payload.postId) {
+          }
+          return post.id === payload.postId
+            ? {
+                ...post,
+                comments_count: post?.comments_count
+                  ? --post.comments_count
+                  : -1,
+              }
+            : post;
+        }),
       };
     case types.UPDATE_COMMENT:
       return {

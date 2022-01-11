@@ -10,7 +10,7 @@ if (Cookies && Cookies.get && Cookies.get("user")) {
 const initialState = {
   user: initUser,
   isLoggedIn: false,
-  isLoading: true,
+  isLoading: false,
 };
 
 export default (state = initialState, { type, payload }) => {

@@ -6,14 +6,17 @@ import {
   updateComment,
 } from "../redux/posts/actions";
 import AddComment from "./AddComment";
+import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 
 function CommentsSystem({ post }) {
   const { comments } = useSelector(({ posts }) => posts);
+  const { isLoggedIn } = useSelector(({ auth }) => auth);
+
   const dispatch = useDispatch();
 
   const handleDeleteComment = async (id) => {
-    dispatch(deleteComment(id));
+    dispatch(deleteComment(id, post));
   };
 
   const handleUpdateComment = async (id, updatedData) => {
@@ -25,7 +28,12 @@ function CommentsSystem({ post }) {
   };
   return (
     <div>
-      <AddComment onCreate={handleSaveComment} post={post} />
+      {isLoggedIn ? (
+        <AddComment onCreate={handleSaveComment} post={post} />
+      ) : (
+        <CommentsGuestBanner count={post.comments_count} />
+      )}
+
       <CommentsList
         comments={comments}
         onUpdate={handleUpdateComment}

@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Menu, Dropdown } from "antd";
 import Link from "next/link";
-import UserContext from "./UserContext";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import CommentEditForm from "./CommentEditForm";
 import { useSelector } from "react-redux";
+import CommentsCount from "./CommentLikes";
 
 function Comment({ comment, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -87,6 +87,7 @@ function Comment({ comment, onDelete, onUpdate }) {
             )}
           </div>
         </div>
+        <CommentsCount />
       </div>
 
       <div>

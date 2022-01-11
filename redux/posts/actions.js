@@ -3,13 +3,11 @@ import API from "../../api";
 
 export const getAllPosts = () => async (dispatch) => {
   try {
-    dispatch({ type: types.START_LOADING_POST });
     const response = await API.posts.getAllPosts();
     dispatch({
       type: types.GET_ALL_POSTS,
       payload: response.data,
     });
-    dispatch({ type: types.END_LOADING_POST });
   } catch (error) {
     console.log(error);
   }
@@ -17,14 +15,12 @@ export const getAllPosts = () => async (dispatch) => {
 
 export const getUserPosts = (ctx) => async (dispatch) => {
   try {
-    dispatch({ type: types.START_LOADING_POST });
     const author = await API.profile.getUser(ctx.params.username);
     const response = await API.posts.getUserPosts(author.data.user_name);
     dispatch({
       type: types.GET_USER_POSTS,
       payload: { posts: response.data, author: author.data },
     });
-    dispatch({ type: types.END_LOADING_POST });
   } catch (error) {
     console.log(error);
   }
@@ -110,13 +106,13 @@ export const createComment = (id, comment) => async (dispatch) => {
     console.log(error);
   }
 };
-export const deleteComment = (id) => async (dispatch) => {
+export const deleteComment = (id, post) => async (dispatch) => {
   try {
-    dispatch({ type: types.END_LOADING_COMMENTS });
+    dispatch({ type: types.START_LOADING_COMMENTS });
     await API.comments.deleteComment(id);
     dispatch({
       type: types.DELETE_COMMENT,
-      payload: id,
+      payload: { postId: post.id, id },
     });
     dispatch({ type: types.END_LOADING_COMMENTS });
   } catch (error) {

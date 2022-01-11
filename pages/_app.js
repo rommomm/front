@@ -15,8 +15,10 @@ export default function MyApp({ Component, pageProps }) {
   }
 
   return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
+    <div>
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
+    </div>
   );
 }

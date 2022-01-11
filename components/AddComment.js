@@ -26,7 +26,7 @@ function AddComment({ onCreate, post }) {
               name="content"
               placeholder="Text"
               rows="4"
-              className="resize-none bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full  border-t border-black"
+              className="resize-none bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full "
             />
 
             <div className="flex justify-between pt-2.5 pr-2 pb-2">

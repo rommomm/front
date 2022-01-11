@@ -40,7 +40,7 @@ export default function DropDownMenu({ children }) {
       getPopupContainer={(trigger) => trigger.parentNode}
     >
       <a className="ant-dropdown-link " onClick={(e) => e.preventDefault()}>
-        <a>{children}</a>
+        {children}
       </a>
     </Dropdown>
   );
