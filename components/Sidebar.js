@@ -35,7 +35,13 @@ function Sidebar() {
               </a>
             </Link>
           )}
-          {isLoggedIn && <SidebarLink text="Settings" Icon={SettingOutlined} />}
+          {isLoggedIn && (
+            <Link href="/settings">
+              <a>
+                <SidebarLink text="Settings" Icon={SettingOutlined} />
+              </a>
+            </Link>
+          )}
         </div>
       </div>
     </div>
