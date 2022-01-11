@@ -66,7 +66,7 @@ export async function getServerSideProps(ctx) {
   const author = await API.profile.getUser(ctx.params.username);
   const response = await API.posts.getUserPosts(author.data.user_name);
 
-  const posts = response.data.map((post) => ({
+  const posts = response.map((post) => ({
     ...post,
     author: author.data,
   }));
