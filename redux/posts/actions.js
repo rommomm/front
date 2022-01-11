@@ -17,9 +17,13 @@ export const getUserPosts = (ctx) => async (dispatch) => {
   try {
     const author = await API.profile.getUser(ctx.params.username);
     const response = await API.posts.getUserPosts(author.data.user_name);
+    const posts = response.map((post) => ({
+      ...post,
+      author: author.data,
+    }));
     dispatch({
       type: types.GET_USER_POSTS,
-      payload: { posts: response.data, author: author.data },
+      payload: { posts, author: author.data },
     });
   } catch (error) {
     console.log(error);
