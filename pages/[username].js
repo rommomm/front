@@ -3,7 +3,6 @@ import UserHeader from "../components/UserHeader";
 import React from "react";
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import API from "../api";
 import { withRedux } from "../redux";
 import {
   getUserPosts,
