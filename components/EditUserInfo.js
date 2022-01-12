@@ -1,9 +1,13 @@
 import { Input } from "antd";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { profileValidationSchema } from "../validationSchema/profile";
 
 function EditUserInfo() {
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
+
   function handleSave() {
     console.log(`formInitialValue`, formInitialValue);
   }
