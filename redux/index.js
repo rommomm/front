@@ -4,6 +4,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
 import posts from "./posts/reducer";
 import auth from "./auth/reducer";
+import API from "../api";
 
 let store;
 
@@ -44,7 +45,6 @@ export function useStore(initialState) {
 export const withRedux = (getServerSideProps) => async (ctx) => {
   const store = initializeStore();
   const result = await getServerSideProps(ctx, store);
-
   return {
     ...result,
 
