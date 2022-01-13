@@ -12,7 +12,7 @@ function UserDropDown() {
         <DropDownMenu>
           <Row>
             <img
-              src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
+              src={user.profile.profile_photo}
               alt=""
               className="h-10 w-10 rounded-full xl:mr-2.5"
             />

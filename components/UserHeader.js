@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 function UserHeader({ userInfo, posts }) {
   const { isLoggedIn, user } = useSelector(({ auth }) => auth);
+  const { author } = useSelector(({ posts }) => posts);
 
   return (
     <>
@@ -21,7 +22,7 @@ function UserHeader({ userInfo, posts }) {
         <div className="profile w-full flex flex-col text-white">
           <img
             className="max-h-32 w-full"
-            src="https://unsplash.com/photos/h0Vxgz5tyXA/download?force=true&w=640"
+            src={author.profile.profile_background}
             alt=""
           />
           <div
@@ -30,7 +31,7 @@ function UserHeader({ userInfo, posts }) {
           >
             <img
               class="w-36 h-36 p-1 bg-white rounded-full"
-              src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
+              src={author.profile.profile_photo}
               alt=""
             />
             {isLoggedIn && userInfo.id !== user.id && (
@@ -57,13 +58,14 @@ function UserHeader({ userInfo, posts }) {
                 <p className="text-base ">@{userInfo.user_name}</p>
               </div>
             </div>
-            <div class="buttons left-0 space-x-0 my-3.5 ml-3 text-black ">
-              <div className="pr-4">
-                <h2 className="text-base ">
-                  <EnvironmentOutlined />
-                  Monaco
-                </h2>
+            <div class=" left-0 space-x-0 my-3.5 ml-3 text-black ">
+              <div className="m-auto flex justify-start  ">
+                <EnvironmentOutlined />
+                <span class=" pl-1 inline-block align-bottom text-xs">
+                  {author.profile.user_location}
+                </span>
               </div>
+
               <div>
                 <span className="text-base ">
                   <span className="text-xl pr-1 font-bold">420</span>Following

@@ -15,6 +15,7 @@ function Post({ post, onDelete, onUpdate }) {
   const [editComment, setEditComment] = useState(false);
   const { isLoggedIn, user } = useSelector(({ auth }) => auth);
   const { openedPostComments } = useSelector(({ posts }) => posts);
+
   const dispatch = useDispatch();
 
   function handleUpdatePost(value) {
@@ -54,7 +55,7 @@ function Post({ post, onDelete, onUpdate }) {
           <div className="flex">
             <Link href={`/` + post.author.user_name}>
               <img
-                src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
+                src={post.author.profile.profile_photo}
                 alt=""
                 className="h-12 w-12 rounded-full mr-4"
               />

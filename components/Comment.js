@@ -41,7 +41,7 @@ function Comment({ comment, onDelete, onUpdate }) {
         <div className=" pl-12 flex ">
           <Link href={`/` + comment.author.user_name}>
             <img
-              src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
+              src={comment.author.profile.profile_photo}
               alt=""
               className="h-10 w-10 rounded-full mr-4"
             />
