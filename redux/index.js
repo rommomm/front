@@ -4,12 +4,13 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
 import posts from "./posts/reducer";
 import auth from "./auth/reducer";
-
+import profile from "./profile/reducer";
 let store;
 
 const reducers = combineReducers({
   posts,
   auth,
+  profile,
 });
 
 function initStore(initialState) {

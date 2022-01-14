@@ -1,37 +1,62 @@
 import * as types from "./types";
-import Cookies from "js-cookie";
 import API from "../../api";
 
-export const updateProfile = (user) => async (dispatch) => {
+export const updateProfile = (values) => async (dispatch) => {
   try {
-    dispatch({ type: USER_UPDATE_REQUEST });
-
-    const response = await API.profile.updateInfo(user);
-
-    dispatch({ type: USER_UPDATE_SUCCESS, payload: data });
-
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-
-    localStorage.setItem("userInfo", JSON.stringify(data));
-  } catch (error) {
+    const response = await API.profile.updateProfile({ values });
     dispatch({
-      type: USER_UPDATE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-
-export const signUp = (credentials, callback) => async (dispatch) => {
-  try {
-    const response = await API.auth.signUp(credentials);
-    dispatch({
-      type: types.SIGN_UP,
+      type: types.UPDATE_PROFILE,
       payload: response.data,
     });
   } catch (error) {
-    throw error;
+    console.log(error);
+  }
+};
+
+export const uploadAvatar = (avatar) => async (dispatch) => {
+  try {
+    const response = await API.posts.uploadAvatar({ avatar });
+    dispatch({
+      type: types.UPLOAD_AVATAR,
+      payload: response.data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeAvatar = () => async (dispatch) => {
+  try {
+    const response = await API.posts.removeAvatar();
+    dispatch({
+      type: types.REMOVE_AVATAR,
+      payload: response.data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const uploadBackground = (background) => async (dispatch) => {
+  try {
+    const response = await API.posts.uploadBackground({ background });
+    dispatch({
+      type: types.UPLOAD_BACKGROUND,
+      payload: response.data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeBackground = () => async (dispatch) => {
+  try {
+    const response = await API.posts.removeBackground();
+    dispatch({
+      type: types.REMOVE_BACKGROUND,
+      payload: response.data,
+    });
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -1,13 +1,21 @@
 import * as types from "./types";
 
-export default (state = {}, { type, payload }) => {
+const initialState = {
+  profile: [],
+};
+
+export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case types.USER_UPDATE_REQUEST:
-      return { loading: true };
-    case types.USER_UPDATE_SUCCESS:
-      return { loading: false, userInfo: payload, success: true };
-    case types.USER_UPDATE_FAIL:
-      return { loading: false, error: payload, success: false };
+    case types.UPDATE_PROFILE:
+      return { ...state, profile: payload };
+    case types.UPLOAD_AVATAR:
+      return { ...state, profile: payload };
+    case types.REMOVE_AVATAR:
+      return { ...state, profile: payload };
+    case types.UPLOAD_BACKGROUND:
+      return { ...state, profile: payload };
+    case types.REMOVE_BACKGROUND:
+      return { ...state, profile: payload };
     default:
       return state;
   }

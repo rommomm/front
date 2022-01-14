@@ -16,7 +16,7 @@ function CommentsCount({ counterComments, showComments }) {
 
         <a className="pl-2" onClick={showComments}>
           <LikeOutlined style={{ fontSize: "22px" }} />
-          <span className="inline-block align-bottom text-sm pl-1">1</span>
+          <span className="inline-block align-bottom text-sm pl-1">0</span>
         </a>
       </div>
     </div>

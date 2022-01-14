@@ -18,7 +18,7 @@ const center = {
   lng: 35.15485298489101,
 };
 
-const libraries = ["drawing", "places"];
+const libraries = ["places"];
 
 function Map() {
   const { isLoaded } = useJsApiLoader({
@@ -29,7 +29,12 @@ function Map() {
   return (
     <div>
       {isLoaded ? (
-        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={10}
+          id="map"
+        >
           <Autocomplete>
             <input
               type="text"

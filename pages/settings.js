@@ -6,7 +6,8 @@ import EditUserInfo from "../components/EditUserInfo";
 import Layout from "../components/Layout";
 import ProfilePreview from "../components/ProfilePreview";
 
-function Settings() {
+function Settings({ avatar }) {
+  console.log(`avatar`, avatar);
   return (
     <Layout title="Settings page">
       <div className="flex-grow  border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px]">

@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 function UserHeader({ userInfo, posts }) {
   const { isLoggedIn, user } = useSelector(({ auth }) => auth);
   const { author } = useSelector(({ posts }) => posts);
-
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-1 px-1  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
@@ -21,8 +20,8 @@ function UserHeader({ userInfo, posts }) {
       <div className="relative flex flex-col mx-auto  w-full border-black border-b">
         <div className="profile w-full flex flex-col text-white">
           <img
-            className="max-h-32 w-full"
-            src={author.profile.profile_background}
+            className="max-h-32 object-cover	 w-full"
+            src={author.profile.profile_background || "/default/background.png"}
             alt=""
           />
           <div
@@ -31,7 +30,7 @@ function UserHeader({ userInfo, posts }) {
           >
             <img
               class="w-36 h-36 p-1 bg-white rounded-full"
-              src={author.profile.profile_photo}
+              src={author.profile.profile_photo || "/default/avatar.png"}
               alt=""
             />
             {isLoggedIn && userInfo.id !== user.id && (

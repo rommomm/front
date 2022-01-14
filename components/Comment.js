@@ -41,7 +41,7 @@ function Comment({ comment, onDelete, onUpdate }) {
         <div className=" pl-12 flex ">
           <Link href={`/` + comment.author.user_name}>
             <img
-              src={comment.author.profile.profile_photo}
+              src={user.profile.profile_photo || "/default/avatar.png"}
               alt=""
               className="h-10 w-10 rounded-full mr-4"
             />
