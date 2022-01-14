@@ -61,7 +61,7 @@ function UserHeader({ userInfo, posts }) {
               <div className="m-auto flex justify-start  ">
                 <EnvironmentOutlined />
                 <span class=" pl-1 inline-block align-bottom text-xs">
-                  {author.profile.user_location}
+                  {author.profile.user_location || "Запорожье"}
                 </span>
               </div>
 
