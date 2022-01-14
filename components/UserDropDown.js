@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 
 function UserDropDown() {
   const { user } = useSelector(({ auth }) => auth);
-
   return (
     <div className="sticky top-0 hidden sm:flex flex-col items-center   p-2 h-screen pr-2">
       <div className="space-y-2.5 xl:ml-24 flex flex-col justify-between h-screen">

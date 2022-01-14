@@ -16,7 +16,6 @@ function Profile() {
   const { isLoggedIn, user } = useSelector(({ auth }) => auth);
   const { all: posts, author } = useSelector(({ posts }) => posts);
   const dispatch = useDispatch();
-
   const handleDeletePost = async (id) => {
     dispatch(deletePost(id));
   };
