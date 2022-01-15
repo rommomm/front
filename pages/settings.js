@@ -17,7 +17,7 @@ function Settings({ avatar }) {
         <div className="border-black border-l border-r w-full max-w-screen-md	border-b">
           <EditUserInfo />
 
-          <div className=" pl-4 m-2  flex justify-between">
+          <div className="pl-4 m-2  flex justify-between">
             <EditAvatar />
             <EditBackground />
             <EditLocation />

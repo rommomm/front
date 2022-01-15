@@ -1,16 +1,27 @@
 import { Input } from "antd";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { profileValidationSchema } from "../validationSchema/profile";
+import api from "../libs/api";
 
 function EditUserInfo() {
-  const [firstName, setfirstName] = useState("");
-  const [lastName, setlastName] = useState("");
-
-  function handleSave() {
-    console.log(`formInitialValue`, formInitialValue);
+  const { user } = useSelector(({ auth }) => auth);
+  async function handleSave(values) {
+    try {
+      if (!values.first_name) {
+        values.first_name = user.first_name;
+      }
+      if (!values.last_name) {
+        values.last_name = user.last_name;
+      }
+      const response = await api.put("/profile/update", values);
+      console.log(`response`, response);
+    } catch (error) {
+      console.log(`error`, error);
+    }
   }
+
   const formInitialValue = {
     first_name: "",
     last_name: "",
@@ -19,7 +30,8 @@ function EditUserInfo() {
     <div className="border-b border-black pb-4">
       <div className="w-5/6 m-auto pt-5">
         <Formik
-          initialValues={formInitialValue}
+          enableReinitialize={false}
+          initialValues={({ first_name: "" }, { last_name: "" })}
           validationSchema={profileValidationSchema}
           onSubmit={handleSave}
         >
@@ -51,7 +63,10 @@ function EditUserInfo() {
             </div>
 
             <div className="flex justify-end">
-              <button className="bg-blue-200 hover:bg-blue-300 text-gray-800  py-2 px-7 border-gray-400 rounded shadow">
+              <button
+                type="submit"
+                className="bg-blue-200 hover:bg-blue-300 text-gray-800  py-2 px-7 border-gray-400 rounded shadow"
+              >
                 Save
               </button>
             </div>
