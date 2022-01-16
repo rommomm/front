@@ -13,7 +13,8 @@ export default function MyApp({ Component, pageProps }) {
   if (Cookies?.get && Cookies.get("token")) {
     store.dispatch(authMe());
   }
-
+  console.log(`token`, Cookies.get("token"));
+  console.log(`Cookies`, Cookies.withConverter);
   return (
     <div>
       <Provider store={store}>

@@ -1,12 +1,14 @@
 import React, { useCallback, useState } from "react";
 import api from "../libs/api";
 import { convertToBase64 } from "../helpers/convertToBase64";
+import { useDispatch } from "react-redux";
+import { removeAvatar } from "../redux/profile/actions";
 
 function EditAvatar() {
   const [avatar, setAvatar] = useState("");
   const [avatarData, setAvatarData] = useState("");
-  console.log(`avatarData`, avatarData);
-  console.log(`avatar`, avatar);
+  const dispatch = useDispatch();
+
   const handleCreateBase64 = useCallback(async (e) => {
     const file = e.target.files[0];
     const base64 = await convertToBase64(file);
@@ -25,14 +27,10 @@ function EditAvatar() {
       console.log(`error`, error);
     }
   }
-  async function onRemove() {
-    try {
-      const response = await api.delete("/profile/avatar");
-      console.log(`response`, response);
-    } catch (error) {
-      console.log(`error`, error);
-    }
-  }
+
+  const onRemove = async () => {
+    dispatch(removeAvatar());
+  };
 
   return (
     <div className="flex flex-col">

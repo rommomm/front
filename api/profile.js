@@ -3,9 +3,9 @@ import api from "../libs/api";
 export default {
   get: () => api.get("/auth/me"),
   getUser: (username) => api.get(`/users/${username}`),
-  updateProfile: () => api.put("/profile/update"),
-  uploadAvatar: () => api.post("/profile/avatar"),
+  updateProfile: (values) => api.put("/profile/update", values),
+  uploadAvatar: (avatar) => api.post("/profile/avatar", avatar),
   removeAvatar: () => api.delete("/profile/avatar"),
-  uploadBackground: () => api.post("/profile/background'"),
+  uploadBackground: (background) => api.post("/profile/background", background),
   removeBackground: () => api.delete("/profile/background'"),
 };

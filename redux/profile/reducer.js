@@ -1,11 +1,16 @@
 import * as types from "./types";
 
 const initialState = {
-  profile: [],
+  isLoading: false,
+  profile: {},
 };
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case types.START_LOADING:
+      return { ...state, isLoading: true };
+    case types.END_LOADING:
+      return { ...state, isLoading: false };
     case types.UPDATE_PROFILE:
       return { ...state, profile: payload };
     case types.UPLOAD_AVATAR:
