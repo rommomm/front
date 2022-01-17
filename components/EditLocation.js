@@ -2,21 +2,20 @@ import Modal from "antd/lib/modal/Modal";
 import React, { useState } from "react";
 import Map from "./Map";
 import api from "../libs/api";
+import { updateProfile } from "../redux/profile/actions";
+import { useDispatch } from "react-redux";
 
 function EditLocation() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const dispatch = useDispatch();
+
   const showModal = () => {
     setIsModalVisible(true);
   };
 
   async function onRemove() {
-    try {
-      const locatoin = { user_location: null };
-      const response = await api.put("/profile/update", locatoin);
-      console.log(`response`, response);
-    } catch (error) {
-      console.log(`error`, error);
-    }
+    const locatoin = { user_location: null };
+    dispatch(updateProfile(locatoin));
   }
 
   const handleCancel = () => {
@@ -44,6 +43,7 @@ function EditLocation() {
         closable={false}
         maskClosable={true}
         width="768px"
+        footer={null}
       >
         <Map />
       </Modal>

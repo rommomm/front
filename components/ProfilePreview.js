@@ -5,6 +5,7 @@ import HeaderProfilePreview from "./HeaderProfilePreview";
 
 function ProfilePreview() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -28,6 +29,7 @@ function ProfilePreview() {
         closable={false}
         maskClosable={true}
         width="768px"
+        footer={null}
       >
         <HeaderProfilePreview />
       </Modal>

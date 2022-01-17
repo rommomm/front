@@ -7,5 +7,5 @@ export default {
   uploadAvatar: (avatar) => api.post("/profile/avatar", avatar),
   removeAvatar: () => api.delete("/profile/avatar"),
   uploadBackground: (background) => api.post("/profile/background", background),
-  removeBackground: () => api.delete("/profile/background'"),
+  removeBackground: () => api.delete("/profile/background"),
 };

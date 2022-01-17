@@ -2,10 +2,13 @@ import api from "../libs/api";
 
 import React, { useCallback, useState } from "react";
 import { convertToBase64 } from "../helpers/convertToBase64";
+import { removeBackground, uploadBackground } from "../redux/profile/actions";
+import { useDispatch } from "react-redux";
 
 function EditBackground() {
   const [background, setBackground] = useState("");
   const [backgroundData, setBackgroundData] = useState("");
+  const dispatch = useDispatch();
 
   const handleCreateBase64 = useCallback(async (e) => {
     const file = e.target.files[0];
@@ -14,28 +17,23 @@ function EditBackground() {
     setBackgroundData(file);
   }, []);
 
-  async function onSubmit() {
-    try {
-      const formData = new FormData();
-      formData.append("profile_background", backgroundData);
-      const response = await api.post("/profile/background", formData);
-      console.log(`response`, response);
-    } catch (error) {
-      console.log(`error`, error);
-    }
+  function onSubmit() {
+    const formData = new FormData();
+    formData.append("profile_background", backgroundData);
+    dispatch(uploadBackground(formData));
   }
-  async function onRemove() {
-    try {
-      const response = await api.delete("/profile/background");
-      console.log(`response`, response);
-    } catch (error) {
-      console.log(`error`, error);
-    }
-  }
+  const onRemove = async () => {
+    dispatch(removeBackground());
+  };
 
   return (
     <div className="flex flex-col">
-      <input type="file" name="avatar" onChange={handleCreateBase64} />
+      <input
+        type="file"
+        name="avatar"
+        onChange={handleCreateBase64}
+        accept="image/png"
+      />
       <button
         onClick={onSubmit}
         className=" m-2 bg-blue-300 hover:bg-blue-400 text-gray-800 py-2 px-7 border-gray-400 rounded shadow"

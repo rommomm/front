@@ -1,12 +1,14 @@
 import React, { useCallback, useState } from "react";
-import api from "../libs/api";
 import { convertToBase64 } from "../helpers/convertToBase64";
 import { useDispatch } from "react-redux";
-import { removeAvatar } from "../redux/profile/actions";
+import { removeAvatar, uploadAvatar } from "../redux/profile/actions";
+import { Button, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons/lib/icons";
 
 function EditAvatar() {
   const [avatar, setAvatar] = useState("");
   const [avatarData, setAvatarData] = useState("");
+
   const dispatch = useDispatch();
 
   const handleCreateBase64 = useCallback(async (e) => {
@@ -17,15 +19,10 @@ function EditAvatar() {
     e.target.value = "";
   }, []);
 
-  async function submit() {
-    try {
-      const formData = new FormData();
-      formData.append("profile_photo", avatarData);
-      const response = await api.post("/profile/avatar", formData);
-      console.log(`response`, response);
-    } catch (error) {
-      console.log(`error`, error);
-    }
+  function onSubmit() {
+    const formData = new FormData();
+    formData.append("profile_photo", avatarData);
+    dispatch(uploadAvatar(formData));
   }
 
   const onRemove = async () => {
@@ -33,14 +30,20 @@ function EditAvatar() {
   };
 
   return (
-    <div className="flex flex-col">
-      <input type="file" name="avatar" onChange={handleCreateBase64} />
+    <div className="flex flex-col ">
+      <input
+        type="file"
+        name="avatar"
+        onChange={handleCreateBase64}
+        accept="image/png"
+      />
       <button
-        onClick={submit}
-        className=" m-2 bg-blue-300 hover:bg-blue-400 text-gray-800 py-2 px-7 border-gray-400 rounded shadow"
+        onClick={onSubmit}
+        className=" m-2 bg-blue-300 hover:bg-blue-400  py-2 px-7 border-gray-400 rounded shadow"
       >
         Upload avatar
       </button>
+
       <img src={avatar} />
       <button
         onClick={onRemove}

@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import EditAvatar from "../components/EditAvatar";
 import EditBackground from "../components/EditBackground";
 import EditLocation from "../components/EditLocation";
 import EditUserInfo from "../components/EditUserInfo";
 import Layout from "../components/Layout";
 import ProfilePreview from "../components/ProfilePreview";
+import { authMe } from "../redux/auth/actions";
 
-function Settings({ avatar }) {
-  console.log(`avatar`, avatar);
+function Settings() {
+  const dispatch = useDispatch();
+  const { profile } = useSelector(({ profile }) => profile);
+
+  useEffect(() => {
+    dispatch(authMe());
+  }, [profile]);
   return (
     <Layout title="Settings page">
       <div className="flex-grow  border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px]">
@@ -17,7 +24,7 @@ function Settings({ avatar }) {
         <div className="border-black border-l border-r w-full max-w-screen-md	border-b">
           <EditUserInfo />
 
-          <div className="pl-4 m-2  flex justify-between">
+          <div className="pl-4 m-2  flex justify-around">
             <EditAvatar />
             <EditBackground />
             <EditLocation />

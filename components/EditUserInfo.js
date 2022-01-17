@@ -1,12 +1,12 @@
-import { Input } from "antd";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { profileValidationSchema } from "../validationSchema/profile";
-import api from "../libs/api";
+import { updateProfile } from "../redux/profile/actions";
 
 function EditUserInfo() {
   const { user } = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
   async function handleSave(values) {
     try {
       if (!values.first_name) {
@@ -15,10 +15,9 @@ function EditUserInfo() {
       if (!values.last_name) {
         values.last_name = user.last_name;
       }
-      const response = await api.put("/profile/update", values);
-      console.log(`response`, response);
+      dispatch(updateProfile(values));
     } catch (error) {
-      console.log(`error`, error);
+      console.log(error);
     }
   }
 

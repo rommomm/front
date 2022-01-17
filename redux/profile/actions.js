@@ -4,31 +4,45 @@ import { message } from "antd";
 
 export const updateProfile = (values) => async (dispatch) => {
   try {
-    dispatch({ type: types.START_LOADING });
+    const response = await API.profile.updateProfile(values);
+    message.success("Success", 2);
 
-    const response = await API.profile.updateProfile({ values });
     dispatch({
       type: types.UPDATE_PROFILE,
       payload: response.data,
     });
-    dispatch({ type: types.END_LOADING });
   } catch (error) {
     console.log(error);
+    message.error(error.message, 2);
   }
 };
 
 export const uploadAvatar = (avatar) => async (dispatch) => {
   try {
-    dispatch({ type: types.START_LOADING });
-
-    const response = await API.posts.uploadAvatar({ avatar });
+    const response = await API.profile.uploadAvatar(avatar);
+    message.success("Success", 2);
     dispatch({
       type: types.UPLOAD_AVATAR,
       payload: response.data,
     });
-    dispatch({ type: types.END_LOADING });
   } catch (error) {
     console.log(error);
+    message.error(error.message, 2);
+  }
+};
+
+export const uploadBackground = (background) => async (dispatch) => {
+  try {
+    const response = await API.profile.uploadBackground(background);
+    message.success("Success", 2);
+
+    dispatch({
+      type: types.UPLOAD_BACKGROUND,
+      payload: response.data,
+    });
+  } catch (error) {
+    console.log(error);
+    message.error(error.message, 2);
   }
 };
 
@@ -45,24 +59,9 @@ export const removeAvatar = () => async (dispatch) => {
   }
 };
 
-export const uploadBackground = (background) => async (dispatch) => {
-  try {
-    dispatch({ type: types.START_LOADING });
-
-    const response = await API.posts.uploadBackground({ background });
-    dispatch({
-      type: types.UPLOAD_BACKGROUND,
-      payload: response.data,
-    });
-    dispatch({ type: types.END_LOADING });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const removeBackground = () => async (dispatch) => {
   try {
-    const response = await API.posts.removeBackground();
+    const response = await API.profile.removeBackground();
     message.success("Success", 2);
     dispatch({
       type: types.REMOVE_BACKGROUND,
