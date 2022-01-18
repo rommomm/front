@@ -14,7 +14,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 function Profile() {
   const { isLoggedIn, user } = useSelector(({ user }) => user);
-  const { posts, author } = useSelector(({ all }) => all.posts);
+  const { posts, author } = useSelector(({ all }) => all);
+  console.log("posts", posts);
+  console.log(`author`, author);
   const dispatch = useDispatch();
   const handleDeletePost = async (id) => {
     dispatch(deletePost(id));
@@ -48,8 +50,6 @@ function Profile() {
 export const getServerSideProps = withRedux(async (ctx, store) => {
   await store.dispatch(getUserPosts(ctx));
   const data = store.getState();
-  console.log(`store.getState()`, store.getState());
-  // console.log(`data`, data.all.posts.author);
   if (!data.all.posts) {
     return {
       notFound: true,

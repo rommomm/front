@@ -1,21 +1,32 @@
-import React from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import React, { useEffect, useRef } from "react";
+import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import Link from "next/link";
 import router from "next/router";
 import { signInValidationSchema } from "../validationSchema/signIn";
 import { handleErrors } from "../helpers/handleError";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "../redux/auth/authSlice";
 import AuthLayout from "../components/AuthLayout";
 
 function SignIn() {
   const dispatch = useDispatch();
+  const { errors } = useSelector(({ user }) => user);
+  const formikRef = useRef(null);
 
-  async function handleFormSubmit(values, actions) {
+  console.log("errors", errors);
+  console.log("formikRef", formikRef);
+
+  // useEffect(() => {
+  //   if (errors) {
+  //     formikRef.current.setErrors(handleErrors(errors));
+  //   }
+  // }, [errors]);
+
+  async function handleFormSubmit(values, { setErrors }) {
     try {
-      await dispatch(signIn(values));
-      router.push("/");
+      dispatch(signIn({ values, setErrors }));
     } catch (error) {
+      console.log(`error`, error);
       const errors = handleErrors(error.errors);
       actions.setErrors(errors);
       console.log(error);
@@ -34,6 +45,7 @@ function SignIn() {
             <h1 className="mb-5 text-2xl text-center">Sign in</h1>
             <div className="col-md-8 offset-md-2">
               <Formik
+                errors={handleErrors(errors)}
                 initialValues={formInitialSchema}
                 validationSchema={signInValidationSchema}
                 onSubmit={handleFormSubmit}

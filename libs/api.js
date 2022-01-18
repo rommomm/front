@@ -25,6 +25,7 @@ instance.interceptors.response.use(
     return response.data;
   },
   async function (error) {
+    console.log("error.response.data", error.response.data);
     throw error.response.data;
   }
 );

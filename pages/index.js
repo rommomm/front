@@ -17,10 +17,6 @@ function App() {
   const { posts } = useSelector(({ all }) => all);
   const { isLoggedIn } = useSelector(({ user }) => user);
 
-  useEffect(() => {
-    dispatch(getAllPosts());
-  }, [dispatch]);
-
   const handleDeletePost = async (id) => {
     dispatch(deletePost(id));
   };

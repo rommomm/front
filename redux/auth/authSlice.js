@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../api";
 import router from "next/router";
+import { handleErrors } from "../../helpers/handleError";
 
 export const authMe = createAsyncThunk("auth/authMe", async function () {
   try {
@@ -14,24 +15,14 @@ export const authMe = createAsyncThunk("auth/authMe", async function () {
 
 export const signIn = createAsyncThunk(
   "auth/signIn",
-  async function (credentials) {
+  async function ({ values, setErrors }) {
     try {
-      const response = await API.auth.signIn(credentials);
+      const response = await API.auth.signIn(values);
       Cookies.set("token", response.token);
+      router.push("/");
       return response.data;
     } catch (error) {
-      throw error;
-    }
-  }
-);
-
-export const login = createAsyncThunk(
-  "auth/login",
-  async function (credentials) {
-    try {
-      await dispatch(signIn(credentials));
-      await dispatch(authMe());
-    } catch (error) {
+      setErrors(handleErrors(error.errors));
       throw error;
     }
   }
@@ -74,9 +65,15 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.user = action.payload;
     },
-    [signIn]: (state) => {
+    [signIn.pending]: (state) => {
+      state.isLoggedIn = false;
+    },
+    [signIn.fulfilled]: (state, action) => {
       state.isLoggedIn = true;
       state.user = action.payload;
+    },
+    [signIn.rejected]: (state) => {
+      state.isLoggedIn = false;
     },
     [signUp]: (state) => {
       state.user = null;

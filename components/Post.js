@@ -25,7 +25,7 @@ function Post({ post, onDelete, onUpdate }) {
 
   function showComments() {
     dispatch(getAllCommentsByPosts(post.id));
-    setEditComment(!editComment);
+    // setEditComment(!editComment);
   }
 
   const menu = (
@@ -48,6 +48,10 @@ function Post({ post, onDelete, onUpdate }) {
     "dd LLL yyyy HH:mm:ss"
   );
 
+  if (openedPostComments === post.id) {
+    console.log("ids", openedPostComments, post.id);
+    console.log("editComment", editComment);
+  }
   return (
     <div>
       <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">
@@ -113,9 +117,7 @@ function Post({ post, onDelete, onUpdate }) {
         </div>
       </div>
       <div className="relative">
-        {editComment && openedPostComments === post.id && (
-          <CommentsSystem post={post} />
-        )}
+        {openedPostComments === post.id && <CommentsSystem post={post} />}
       </div>
     </div>
   );

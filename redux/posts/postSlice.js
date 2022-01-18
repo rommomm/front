@@ -197,7 +197,8 @@ const postSlice = createSlice({
     },
     [getUserPosts.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.posts = action.payload;
+      state.posts = action.payload.posts;
+      state.author = action.payload.author;
     },
 
     [getAllComments.fulfilled]: (state, action) => {
@@ -208,8 +209,11 @@ const postSlice = createSlice({
       state.isLoadingComments = true;
     },
     [getAllCommentsByPosts.fulfilled]: (state, action) => {
+      const { postId } = action.payload;
+
       state.comments = action.payload;
-      state.openedPostComments = action.payload.postId;
+      state.openedPostComments =
+        state.openedPostComments !== postId ? postId : null;
       state.isLoadingComments = false;
     },
   },
