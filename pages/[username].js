@@ -23,7 +23,7 @@ function Profile() {
   };
 
   const handleUpdatePost = async (id, updatedData) => {
-    dispatch(updatePost(id, updatedData));
+    dispatch(updatePost({ id, data: updatedData }));
   };
 
   const handleSavePost = async (post) => {

@@ -56,10 +56,12 @@ export const deletePost = createAsyncThunk(
 
 export const updatePost = createAsyncThunk(
   "posts/updatePost",
-  async function (id, updatedData) {
+  async function ({ id, data }) {
+    console.log("data", data);
     try {
-      const response = await API.posts.updatePost(id, updatedData);
-      return response.data;
+      const response = await API.posts.updatePost(id, data);
+      console.log("response", response);
+      return { id, updatedPost: response.data };
     } catch (error) {
       console.log(error);
     }
@@ -137,9 +139,9 @@ const postSlice = createSlice({
   },
   extraReducers: {
     [createPost.fulfilled]: (state, action) => {
-      state.posts.push(action.payload);
+      state.posts = [action.payload, ...state.posts];
     },
-    [deletePost.pending]: (state, action) => {
+    [deletePost.pending]: (state) => {
       state.isLoading = true;
     },
     [deletePost.fulfilled]: (state, action) => {
@@ -148,8 +150,11 @@ const postSlice = createSlice({
       state.posts = state.posts.filter((post) => post.id !== action.payload);
     },
     [updatePost.fulfilled]: (state, action) => {
-      state.posts.map((post) =>
-        post.id === action.payload.id ? { ...post, ...action.payload } : post
+      console.log("action", action);
+      state.posts = state.posts.map((post) =>
+        post.id === action.payload.id
+          ? { ...post, ...action.payload.updatedPost }
+          : post
       );
     },
     [createComment.fulfilled]: (state, action) => {
