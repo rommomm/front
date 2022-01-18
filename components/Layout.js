@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { Spin } from "antd";
 
 function Layout({ children, title }) {
-  const { isLoggedIn, user, isLoading } = useSelector(({ auth }) => auth);
+  const { isLoggedIn, isLoading, user } = useSelector(({ user }) => user);
 
   return (
     <div>

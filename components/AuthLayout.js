@@ -4,8 +4,7 @@ import { useRouter } from "next/router";
 
 function AuthLayout({ children }) {
   const router = useRouter();
-  const { isLoggedIn, isLoading } = useSelector(({ auth }) => auth);
-
+  const { isLoggedIn, isLoading } = useSelector(({ user }) => user);
   useEffect(() => {
     if (isLoggedIn) {
       router.push("/");

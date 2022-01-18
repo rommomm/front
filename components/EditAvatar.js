@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { convertToBase64 } from "../helpers/convertToBase64";
 import { useDispatch } from "react-redux";
-import { removeAvatar, uploadAvatar } from "../redux/profile/actions";
+import { removeAvatar, uploadAvatar } from "../redux/profile/profileSlice";
 import { Button, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons/lib/icons";
 

@@ -5,10 +5,10 @@ import router from "next/router";
 import Link from "next/link";
 import { Menu, Dropdown } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/auth/actions";
+import { logout } from "../redux/auth/authSlice";
 
 export default function DropDownMenu({ children }) {
-  const { user } = useSelector(({ auth }) => auth);
+  const { isLoggedIn, isLoading, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   async function handleLogout() {

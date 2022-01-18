@@ -2,7 +2,7 @@ import Modal from "antd/lib/modal/Modal";
 import React, { useState } from "react";
 import Map from "./Map";
 import api from "../libs/api";
-import { updateProfile } from "../redux/profile/actions";
+import { updateProfile } from "../redux/profile/profileSlice";
 import { useDispatch } from "react-redux";
 
 function EditLocation() {

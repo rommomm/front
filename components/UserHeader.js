@@ -3,8 +3,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 function UserHeader({ userInfo, posts }) {
-  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
-  const { author } = useSelector(({ posts }) => posts);
+  const { isLoggedIn, user } = useSelector(({ user }) => user);
+  const { author } = useSelector(({ all }) => all.posts);
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-1 px-1  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">

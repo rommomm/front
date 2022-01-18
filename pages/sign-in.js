@@ -1,12 +1,11 @@
 import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import Cookies from "js-cookie";
 import Link from "next/link";
 import router from "next/router";
 import { signInValidationSchema } from "../validationSchema/signIn";
 import { handleErrors } from "../helpers/handleError";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/auth/actions";
+import { useDispatch } from "react-redux";
+import { signIn } from "../redux/auth/authSlice";
 import AuthLayout from "../components/AuthLayout";
 
 function SignIn() {
@@ -14,7 +13,7 @@ function SignIn() {
 
   async function handleFormSubmit(values, actions) {
     try {
-      await dispatch(login(values));
+      await dispatch(signIn(values));
       router.push("/");
     } catch (error) {
       const errors = handleErrors(error.errors);
@@ -26,10 +25,6 @@ function SignIn() {
     login: "",
     password: "",
   };
-
-  // if (Cookies?.get && Cookies.get("token")) {
-  //   router.push("/");
-  // }
 
   return (
     <AuthLayout>

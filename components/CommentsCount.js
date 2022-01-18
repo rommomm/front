@@ -1,9 +1,7 @@
 import { CommentOutlined, LikeOutlined } from "@ant-design/icons/lib/icons";
 import React from "react";
-import { useSelector } from "react-redux";
 
 function CommentsCount({ counterComments, showComments }) {
-  const { isLoggedIn } = useSelector(({ auth }) => auth);
   return (
     <div>
       <div className="w-5/6 m-auto	flex justify-start">

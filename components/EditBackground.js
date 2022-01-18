@@ -2,7 +2,10 @@ import api from "../libs/api";
 
 import React, { useCallback, useState } from "react";
 import { convertToBase64 } from "../helpers/convertToBase64";
-import { removeBackground, uploadBackground } from "../redux/profile/actions";
+import {
+  removeBackground,
+  uploadBackground,
+} from "../redux/profile/profileSlice";
 import { useDispatch } from "react-redux";
 
 function EditBackground() {

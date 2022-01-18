@@ -6,7 +6,7 @@ import EditLocation from "../components/EditLocation";
 import EditUserInfo from "../components/EditUserInfo";
 import Layout from "../components/Layout";
 import ProfilePreview from "../components/ProfilePreview";
-import { authMe } from "../redux/auth/actions";
+import { authMe } from "../redux/auth/authSlice";
 
 function Settings() {
   const dispatch = useDispatch();

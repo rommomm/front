@@ -2,10 +2,10 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { profileValidationSchema } from "../validationSchema/profile";
-import { updateProfile } from "../redux/profile/actions";
+import { updateProfile } from "../redux/profile/profileSlice";
 
 function EditUserInfo() {
-  const { user } = useSelector(({ auth }) => auth);
+  const { user } = useSelector(({ user }) => user);
   const dispatch = useDispatch();
   async function handleSave(values) {
     try {

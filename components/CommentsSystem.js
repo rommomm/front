@@ -4,14 +4,14 @@ import {
   createComment,
   deleteComment,
   updateComment,
-} from "../redux/posts/actions";
+} from "../redux/posts/postSlice";
 import AddComment from "./AddComment";
 import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 
 function CommentsSystem({ post }) {
-  const { comments } = useSelector(({ posts }) => posts);
-  const { isLoggedIn } = useSelector(({ auth }) => auth);
+  const { comments } = useSelector(({ all }) => all.comments);
+  const { isLoggedIn } = useSelector(({ user }) => user);
 
   const dispatch = useDispatch();
 

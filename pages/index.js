@@ -1,20 +1,25 @@
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import React from "react";
+import React, { useEffect } from "react";
 import { withRedux } from "../redux";
 import {
   getAllPosts,
   createPost,
   deletePost,
   updatePost,
-} from "../redux/posts/actions";
+} from "../redux/posts/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AddPostForm from "../components/AddPostForm";
 
 function App() {
-  const { all: posts } = useSelector(({ posts }) => posts);
-  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
+
+  const { posts } = useSelector(({ all }) => all);
+  const { isLoggedIn } = useSelector(({ user }) => user);
+
+  useEffect(() => {
+    dispatch(getAllPosts());
+  }, [dispatch]);
 
   const handleDeletePost = async (id) => {
     dispatch(deletePost(id));

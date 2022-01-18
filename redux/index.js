@@ -1,30 +1,26 @@
 import { useMemo } from "react";
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import thunkMiddleware from "redux-thunk";
-import posts from "./posts/reducer";
-import auth from "./auth/reducer";
-import profile from "./profile/reducer";
+import postSlice from "./posts/postSlice";
+import authSlice from "./auth/authSlice";
+import profileSlice from "./profile/profileSlice";
+import { configureStore } from "@reduxjs/toolkit";
+
 let store;
 
-const reducers = combineReducers({
-  posts,
-  auth,
-  profile,
-});
-
-function initStore(initialState) {
-  return createStore(
-    reducers,
-    initialState,
-    composeWithDevTools(applyMiddleware(thunkMiddleware))
-  );
-}
+const createStore = (preloadedState) => {
+  return configureStore({
+    reducer: {
+      profile: profileSlice,
+      all: postSlice,
+      user: authSlice,
+    },
+    preloadedState,
+  });
+};
 
 export const initializeStore = (preloadedState) => {
-  let _store = store ?? initStore(preloadedState);
+  let _store = store ?? createStore(preloadedState);
   if (preloadedState && store) {
-    _store = initStore({
+    _store = createStore({
       ...store.getState(),
       ...preloadedState,
     });

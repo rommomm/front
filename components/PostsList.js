@@ -4,11 +4,10 @@ import { useSelector } from "react-redux";
 import Post from "./Post";
 
 function PostsList({ posts, onDelete, onUpdate }) {
-  const { isLoadingPosts } = useSelector(({ posts }) => posts);
-
+  const { isLoading } = useSelector(({ all }) => all);
   return (
     <div>
-      {isLoadingPosts ? (
+      {isLoading ? (
         <div className=" fixed inset-1/2 ">
           <Spin tip="Loading..." size="large" />
         </div>

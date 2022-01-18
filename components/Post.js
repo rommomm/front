@@ -8,13 +8,13 @@ import PostEditForm from "./PostEditForm";
 import CommentsCount from "./CommentsCount";
 import { useDispatch, useSelector } from "react-redux";
 import CommentsSystem from "./CommentsSystem";
-import { getAllCommentsByPosts } from "../redux/posts/actions";
+import { getAllCommentsByPosts } from "../redux/posts/postSlice";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
   const [editComment, setEditComment] = useState(false);
-  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
-  const { openedPostComments } = useSelector(({ posts }) => posts);
+  const { isLoggedIn, user } = useSelector(({ user }) => user);
+  const { openedPostComments } = useSelector(({ all }) => all);
 
   const dispatch = useDispatch();
 

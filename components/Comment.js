@@ -9,7 +9,7 @@ import CommentsCount from "./CommentLikes";
 
 function Comment({ comment, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
+  const { isLoggedIn, user } = useSelector(({ user }) => user);
   function handleUpdatePost(values) {
     onUpdate(comment.id, values);
     setEditMode(false);

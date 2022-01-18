@@ -3,7 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 function HeaderProfilePreview() {
-  const { user } = useSelector(({ auth }) => auth);
+  const { user } = useSelector(({ user }) => user);
 
   return (
     <>

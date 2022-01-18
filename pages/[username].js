@@ -9,12 +9,12 @@ import {
   createPost,
   deletePost,
   updatePost,
-} from "../redux/posts/actions";
+} from "../redux/posts/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function Profile() {
-  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
-  const { all: posts, author } = useSelector(({ posts }) => posts);
+  const { isLoggedIn, user } = useSelector(({ user }) => user);
+  const { posts, author } = useSelector(({ all }) => all.posts);
   const dispatch = useDispatch();
   const handleDeletePost = async (id) => {
     dispatch(deletePost(id));
@@ -48,7 +48,9 @@ function Profile() {
 export const getServerSideProps = withRedux(async (ctx, store) => {
   await store.dispatch(getUserPosts(ctx));
   const data = store.getState();
-  if (!data.posts.author) {
+  console.log(`store.getState()`, store.getState());
+  // console.log(`data`, data.all.posts.author);
+  if (!data.all.posts) {
     return {
       notFound: true,
     };

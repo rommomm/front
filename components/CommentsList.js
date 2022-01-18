@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Comment from "./Comment";
 
 function CommentsList({ comments, onUpdate, onDelete }) {
-  const { isLoadingComments } = useSelector(({ posts }) => posts);
+  const { isLoadingComments } = useSelector(({ all }) => all);
 
   return (
     <div>
