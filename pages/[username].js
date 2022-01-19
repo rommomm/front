@@ -55,7 +55,6 @@ export const getServerSideProps = withRedux(async (ctx, store) => {
       notFound: true,
     };
   }
-
   return {
     props: {},
   };
