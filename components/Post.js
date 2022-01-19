@@ -111,7 +111,7 @@ function Post({ post, onDelete, onUpdate }) {
         </div>
       </div>
       <div className="relative">
-        {openedPostComments === post.id && (
+        {editComment && openedPostComments === post.id && (
           <CommentsSystem post={post} />
         )}
       </div>
