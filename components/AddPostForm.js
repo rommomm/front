@@ -1,32 +1,48 @@
-import React, { useState } from "react";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { postValidationSchema } from "../validationSchema/post";
 
 function AddPostForm({ onCreate }) {
-  const [content, setContent] = useState("");
+  function handleCreate(value, actions) {
+    onCreate(value.content);
+    actions.resetForm();
+  }
 
-  const handleCreate = () => {
-    onCreate(content);
-    setContent("");
+  const formInitialValues = {
+    content: "",
   };
 
   return (
     <div className=" w-full border-black border-b ">
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Text"
-        rows="4"
-        className="bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
-      />
-      <div className="flex justify-between pt-2.5 pr-2 pb-2">
-        <div></div>
-        <div>
-          <button
-            className="bg-blue-400 rounded-lg px-4 py-1.5 shadow-md"
-            onClick={handleCreate}
-          >
-            Create
-          </button>
-        </div>
+      <div className="col-md-8 offset-md-2">
+        <Formik
+          initialValues={formInitialValues}
+          validationSchema={postValidationSchema}
+          onSubmit={handleCreate}
+        >
+          <Form className="w-full">
+            <Field
+              component="textarea"
+              type="content"
+              name="content"
+              placeholder="Text"
+              rows="5"
+              className="resize-none bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full"
+            />
+
+            <div className="flex justify-between pt-2.5 pr-2 pb-2">
+              <div>
+                <p className=" text-sm pl-4 text-rose-500 text-red-600">
+                  <ErrorMessage name="content" />
+                </p>
+              </div>
+              <div>
+                <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                  Create
+                </button>
+              </div>
+            </div>
+          </Form>
+        </Formik>
       </div>
     </div>
   );

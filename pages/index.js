@@ -1,15 +1,17 @@
-import React, { useState } from "react";
-import PostsList from "../components/PostList";
-import Sidebar from "../components/Sidebar";
-import Head from "next/head";
-import apiClient from "../libs/apiClient";
+import React, { useContext, useState } from "react";
+import PostsList from "../components/PostsList";
+import Layout from "../components/Layout";
+import UserContext from "../components/UserContext";
+import AddPostForm from "../components/AddPostForm";
+import API from "../api";
 
 function App({ initialPosts = [] }) {
+  const { isLoggedIn } = useContext(UserContext);
   const [posts, setPosts] = useState(initialPosts);
 
   async function handleDeletePost(id) {
     try {
-      await apiClient.delete(`/posts/${id}`);
+      await API.posts.DeletePost(id);
       setPosts(posts.filter((p) => p.id !== id));
     } catch (e) {
       console.log(e);
@@ -18,10 +20,10 @@ function App({ initialPosts = [] }) {
 
   async function handleUpdatePost(id, updatedData) {
     try {
-      await apiClient.put(`/posts/${id}`, updatedData);
+      const response = await API.posts.updatePost(id, updatedData);
       setPosts(
         posts.map((post) =>
-          post.id === id ? { ...post, ...updatedData } : post
+          post.id === id ? { ...post, ...response.data } : post
         )
       );
     } catch (e) {
@@ -29,40 +31,39 @@ function App({ initialPosts = [] }) {
     }
   }
 
-  const handleSavePost = async (text) => {
+  async function handleSavePost(content) {
     try {
-      const response = await apiClient.post(`/posts`, {
-        text,
-      });
-      setPosts([...posts, response.data]);
+      const response = await API.posts.createPost({ content });
+      const newPost = { ...response.data };
+      setPosts([newPost, ...posts]);
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
   return (
-    <div className="">
-      <Head>
-        <title>Home</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="bg-[#000] min-h-screen flex max-w-[1500px] mx-auto">
-        <Sidebar />
-        <PostsList
-          posts={posts}
-          onUpdate={handleUpdatePost}
-          onDelete={handleDeletePost}
-          onCreate={handleSavePost}
-        />
-      </main>
-    </div>
+    <Layout title="Home page">
+      <div className="flex-grow  border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px]">
+        <div className="text-[#d9d9d9] flex items-center sm:justify-between py-2 px-3  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
+          Explore
+        </div>
+        <div className="border-black border-l border-r w-full max-w-screen-md	">
+          {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
+
+          <PostsList
+            posts={posts}
+            onUpdate={handleUpdatePost}
+            onDelete={handleDeletePost}
+          />
+        </div>
+      </div>
+    </Layout>
   );
 }
 
 export async function getServerSideProps() {
-  const response = await apiClient.get("/posts");
+  const response = await API.posts.getAllPosts();
 
   return { props: { initialPosts: response.data } };
 }
-
 export default App;

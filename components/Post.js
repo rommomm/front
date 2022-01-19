@@ -1,75 +1,99 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Menu, Dropdown } from "antd";
+import Link from "next/link";
+import UserContext from "./UserContext";
+import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
+import useFormateDate from "../hooks/useFormatDate";
+import PostEditForm from "./PostEditForm";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const [editableContent, setEditableContent] = useState(post.text);
-
-  function handleUpdatePost() {
-    const updatedPost = { text: editableContent };
-    onUpdate(post.id, updatedPost);
+  const { isLoggedIn, user } = useContext(UserContext);
+  function handleUpdatePost(value) {
+    onUpdate(post.id, value);
     setEditMode(false);
   }
 
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <button onClick={() => onDelete(post.id)}>Delete</button>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <button onClick={() => setEditMode(!editMode)}>
+          {editMode ? "Cancel" : "Edit"}
+        </button>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const formattedCreateAt = useFormateDate(post.created_at, "dd LLL yyyy");
+
+  const formattedUpdateAt = useFormateDate(
+    post.updated_at,
+    "dd LLL yyyy HH:mm:ss"
+  );
+
   return (
-    <div className=" flex p-2   cursor-pointer border-b border-gray-700">
-      <div className=" m-2 space-y-2 w-full">
+    <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">
+      <div className="m-2 space-y-2 w-full">
         <div className="flex">
-          {!editMode && (
+          <Link href={`/` + post.author.user_name}>
             <img
               src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
               alt=""
               className="h-12 w-12 rounded-full mr-4"
             />
-          )}
+          </Link>
           <div className="text-[#6e767d] w-full">
-            <div className="inline-block group">
+            <div className="inline-block flex group">
               <h4
-                className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${
+                className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] ${
                   !editMode && "inline-block"
                 }`}
               >
-                Vasya
+                <Link href={`/` + post.author.user_name}>
+                  <a>{post.author.first_name}</a>
+                </Link>
               </h4>
-              <span
-                className={`text-sm sm:text-[15px] ${!editMode && "ml-1.5"}`}
+              <p
+                className={`text-sm sm:text-[15px] pl-1 ${
+                  !editMode && "ml-1.5"
+                }`}
               >
-                @Vasya
-              </span>
-            </div>
-
-            {editMode ? (
-              <div className="flex">
-                <img
-                  src="https://assets.puzzlefactory.pl/puzzle/311/987/original.webp"
-                  alt=""
-                  className="h-12 w-12 rounded-full mr-4"
-                />
-                <textarea
-                  value={editableContent}
-                  onChange={(e) => setEditableContent(e.target.value)}
-                  rows="4"
-                  className="border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
-                />
-              </div>
-            ) : (
-              <p className="break-normal md:break-all">{post.text}</p>
-            )}
-          </div>
-          <div className="icon group flex-shrink-0 ml-auto pl-2">
-            <div className="border p-1 m-1 rounded-lg px-4 py-1.5 shadow-md">
-              {editMode ? (
-                <button onClick={handleUpdatePost}>Save</button>
-              ) : (
-                <button onClick={() => onDelete(post.id)}>Delete</button>
+                @{post.author.user_name}
+              </p>
+              <span className="ml-2">{formattedCreateAt}</span>
+              {post.created_at !== post.updated_at && (
+                <span className="ml-2">{formattedUpdateAt}</span>
               )}
             </div>
-            <div className="border p-1 m-1 rounded-lg px-4 py-1.5 shadow-md">
-              <button onClick={() => setEditMode(!editMode)}>
-                {editMode ? "Cancel" : "Edit"}
-              </button>
-            </div>
+            {editMode ? (
+              <PostEditForm
+                value={post.content}
+                onSave={handleUpdatePost}
+                isLoggedIn={isLoggedIn}
+                editMode={editMode}
+                setEditMode={setEditMode}
+              />
+            ) : (
+              <p className="break-words break-all">{post.content}</p>
+            )}
           </div>
         </div>
+      </div>
+
+      <div>
+        {isLoggedIn && user.id === post.author.id && (
+          <Dropdown overlay={menu} trigger={["click"]}>
+            <a
+              className="ant-dropdown-link"
+              onClick={(e) => e.preventDefault()}
+            >
+              <EllipsisOutlined style={{ fontSize: "22px" }} />
+            </a>
+          </Dropdown>
+        )}
       </div>
     </div>
   );

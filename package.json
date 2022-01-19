@@ -8,12 +8,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroicons/react": "^1.0.5",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
+    "@ant-design/icons": "^4.7.0",
+    "antd": "^4.18.0",
     "axios": "^0.24.0",
-    "next": "12.0.4",
-    "react": "17.0.2"
+    "cookies": "^0.8.0",
+    "formik": "^2.2.9",
+    "js-cookie": "^3.0.1",
+    "luxon": "^2.3.0",
+    "next": "^12.0.7",
+    "react": "17.0.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
