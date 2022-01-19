@@ -3,6 +3,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { profileValidationSchema } from "../validationSchema/profile";
 import { updateProfile } from "../redux/profile/profileSlice";
+import EditUserInfoForm from "./EditUserInfoForm";
 
 function EditUserInfo() {
   const { user } = useSelector(({ user }) => user);
@@ -11,6 +12,9 @@ function EditUserInfo() {
     dispatch(updateProfile(values));
   }
 
+  if (!user) {
+    return null;
+  }
   const formInitialValue = {
     first_name: user.first_name,
     last_name: user.last_name,
@@ -25,42 +29,7 @@ function EditUserInfo() {
           validationSchema={profileValidationSchema}
           onSubmit={(values) => handleSave(values)}
         >
-          <Form>
-            <div className="col-md-12 mt-4">
-              <span>First name</span>
-              <Field
-                type="text"
-                name="first_name"
-                className="block border border-black w-full p-2 rounded mb-4"
-              />
-
-              <p className=" text-sm pl-4 text-rose-500 text-red-600	">
-                <ErrorMessage name="first_name" />
-              </p>
-            </div>
-            <div className="col-md-12 mt-4">
-              <span>Last name</span>
-
-              <Field
-                type="text"
-                name="last_name"
-                className="block border border-black w-full p-2 rounded mb-4"
-              />
-
-              <p className=" text-sm pl-4 text-rose-500 text-red-600	">
-                <ErrorMessage name="last_name" />
-              </p>
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className="bg-blue-200 hover:bg-blue-300 text-gray-800  py-2 px-7 border-gray-400 rounded shadow"
-              >
-                Save
-              </button>
-            </div>
-          </Form>
+          {({ values }) => <EditUserInfoForm values={values} />}
         </Formik>
       </div>
     </div>

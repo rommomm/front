@@ -13,7 +13,6 @@ import AddPostForm from "../components/AddPostForm";
 
 function App() {
   const dispatch = useDispatch();
-
   const { posts } = useSelector(({ all }) => all);
   const { isLoggedIn } = useSelector(({ user }) => user);
 

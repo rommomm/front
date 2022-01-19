@@ -5,11 +5,7 @@ module.exports = {
     extend: {},
   },
   variants: {
-    variants: {
-      extend: {
-        opacity: ["disabled"],
-      },
-    },
+    opacity: ({ after }) => after(["disabled"]),
   },
   plugins: [],
 };

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EditAvatar from "../components/EditAvatar";
+import EditAvatarModal from "../components/EditAvatarModal";
 import EditBackground from "../components/EditBackground";
 import EditLocation from "../components/EditLocation";
 import EditUserInfo from "../components/EditUserInfo";
@@ -10,11 +11,11 @@ import { authMe } from "../redux/auth/authSlice";
 
 function Settings() {
   const dispatch = useDispatch();
-  const { profile } = useSelector(({ profile }) => profile);
+  const { isLoading } = useSelector(({ profile }) => profile);
 
   useEffect(() => {
     dispatch(authMe());
-  }, [profile]);
+  }, [isLoading]);
   return (
     <Layout title="Settings page">
       <div className="flex-grow  border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px]">
@@ -24,8 +25,8 @@ function Settings() {
         <div className="border-black border-l border-r w-full max-w-screen-md	border-b">
           <EditUserInfo />
 
-          <div className="pl-4 m-2  flex justify-around">
-            <EditAvatar />
+          <div className="pl-4 m-2  flex justify-around  flex-wrap">
+            <EditAvatarModal />
             <EditBackground />
             <EditLocation />
             <ProfilePreview />

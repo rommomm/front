@@ -15,8 +15,6 @@ import { useDispatch, useSelector } from "react-redux";
 function Profile() {
   const { isLoggedIn, user } = useSelector(({ user }) => user);
   const { posts, author } = useSelector(({ all }) => all);
-  console.log("posts", posts);
-  console.log(`author`, author);
   const dispatch = useDispatch();
   const handleDeletePost = async (id) => {
     dispatch(deletePost(id));

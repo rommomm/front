@@ -20,6 +20,7 @@ export const uploadAvatar = createAsyncThunk(
   "profile/uploadAvatar",
   async function (avatar) {
     try {
+      console.log("avatar", avatar);
       const response = await API.profile.uploadAvatar(avatar);
       message.success("Success", 2);
       return response.data;
