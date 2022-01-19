@@ -7,26 +7,21 @@ import { updateProfile } from "../redux/profile/profileSlice";
 function EditUserInfo() {
   const { user } = useSelector(({ user }) => user);
   const dispatch = useDispatch();
-  async function handleSave(values) {
-    try {
-      if (!values.first_name) {
-        values.first_name = user.first_name;
-      }
-      if (!values.last_name) {
-        values.last_name = user.last_name;
-      }
-      dispatch(updateProfile(values));
-    } catch (error) {
-      console.log(error);
-    }
+  function handleSave(values) {
+    dispatch(updateProfile(values));
   }
+
+  const formInitialValue = {
+    first_name: user.first_name,
+    last_name: user.last_name,
+  };
 
   return (
     <div className="border-b border-black pb-4">
       <div className="w-5/6 m-auto pt-5">
         <Formik
           enableReinitialize={false}
-          initialValues={{ first_name: "", last_name: "" }}
+          initialValues={formInitialValue}
           validationSchema={profileValidationSchema}
           onSubmit={(values) => handleSave(values)}
         >

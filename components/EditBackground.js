@@ -1,31 +1,22 @@
-import api from "../libs/api";
-
-import React, { useCallback, useState } from "react";
-import { convertToBase64 } from "../helpers/convertToBase64";
+import React from "react";
 import {
   removeBackground,
   uploadBackground,
 } from "../redux/profile/profileSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function EditBackground() {
-  const [background, setBackground] = useState("");
-  const [backgroundData, setBackgroundData] = useState("");
+  const { user } = useSelector(({ user }) => user);
   const dispatch = useDispatch();
 
-  const handleCreateBase64 = useCallback(async (e) => {
+  function handleUploadBackground(e) {
     const file = e.target.files[0];
-    const base64 = await convertToBase64(file);
-    setBackground(base64);
-    setBackgroundData(file);
-  }, []);
-
-  function onSubmit() {
     const formData = new FormData();
-    formData.append("profile_background", backgroundData);
+    formData.append("profile_background", file);
     dispatch(uploadBackground(formData));
   }
-  const onRemove = async () => {
+
+  const handleRemoveBackground = async () => {
     dispatch(removeBackground());
   };
 
@@ -34,17 +25,13 @@ function EditBackground() {
       <input
         type="file"
         name="avatar"
-        onChange={handleCreateBase64}
+        onChange={handleUploadBackground}
         accept="image/png"
       />
+
       <button
-        onClick={onSubmit}
-        className=" m-2 bg-blue-300 hover:bg-blue-400 text-gray-800 py-2 px-7 border-gray-400 rounded shadow"
-      >
-        Upload background
-      </button>
-      <button
-        onClick={onRemove}
+        disabled={!user.profile.profile_background}
+        onClick={handleRemoveBackground}
         className=" m-2 bg-red-300 hover:bg-red-400 text-gray-800  py-2 px-7 border-gray-400 rounded shadow"
       >
         Remove background
