@@ -1,12 +1,12 @@
-import React from "react";
-import {
-  Autocomplete,
-  GoogleMap,
-  LoadScript,
-  useJsApiLoader,
-} from "@react-google-maps/api";
+import React, { useState } from "react";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { Spin } from "antd";
+import Geocode from "react-geocode";
+import { useDispatch } from "react-redux";
+import { updateProfile } from "../redux/profile/profileSlice";
+
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+Geocode.setApiKey(API_KEY);
 
 const containerStyle = {
   width: "720px",
@@ -18,14 +18,32 @@ const center = {
   lng: 35.15485298489101,
 };
 
-const libraries = ["places"];
-
 function Map() {
+  const [markerPosition, setMarkerPosition] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+
+  const dispatch = useDispatch();
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: API_KEY,
-    libraries,
   });
+
+  async function handleClick(e) {
+    try {
+      const coords = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+      const response = await Geocode.fromLatLng(coords.lat, coords.lng);
+      const address = response.results[1].formatted_address;
+      setUserLocation(address);
+      setMarkerPosition(coords);
+    } catch (error) {
+      console.log(`error`, error);
+    }
+  }
+
+  function handleUpdate() {
+    dispatch(updateProfile({ user_location: userLocation }));
+  }
+
   return (
     <div>
       {isLoaded ? (
@@ -34,30 +52,11 @@ function Map() {
           center={center}
           zoom={10}
           id="map"
+          onClick={handleClick}
         >
-          <Autocomplete>
-            <input
-              type="text"
-              placeholder="Input"
-              style={{
-                boxSizing: `border-box`,
-                border: `1px solid transparent`,
-                width: `240px`,
-                height: `32px`,
-                padding: `0 12px`,
-                borderRadius: `3px`,
-                boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                fontSize: `14px`,
-                outline: `none`,
-                textOverflow: `ellipses`,
-                position: "absolute",
-                left: "50%",
-                marginLeft: "-120px",
-                top: "2%",
-              }}
-            />
-          </Autocomplete>
-          <></>
+          {markerPosition && (
+            <Marker position={markerPosition} onClick={handleUpdate} />
+          )}
         </GoogleMap>
       ) : (
         <Spin />

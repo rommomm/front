@@ -21,18 +21,14 @@ function EditUserInfo() {
     }
   }
 
-  const formInitialValue = {
-    first_name: "",
-    last_name: "",
-  };
   return (
     <div className="border-b border-black pb-4">
       <div className="w-5/6 m-auto pt-5">
         <Formik
           enableReinitialize={false}
-          initialValues={({ first_name: "" }, { last_name: "" })}
+          initialValues={{ first_name: "", last_name: "" }}
           validationSchema={profileValidationSchema}
-          onSubmit={handleSave}
+          onSubmit={(values) => handleSave(values)}
         >
           <Form>
             <div className="col-md-12 mt-4">

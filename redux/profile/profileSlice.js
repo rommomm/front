@@ -76,23 +76,43 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: {
     profile: {},
-    isLoading: false,
+    isLoading: true,
   },
   extraReducers: {
+    [updateProfile.pending]: (state, action) => {
+      state.isLoading = true;
+    },
     [updateProfile.fulfilled]: (state, action) => {
       state.profile = action.payload;
+      state.isLoading = false;
+    },
+    [uploadAvatar.pending]: (state, action) => {
+      state.isLoading = true;
     },
     [uploadAvatar.fulfilled]: (state, action) => {
       state.profile = action.payload;
+      state.isLoading = false;
+    },
+    [uploadBackground.pending]: (state, action) => {
+      state.isLoading = true;
     },
     [uploadBackground.fulfilled]: (state, action) => {
       state.profile = action.payload;
+      state.isLoading = false;
+    },
+    [removeAvatar.pending]: (state, action) => {
+      state.isLoading = true;
     },
     [removeAvatar.fulfilled]: (state, action) => {
       state.profile = action.payload;
+      state.isLoading = false;
+    },
+    [removeBackground.pending]: (state, action) => {
+      state.isLoading = true;
     },
     [removeBackground.fulfilled]: (state, action) => {
       state.profile = action.payload;
+      state.isLoading = false;
     },
   },
 });

@@ -57,10 +57,8 @@ export const deletePost = createAsyncThunk(
 export const updatePost = createAsyncThunk(
   "posts/updatePost",
   async function ({ id, data }) {
-    console.log("data", data);
     try {
       const response = await API.posts.updatePost(id, data);
-      console.log("response", response);
       return { id, updatedPost: response.data };
     } catch (error) {
       console.log(error);
@@ -94,7 +92,7 @@ export const getAllCommentsByPosts = createAsyncThunk(
 
 export const createComment = createAsyncThunk(
   "comments/createComment",
-  async function (id, comment) {
+  async function ({ id, comment }) {
     try {
       const response = await API.comments.createComment(id, comment);
       return { postId: id, comment: response.data };
@@ -106,10 +104,10 @@ export const createComment = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
   "comments/deleteComment",
-  async function (id, post) {
+  async function ({ postId, id }) {
     try {
       await API.comments.deleteComment(id);
-      return { postId: post.id, id };
+      return { postId, id };
     } catch (error) {
       console.log(error);
     }
@@ -118,10 +116,10 @@ export const deleteComment = createAsyncThunk(
 
 export const updateComment = createAsyncThunk(
   "comments/updateComment",
-  async function (id, updatedData) {
+  async function ({ id, data }) {
     try {
-      const response = await API.comments.updateComment(id, updatedData);
-      return response.data;
+      const response = await API.comments.updateComment(id, data);
+      return { id, updatedComment: response.data };
     } catch (error) {
       console.log(error);
     }
@@ -133,72 +131,98 @@ const postSlice = createSlice({
   initialState: {
     posts: [],
     comments: [],
+    postId: null,
     openedPostComments: null,
     isLoading: false,
     isLoadingComments: false,
   },
   extraReducers: {
+    [createPost.pending]: (state) => {
+      state.isLoading = true;
+    },
     [createPost.fulfilled]: (state, action) => {
       state.posts = [action.payload, ...state.posts];
+      state.isLoading = false;
     },
+
     [deletePost.pending]: (state) => {
       state.isLoading = true;
     },
     [deletePost.fulfilled]: (state, action) => {
       state.isLoading = false;
-
       state.posts = state.posts.filter((post) => post.id !== action.payload);
     },
+
+    [updatePost.pending]: (state) => {
+      state.isLoading = true;
+    },
     [updatePost.fulfilled]: (state, action) => {
-      console.log("action", action);
       state.posts = state.posts.map((post) =>
         post.id === action.payload.id
           ? { ...post, ...action.payload.updatedPost }
           : post
       );
-    },
-    [createComment.fulfilled]: (state, action) => {
-      state.comments.push(action.payload.comment);
-      // state.all.posts.map((post) => {
-      //   if (post.id === action.payload.postId) {
-      //   }
-      //   return post.id === action.payload.postId
-      //     ? {
-      //         ...post,
-      //         comments_count: post?.comments_count ? ++post.comments_count : 1,
-      //       }
-      //     : post;
-      // });
-    },
-    [deleteComment.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        comments: state.comments.filter((comment) => comment.id !== payload.id),
-        all: state.all.map((post) => {
-          if (post.id === payload.postId) {
-          }
-          return post.id === payload.postId
-            ? {
-                ...post,
-                comments_count: post?.comments_count
-                  ? --post.comments_count
-                  : -1,
-              }
-            : post;
-        }),
-      };
-    },
-    [updateComment.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        comments: state.comments.map((comment) =>
-          comment.id === payload.id ? { ...comment, ...payload } : comment
-        ),
-      };
+      state.isLoading = false;
     },
 
+    [createComment.pending]: (state) => {
+      state.isLoadingComments = true;
+    },
+    [createComment.fulfilled]: (state, action) => {
+      state.comments = [action.payload.comment, ...state.comments];
+      state.isLoadingComments = false;
+      state.posts = state.posts.map((post) => {
+        if (post.id === action.payload.postId) {
+        }
+        return post.id === action.payload.postId
+          ? {
+              ...post,
+              comments_count: post?.comments_count ? ++post.comments_count : 1,
+            }
+          : post;
+      });
+    },
+
+    [deleteComment.pending]: (state) => {
+      state.isLoadingComments = true;
+    },
+    [deleteComment.fulfilled]: (state, action) => {
+      state.comments = state.comments.filter(
+        (comment) => comment.id !== action.payload.id
+      );
+      state.isLoadingComments = false;
+      state.posts = state.posts.map((post) => {
+        if (post.id === action.payload.postId) {
+        }
+        return post.id === action.payload.postId
+          ? {
+              ...post,
+              comments_count: post?.comments_count ? --post.comments_count : 1,
+            }
+          : post;
+      });
+    },
+    [updateComment.pending]: (state) => {
+      state.isLoadingComments = true;
+    },
+    [updateComment.fulfilled]: (state, action) => {
+      state.comments = state.comments.map((comment) =>
+        comment.id === action.payload.id
+          ? { ...comment, ...action.payload.updatedComment }
+          : comment
+      );
+      state.isLoadingComments = false;
+    },
+    [getAllPosts.pending]: (state) => {
+      state.isLoading = true;
+    },
     [getAllPosts.fulfilled]: (state, action) => {
       state.posts = action.payload;
+      state.isLoading = false;
+    },
+
+    [getUserPosts.pending]: (state) => {
+      state.isLoading = true;
     },
     [getUserPosts.fulfilled]: (state, action) => {
       state.isLoading = false;
@@ -215,8 +239,8 @@ const postSlice = createSlice({
     },
     [getAllCommentsByPosts.fulfilled]: (state, action) => {
       const { postId } = action.payload;
-
-      state.comments = action.payload;
+      state.postId = action.payload.postId;
+      state.comments = action.payload.comments;
       state.openedPostComments =
         state.openedPostComments !== postId ? postId : null;
       state.isLoadingComments = false;

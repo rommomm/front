@@ -10,21 +10,21 @@ import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 
 function CommentsSystem({ post }) {
-  const { comments } = useSelector(({ all }) => all.comments);
+  const { comments } = useSelector(({ all }) => all);
   const { isLoggedIn } = useSelector(({ user }) => user);
 
   const dispatch = useDispatch();
 
   const handleDeleteComment = async (id) => {
-    dispatch(deleteComment(id, post));
+    dispatch(deleteComment({ id, postId: post.id }));
   };
 
   const handleUpdateComment = async (id, updatedData) => {
-    dispatch(updateComment(id, updatedData));
+    dispatch(updateComment({ id, data: updatedData }));
   };
 
-  const handleSaveComment = async (post, comment) => {
-    dispatch(createComment(post, comment));
+  const handleSaveComment = async (id, comment) => {
+    dispatch(createComment({ id, comment }));
   };
   return (
     <div>

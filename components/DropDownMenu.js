@@ -1,14 +1,10 @@
-import { useContext } from "react";
-import api from "../libs/api";
-import Cookies from "js-cookie";
-import router from "next/router";
 import Link from "next/link";
 import { Menu, Dropdown } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/auth/authSlice";
 
 export default function DropDownMenu({ children }) {
-  const { isLoggedIn, isLoading, user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   async function handleLogout() {

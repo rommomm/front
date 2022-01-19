@@ -11,25 +11,12 @@ import AuthLayout from "../components/AuthLayout";
 function SignIn() {
   const dispatch = useDispatch();
   const { errors } = useSelector(({ user }) => user);
-  const formikRef = useRef(null);
-
-  console.log("errors", errors);
-  console.log("formikRef", formikRef);
-
-  // useEffect(() => {
-  //   if (errors) {
-  //     formikRef.current.setErrors(handleErrors(errors));
-  //   }
-  // }, [errors]);
 
   async function handleFormSubmit(values, { setErrors }) {
     try {
       dispatch(signIn({ values, setErrors }));
     } catch (error) {
       console.log(`error`, error);
-      const errors = handleErrors(error.errors);
-      actions.setErrors(errors);
-      console.log(error);
     }
   }
   const formInitialSchema = {

@@ -43,7 +43,6 @@ function EditBackground() {
       >
         Upload background
       </button>
-      <img src={background} />
       <button
         onClick={onRemove}
         className=" m-2 bg-red-300 hover:bg-red-400 text-gray-800  py-2 px-7 border-gray-400 rounded shadow"

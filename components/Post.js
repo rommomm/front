@@ -1,7 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Menu, Dropdown } from "antd";
 import Link from "next/link";
-import UserContext from "./UserContext";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import PostEditForm from "./PostEditForm";
@@ -12,7 +11,6 @@ import { getAllCommentsByPosts } from "../redux/posts/postSlice";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const [editComment, setEditComment] = useState(false);
   const { isLoggedIn, user } = useSelector(({ user }) => user);
   const { openedPostComments } = useSelector(({ all }) => all);
 
@@ -25,7 +23,6 @@ function Post({ post, onDelete, onUpdate }) {
 
   function showComments() {
     dispatch(getAllCommentsByPosts(post.id));
-    // setEditComment(!editComment);
   }
 
   const menu = (
@@ -48,10 +45,6 @@ function Post({ post, onDelete, onUpdate }) {
     "dd LLL yyyy HH:mm:ss"
   );
 
-  if (openedPostComments === post.id) {
-    console.log("ids", openedPostComments, post.id);
-    console.log("editComment", editComment);
-  }
   return (
     <div>
       <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">

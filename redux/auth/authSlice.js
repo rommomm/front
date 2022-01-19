@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../api";
 import router from "next/router";
 import { handleErrors } from "../../helpers/handleError";
+import { message } from "antd";
 
 export const authMe = createAsyncThunk("auth/authMe", async function () {
   try {
@@ -30,11 +31,14 @@ export const signIn = createAsyncThunk(
 
 export const signUp = createAsyncThunk(
   "auth/signUp",
-  async function (credentials) {
+  async function ({ values, setErrors }) {
     try {
-      const response = await API.auth.signUp(credentials);
+      const response = await API.auth.signUp(values);
+      message.success("SUCCESSFUL REGISTRATION");
+      router.push("/sign-in");
       return response.data;
     } catch (error) {
+      setErrors(handleErrors(error.errors));
       throw error;
     }
   }
@@ -44,6 +48,7 @@ export const logout = createAsyncThunk("auth/logout", async function () {
   try {
     await API.auth.signOut();
     Cookies.remove("token");
+    router.push("/");
   } catch (error) {
     throw error;
   }
@@ -75,7 +80,15 @@ const authSlice = createSlice({
     [signIn.rejected]: (state) => {
       state.isLoggedIn = false;
     },
-    [signUp]: (state) => {
+    [signUp.pending]: (state) => {
+      state.user = null;
+      state.isLoggedIn = false;
+    },
+    [signUp.fulfilled]: (state) => {
+      state.user = null;
+      state.isLoggedIn = false;
+    },
+    [signUp.rejected]: (state) => {
       state.user = null;
       state.isLoggedIn = false;
     },

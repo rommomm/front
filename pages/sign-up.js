@@ -6,20 +6,16 @@ import { signUpValidationSchema } from "../validationSchema/signUp";
 import { handleErrors } from "../helpers/handleError";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../redux/auth/authSlice";
-import { message } from "antd";
 import AuthLayout from "../components/AuthLayout";
 
 const SignUp = () => {
   const dispatch = useDispatch();
+  const { errors } = useSelector(({ user }) => user);
 
-  async function handleFormSubmit(values, actions) {
+  async function handleFormSubmit(values, { setErrors }) {
     try {
-      await dispatch(signUp(values));
-      message.success("SUCCESSFUL REGISTRATION");
-      router.push("/sign-in");
+      dispatch(signUp({ values, setErrors }));
     } catch (error) {
-      const errors = handleErrors(error.errors);
-      actions.setErrors(errors);
       console.log(error);
     }
   }
@@ -42,6 +38,7 @@ const SignUp = () => {
             <Fragment>
               <div className="col-md-8 offset-md-2">
                 <Formik
+                  errors={handleErrors(errors)}
                   initialValues={formInitialValue}
                   validationSchema={signUpValidationSchema}
                   onSubmit={handleFormSubmit}
