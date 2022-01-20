@@ -1,6 +1,6 @@
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import React, { useEffect } from "react";
+import React from "react";
 import { withRedux } from "../redux";
 import {
   getAllPosts,
@@ -10,22 +10,47 @@ import {
 } from "../redux/posts/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AddPostForm from "../components/AddPostForm";
+import {
+  useAddPostMutation,
+  useGetPostsQuery,
+  useDeletePostMutation,
+  useUpdatePostMutation,
+} from "../redux/posts/postsApi";
+import { Spin } from "antd";
 
 function App() {
+  const { data = [], isLoading } = useGetPostsQuery();
+  console.log("data", data);
+
+  const [addPost] = useAddPostMutation();
+  const [deletePost] = useDeletePostMutation();
+  const [updatePost] = useUpdatePostMutation();
   const dispatch = useDispatch();
   const { posts } = useSelector(({ all }) => all);
   const { isLoggedIn } = useSelector(({ user }) => user);
 
   const handleDeletePost = async (id) => {
-    dispatch(deletePost(id));
+    await deletePost(id);
+    // dispatch(deletePost(id));
   };
   const handleUpdatePost = async (id, updatedData) => {
-    dispatch(updatePost({ id, data: updatedData }));
+    await updatePost({ id, data: updatedData });
+
+    // dispatch(updatePost({ id, data: updatedData }));
   };
 
   const handleSavePost = async (post) => {
-    dispatch(createPost(post));
+    console.log("post", post);
+
+    await addPost(post);
+    // dispatch(createPost(post));
   };
+  if (isLoading)
+    return (
+      <div className=" fixed inset-1/2 ">
+        <Spin tip="Loading..." size="large" />
+      </div>
+    );
 
   return (
     <Layout title="Home page">
@@ -37,7 +62,7 @@ function App() {
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
 
           <PostsList
-            posts={posts}
+            posts={data.data}
             onUpdate={handleUpdatePost}
             onDelete={handleDeletePost}
           />
@@ -47,11 +72,11 @@ function App() {
   );
 }
 
-export const getServerSideProps = withRedux(async (context, store) => {
-  await store.dispatch(getAllPosts());
-  return {
-    props: {},
-  };
-});
+// export const getServerSideProps = withRedux(async (context, store) => {
+//   await store.dispatch(getAllPosts());
+//   return {
+//     props: {},
+//   };
+// });
 
 export default App;

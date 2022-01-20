@@ -6,7 +6,6 @@ import { Provider } from "react-redux";
 import { useStore } from "../redux";
 import Cookies from "js-cookie";
 import { authMe } from "../redux/auth/authSlice";
-import { useRouter } from "next/router";
 
 export default function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState);

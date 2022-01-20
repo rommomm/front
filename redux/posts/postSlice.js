@@ -135,7 +135,6 @@ const postSlice = createSlice({
     openedPostComments: null,
     isLoading: false,
     isLoadingComments: false,
-    author: null,
   },
   extraReducers: {
     [createPost.pending]: (state) => {
@@ -226,9 +225,9 @@ const postSlice = createSlice({
       state.isLoading = true;
     },
     [getUserPosts.fulfilled]: (state, action) => {
-      state.isLoading = false;
       state.posts = action.payload.posts;
       state.author = action.payload.author;
+      state.isLoading = false;
     },
 
     [getAllComments.fulfilled]: (state, action) => {
