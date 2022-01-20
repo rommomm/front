@@ -1,9 +1,9 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
-import React, { useContext } from "react";
-import UserContext from "./UserContext";
+import React from "react";
+import { useSelector } from "react-redux";
 
 function UserHeader({ userInfo, posts }) {
-  const { isLoggedIn, user } = useContext(UserContext);
+  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
 
   return (
     <>
@@ -17,10 +17,10 @@ function UserHeader({ userInfo, posts }) {
         </div>
       </div>
 
-      <div class=" relative flex flex-col mx-auto  w-full border-black border-b">
-        <div class="profile w-full flex flex-col text-white">
+      <div className="relative flex flex-col mx-auto  w-full border-black border-b">
+        <div className="profile w-full flex flex-col text-white">
           <img
-            class="max-h-32 w-full"
+            className="max-h-32 w-full"
             src="https://unsplash.com/photos/h0Vxgz5tyXA/download?force=true&w=640"
             alt=""
           />
@@ -34,7 +34,7 @@ function UserHeader({ userInfo, posts }) {
               alt=""
             />
             {isLoggedIn && userInfo.id !== user.id && (
-              <div class="absolute bottom-0 buttons flex justify-end font-bold right-0 space-x-0 my-3.5 mr-3 ">
+              <div className="absolute bottom-0 buttons flex justify-end font-bold right-0 space-x-0 my-3.5 mr-3 ">
                 <div className="pr-4">
                   <button className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded ">
                     Message

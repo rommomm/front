@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Row } from "antd";
 import DropDownMenu from "./DropDownMenu";
-import UserContext from "./UserContext";
+import { useSelector } from "react-redux";
 
 function UserDropDown() {
-  const { user } = useContext(UserContext);
+  const { user } = useSelector(({ auth }) => auth);
 
   return (
     <div className="sticky top-0 hidden sm:flex flex-col items-center   p-2 h-screen pr-2">
