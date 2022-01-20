@@ -4,7 +4,7 @@ import Link from "next/link";
 import router from "next/router";
 import { signUpValidationSchema } from "../validationSchema/signUp";
 import { handleErrors } from "../helpers/handleError";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signUp } from "../redux/auth/actions";
 import { message } from "antd";
 import AuthLayout from "../components/AuthLayout";

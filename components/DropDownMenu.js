@@ -1,7 +1,3 @@
-import { useContext } from "react";
-import api from "../libs/api";
-import Cookies from "js-cookie";
-import router from "next/router";
 import Link from "next/link";
 import { Menu, Dropdown } from "antd";
 import { useDispatch, useSelector } from "react-redux";

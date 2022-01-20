@@ -1,6 +1,5 @@
 import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import Cookies from "js-cookie";
 import Link from "next/link";
 import router from "next/router";
 import { signInValidationSchema } from "../validationSchema/signIn";

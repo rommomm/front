@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { useContext } from "react";
-import UserContext from "./UserContext";
 import SidebarLink from "./SidebarLink";
 import {
   HomeOutlined,
