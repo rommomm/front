@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import {
-  removeAvatar,
-  updateProfile,
-  uploadAvatar,
-} from "../redux/profile/profileSlice";
+import { removeAvatar, uploadAvatar } from "../redux/profile/profileSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "antd/lib/modal/Modal";
-import Map from "./Map";
 import EditAvatar from "./EditAvatar";
 
 function EditAvatarModal() {

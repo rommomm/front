@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import EditAvatar from "../components/EditAvatar";
 import EditAvatarModal from "../components/EditAvatarModal";
-import EditBackground from "../components/EditBackground";
+import EditBackgroundModal from "../components/EditBackgroundModal";
 import EditLocation from "../components/EditLocation";
 import EditUserInfo from "../components/EditUserInfo";
 import Layout from "../components/Layout";
@@ -27,7 +26,7 @@ function Settings() {
 
           <div className="pl-4 m-2  flex justify-around  flex-wrap">
             <EditAvatarModal />
-            <EditBackground />
+            <EditBackgroundModal />
             <EditLocation />
             <ProfilePreview />
           </div>

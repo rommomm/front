@@ -39,7 +39,8 @@ function EditUserInfoForm({ values }) {
           <button
             disabled={disable}
             type="submit"
-            className="bg-blue-200 hover:bg-blue-300 text-gray-800  py-2 px-7 border-gray-400 rounded shadow"
+            className="bg-blue-200 hover:bg-blue-300 text-gray-800  py-2 px-7 border-gray-400 rounded shadow hover:bg-red-300 focus:outline-none disabled:opacity-50"
+            tabindex="-1"
           >
             Save
           </button>

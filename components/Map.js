@@ -18,11 +18,9 @@ const center = {
   lng: 35.15485298489101,
 };
 
-function Map() {
+function Map({ handlePreviewLocation }) {
   const [markerPosition, setMarkerPosition] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
 
-  const dispatch = useDispatch();
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: API_KEY,
@@ -33,15 +31,11 @@ function Map() {
       const coords = { lat: e.latLng.lat(), lng: e.latLng.lng() };
       const response = await Geocode.fromLatLng(coords.lat, coords.lng);
       const address = response.results[1].formatted_address;
-      setUserLocation(address);
+      handlePreviewLocation(address);
       setMarkerPosition(coords);
     } catch (error) {
       console.log(`error`, error);
     }
-  }
-
-  function handleUpdate() {
-    dispatch(updateProfile({ user_location: userLocation }));
   }
 
   return (
@@ -54,9 +48,7 @@ function Map() {
           id="map"
           onClick={handleClick}
         >
-          {markerPosition && (
-            <Marker position={markerPosition} onClick={handleUpdate} />
-          )}
+          {markerPosition && <Marker position={markerPosition} />}
         </GoogleMap>
       ) : (
         <Spin />

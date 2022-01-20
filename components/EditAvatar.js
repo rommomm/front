@@ -1,10 +1,3 @@
-// function handleUploadAvatar(e) {
-//   const file = e.target.files[0];
-//   const formData = new FormData();
-//   formData.append("profile_photo", file);
-//   dispatch(uploadAvatar(formData));
-// }
-
 import { Upload, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";

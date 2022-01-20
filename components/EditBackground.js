@@ -1,46 +1,68 @@
-import React from "react";
-import {
-  removeBackground,
-  uploadBackground,
-} from "../redux/profile/profileSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { Upload, Modal } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
-function EditBackground() {
-  const { user } = useSelector(({ user }) => user);
-  const dispatch = useDispatch();
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
 
-  function handleUploadBackground(e) {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("profile_background", file);
-    dispatch(uploadBackground(formData));
-  }
+function EditAvatar({ onPreviewUpload }) {
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList, setFileList] = useState([]);
 
-  const handleRemoveBackground = async () => {
-    dispatch(removeBackground());
+  const handleCancel = () => setPreviewVisible(false);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewVisible(true);
+    setPreviewImage(file.url || file.preview);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
   };
-  if (!user) {
-    return null;
-  }
-  return (
-    <div className="flex flex-col">
-      <input
-        type="file"
-        name="avatar"
-        onChange={handleUploadBackground}
-        accept="image/png"
-      />
 
-      <button
-        disabled={!user.profile.profile_background}
-        onClick={handleRemoveBackground}
-        className="m-2 bg-red-300 hover:bg-red-400 text-gray-800  py-2 px-7 border-gray-400 rounded shadow hover:bg-red-300 focus:outline-none disabled:opacity-50"
-        tabindex="-1"
-      >
-        Remove background
-      </button>
+  const handleChange = ({ fileList, file }) => {
+    setFileList(fileList);
+    onPreviewUpload(file.originFileObj);
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
     </div>
+  );
+
+  return (
+    <>
+      <Upload
+        listType="picture-card"
+        fileList={fileList}
+        onPreview={handlePreview}
+        onChange={handleChange}
+        maxCount={1}
+      >
+        {fileList.length >= 8 ? null : uploadButton}
+      </Upload>
+      <Modal
+        visible={previewVisible}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancel}
+      >
+        <img alt="example" style={{ width: "100%" }} src={previewImage} />
+      </Modal>
+    </>
   );
 }
 
-export default EditBackground;
+export default EditAvatar;
