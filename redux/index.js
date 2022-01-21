@@ -3,7 +3,6 @@ import postSlice from "./posts/postSlice";
 import authSlice from "./auth/authSlice";
 import profileSlice from "./profile/profileSlice";
 import { configureStore } from "@reduxjs/toolkit";
-import { postsApi } from "./posts/postsApi";
 let store;
 
 const createStore = (preloadedState) => {
@@ -12,11 +11,8 @@ const createStore = (preloadedState) => {
       profile: profileSlice,
       all: postSlice,
       user: authSlice,
-      [postsApi.reducerPath]: postsApi.reducer,
     },
     preloadedState,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(postsApi.middleware),
   });
 };
 

@@ -47,12 +47,12 @@ function Profile() {
 
 export const getServerSideProps = withRedux(async (ctx, store) => {
   await store.dispatch(getUserPosts(ctx));
-  // const data = store.getState();
-  // if (!data.all.posts) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // }
+  const data = store.getState();
+  if (!data.all.author) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {},
   };

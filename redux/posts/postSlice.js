@@ -25,7 +25,7 @@ export const getUserPosts = createAsyncThunk(
       }));
       return { posts, author: author.data };
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 );
@@ -229,7 +229,9 @@ const postSlice = createSlice({
       state.author = action.payload.author;
       state.isLoading = false;
     },
-
+    [getUserPosts.rejected]: (state, action) => {
+      state.error = action.payload;
+    },
     [getAllComments.fulfilled]: (state, action) => {
       state.comments = action.payload;
     },
