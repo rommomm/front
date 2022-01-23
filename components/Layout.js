@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Head from "next/head";
 import GuestBanner from "../components/GuestBanner";
@@ -7,21 +7,32 @@ import { useSelector } from "react-redux";
 import { Spin } from "antd";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 function Layout({ children, title }) {
   // const { isLoggedIn, isLoading, user } = useSelector(({ user }) => user);
+  const router = useRouter();
   const {
     data: user,
     isLoading,
     isSuccess: isLoggedIn,
-  } = useAuthMeQuery(null, { skip: !(Cookies && Cookies.get("token")) });
+    refetch,
+    isFetching,
+    isUninitialized,
+  } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
+  console.log("isUninitialized", isUninitialized);
+  useEffect(() => {
+    refetch();
+  }, [router.pathname]);
   return (
     <div>
       <Head>
         <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {isLoading ? (
+      {isFetching ? (
         <div className=" fixed inset-1/2 ">
           <Spin tip="Loading..." size="large" />
         </div>

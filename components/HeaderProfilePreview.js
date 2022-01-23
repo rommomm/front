@@ -1,17 +1,26 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
+import Cookies from "js-cookie";
 import React from "react";
 import { useSelector } from "react-redux";
+import { useAuthMeQuery } from "../redux/auth/authApi";
 
 function HeaderProfilePreview() {
-  const { user } = useSelector(({ user }) => user);
-
+  const {
+    data: user,
+    isSuccess: isLoggedIn,
+    isLoading,
+  } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
   return (
     <>
       <div className="relative flex flex-col mx-auto  w-full border-black border">
         <div className="profile w-full flex flex-col text-white">
           <img
             className="max-h-32 object-cover	 w-full"
-            src={user.profile.profile_background || "/default/background.png"}
+            src={
+              user.data.profile.profile_background || "/default/background.png"
+            }
             alt=""
           />
           <div
@@ -20,7 +29,7 @@ function HeaderProfilePreview() {
           >
             <img
               class="w-36 h-36 p-1 bg-white rounded-full"
-              src={user.profile.profile_photo || "/default/avatar.png"}
+              src={user.data.profile.profile_photo || "/default/avatar.png"}
               alt=""
             />
 
@@ -40,17 +49,17 @@ function HeaderProfilePreview() {
           <div style={{ marginTop: "-4rem" }}>
             <div class="buttons left-0 space-x-0 my-3.5 ml-3 text-black ">
               <div className="pr-4">
-                <h2 className="text-2xl font-bold ">{user.first_name}</h2>
+                <h2 className="text-2xl font-bold ">{user.data.first_name}</h2>
               </div>
               <div>
-                <p className="text-base ">@{user.user_name}</p>
+                <p className="text-base ">@{user.data.user_name}</p>
               </div>
             </div>
             <div class="buttons left-0 space-x-0 my-3.5 ml-3 text-black ">
               <div className="m-auto flex justify-start  ">
                 <EnvironmentOutlined />
                 <span class=" pl-1 inline-block align-bottom text-xs">
-                  {user.profile.user_location || "Запорожье"}
+                  {user.data.profile.user_location || "Запорожье"}
                 </span>
               </div>
               <div>

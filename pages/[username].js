@@ -3,13 +3,7 @@ import UserHeader from "../components/UserHeader";
 import React from "react";
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import {
-  getUserPosts,
-  createPost,
-  deletePost,
-  updatePost,
-} from "../redux/posts/postSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { initializeStore, withRedux } from "../redux";
 import {
   postsApi,
@@ -17,7 +11,6 @@ import {
   useDeletePostMutation,
   useGetAuthorByPostsQuery,
   useGetUserPostsQuery,
-  useGetUserQuery,
   useUpdatePostMutation,
 } from "../redux/posts/postApi";
 import { Spin } from "antd";
@@ -34,12 +27,13 @@ function Profile() {
   } = useGetAuthorByPostsQuery(router && router.query.username, {
     skip: !router.query.username,
   });
-  const { data: posts, isLoading: isLoadingPosts } = useGetUserPostsQuery(
-    author && author.data.user_name,
-    {
-      skip: !isSuccess,
-    }
-  );
+  const {
+    data: posts,
+    isLoading: isLoadingPosts,
+    isFetching: isFetchingPosts,
+  } = useGetUserPostsQuery(author && author.data.user_name, {
+    skip: !isSuccess,
+  });
   const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
     skip: !(Cookies && Cookies.get("token")),
   });
@@ -67,26 +61,37 @@ function Profile() {
           author: author.data,
         }))
       : [];
-  if (isLoadingAuthor || isLoadingPosts) {
+  if (!author && !posts) {
     return (
       <div className=" fixed inset-1/2 ">
         <Spin tip="Loading..." size="large" />
       </div>
     );
   }
-  if (!author && !posts) {
-    return null;
+  if (isLoadingPosts) {
+    return (
+      <div className=" fixed inset-1/2 ">
+        <Spin tip="Loading..." size="large" />
+      </div>
+    );
   }
+
   return (
     <Layout>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
         <UserHeader author={author.data} postsCount={posts.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
-        <PostsList
-          posts={postsWithAuthor}
-          onUpdate={handleUpdatePost}
-          onDelete={handleDeletePost}
-        />
+        {isFetchingPosts ? (
+          <div className=" fixed inset-1/2 ">
+            <Spin tip="Loading..." size="large" />
+          </div>
+        ) : (
+          <PostsList
+            posts={postsWithAuthor}
+            onUpdate={handleUpdatePost}
+            onDelete={handleDeletePost}
+          />
+        )}
       </div>
     </Layout>
   );

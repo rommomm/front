@@ -23,7 +23,11 @@ import Cookies from "js-cookie";
 
 function App() {
   const dispatch = useDispatch();
-  const { data: posts, isLoading: isLoadingPosts } = useGetAllPostsQuery();
+  const {
+    data: posts,
+    isLoading: isLoadingPosts,
+    isFetching: isFetchingPosts,
+  } = useGetAllPostsQuery();
   const {
     data: user,
     isSuccess: isLoggedIn,
@@ -61,11 +65,17 @@ function App() {
         </div>
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
-          <PostsList
-            posts={posts.data}
-            onUpdate={handleUpdatePost}
-            onDelete={handleDeletePost}
-          />
+          {isFetchingPosts ? (
+            <div className=" fixed inset-1/2 ">
+              <Spin tip="Loading..." size="large" />
+            </div>
+          ) : (
+            <PostsList
+              posts={posts.data}
+              onUpdate={handleUpdatePost}
+              onDelete={handleDeletePost}
+            />
+          )}
         </div>
       </div>
     </Layout>

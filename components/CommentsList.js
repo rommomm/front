@@ -1,27 +1,22 @@
 import { Spin } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
+import { useGetCommentsByPostQuery } from "../redux/comments/commentsApi";
 import Comment from "./Comment";
 
 function CommentsList({ comments, onUpdate, onDelete }) {
-  const { isLoadingComments } = useSelector(({ all }) => all);
-
   return (
     <div>
-      {isLoadingComments ? (
-        <div className=" relative w-full m-auto flex justify-center">
-          <Spin className="absolute" tip="Loading..." size="large" />
-        </div>
-      ) : comments && comments.length ? (
-        comments.map((comment) => (
-          <Comment
-            comment={comment}
-            key={comment.id}
-            onDelete={onDelete}
-            onUpdate={onUpdate}
-          />
-        ))
-      ) : null}
+      {comments && comments.length
+        ? comments.map((comment) => (
+            <Comment
+              comment={comment}
+              key={comment.id}
+              onDelete={onDelete}
+              onUpdate={onUpdate}
+            />
+          ))
+        : null}
     </div>
   );
 }

@@ -15,8 +15,8 @@ export default function DropDownMenu({ children }) {
 
   async function handleLogout() {
     try {
-      Cookies.remove("token");
       await signOut();
+      Cookies.remove("token");
       router.push("/");
     } catch (error) {
       console.log("error", error);

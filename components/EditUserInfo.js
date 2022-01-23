@@ -7,13 +7,14 @@ import EditUserInfoForm from "./EditUserInfoForm";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import { useUpdateProfileMutation } from "../redux/profile/profileApi";
-import { message } from "antd";
+import { message, Spin } from "antd";
 
 function EditUserInfo() {
   const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
     skip: !(Cookies && Cookies.get("token")),
   });
   const [updateProfile] = useUpdateProfileMutation();
+
   async function handleSave(values) {
     try {
       await updateProfile(values);

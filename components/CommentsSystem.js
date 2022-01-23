@@ -1,3 +1,4 @@
+import { Spin } from "antd";
 import Cookies from "js-cookie";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +20,10 @@ import CommentsList from "./CommentsList";
 
 function CommentsSystem({ post }) {
   // const { comments } = useSelector(({ all }) => all);
-  const { data: comments, isLoading } = useGetCommentsByPostQuery(post.id);
+  if (!post) {
+    return null;
+  }
+  const { data: comments, isFetching } = useGetCommentsByPostQuery(post.id);
   const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
     skip: !(Cookies && Cookies.get("token")),
   });
@@ -46,12 +50,17 @@ function CommentsSystem({ post }) {
       ) : (
         <CommentsGuestBanner count={post.comments_count} />
       )}
-
-      <CommentsList
-        comments={comments && comments.data}
-        onUpdate={handleUpdateComment}
-        onDelete={handleDeleteComment}
-      />
+      {isFetching ? (
+        <div className=" relative w-full m-auto flex justify-center">
+          <Spin className="absolute" tip="Loading..." size="large" />
+        </div>
+      ) : (
+        <CommentsList
+          comments={comments && comments.data}
+          onUpdate={handleUpdateComment}
+          onDelete={handleDeleteComment}
+        />
+      )}
     </div>
   );
 }
