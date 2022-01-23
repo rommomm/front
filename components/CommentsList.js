@@ -12,7 +12,7 @@ function CommentsList({ comments, onUpdate, onDelete }) {
         <div className=" relative w-full m-auto flex justify-center">
           <Spin className="absolute" tip="Loading..." size="large" />
         </div>
-      ) : comments.length ? (
+      ) : comments && comments.length ? (
         comments.map((comment) => (
           <Comment
             comment={comment}

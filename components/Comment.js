@@ -6,10 +6,14 @@ import useFormateDate from "../hooks/useFormatDate";
 import CommentEditForm from "./CommentEditForm";
 import { useSelector } from "react-redux";
 import CommentsCount from "./CommentLikes";
+import { useAuthMeQuery } from "../redux/auth/authApi";
+import Cookies from "js-cookie";
 
 function Comment({ comment, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const { isLoggedIn, user } = useSelector(({ user }) => user);
+  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
   function handleUpdatePost(values) {
     onUpdate(comment.id, values);
     setEditMode(false);
@@ -93,7 +97,7 @@ function Comment({ comment, onDelete, onUpdate }) {
       </div>
 
       <div>
-        {isLoggedIn && user.id === comment.author.id && (
+        {isLoggedIn && user.data.id === comment.author.id && (
           <Dropdown overlay={menu} trigger={["click"]}>
             <a
               className="ant-dropdown-link"

@@ -5,10 +5,16 @@ import GuestBanner from "../components/GuestBanner";
 import UserDropDown from "./UserDropDown";
 import { useSelector } from "react-redux";
 import { Spin } from "antd";
+import { useAuthMeQuery } from "../redux/auth/authApi";
+import Cookies from "js-cookie";
 
 function Layout({ children, title }) {
-  const { isLoggedIn, isLoading, user } = useSelector(({ user }) => user);
-
+  // const { isLoggedIn, isLoading, user } = useSelector(({ user }) => user);
+  const {
+    data: user,
+    isLoading,
+    isSuccess: isLoggedIn,
+  } = useAuthMeQuery(null, { skip: !(Cookies && Cookies.get("token")) });
   return (
     <div>
       <Head>

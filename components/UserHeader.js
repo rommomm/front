@@ -1,19 +1,23 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
+import Cookies from "js-cookie";
 import React from "react";
 import { useSelector } from "react-redux";
+import { useAuthMeQuery } from "../redux/auth/authApi";
+import { useGetAuthorPostsQuery } from "../redux/posts/postApi";
 
-function UserHeader({ userInfo, posts }) {
-  const { isLoggedIn, user } = useSelector(({ user }) => user);
-  const { author } = useSelector(({ all }) => all);
+function UserHeader({ author, postsCount }) {
+  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-1 px-1  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
         <div className="pl-2">
           <p className="text-lg">
-            {userInfo.first_name}&nbsp;
-            {userInfo.last_name}
+            {author.first_name}&nbsp;
+            {author.last_name}
           </p>
-          <p>{posts.length}&nbsp; posts</p>
+          <p>{postsCount}&nbsp; posts</p>
         </div>
       </div>
 
@@ -33,7 +37,7 @@ function UserHeader({ userInfo, posts }) {
               src={author.profile.profile_photo || "/default/avatar.png"}
               alt=""
             />
-            {isLoggedIn && userInfo.id !== user.id && (
+            {isLoggedIn && author.id !== user.data.id && (
               <div className="absolute bottom-0 buttons flex justify-end font-bold right-0 space-x-0 my-3.5 mr-3 ">
                 <div className="pr-4">
                   <button className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded ">
@@ -51,10 +55,10 @@ function UserHeader({ userInfo, posts }) {
           <div style={{ marginTop: "-4rem" }}>
             <div class="buttons left-0 space-x-0 my-3.5 ml-3 text-black ">
               <div className="pr-4">
-                <h2 className="text-2xl font-bold ">{userInfo.first_name}</h2>
+                <h2 className="text-2xl font-bold ">{author.first_name}</h2>
               </div>
               <div>
-                <p className="text-base ">@{userInfo.user_name}</p>
+                <p className="text-base ">@{author.user_name}</p>
               </div>
             </div>
             <div class=" left-0 space-x-0 my-3.5 ml-3 text-black ">

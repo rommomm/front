@@ -1,22 +1,38 @@
 import React, { useState } from "react";
-import { updateProfile } from "../redux/profile/profileSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "antd/lib/modal/Modal";
 import Map from "./Map";
+import { useAuthMeQuery } from "../redux/auth/authApi";
+import Cookies from "js-cookie";
+import { useUpdateProfileMutation } from "../redux/profile/profileApi";
+import { message } from "antd";
 
 function EditLocation() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
-  const { user } = useSelector(({ user }) => user);
+  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
   const dispatch = useDispatch();
 
+  const [updateProfile] = useUpdateProfileMutation();
+
   async function handleRemoveUserLocation() {
-    const locatoin = { user_location: null };
-    dispatch(updateProfile(locatoin));
+    try {
+      const locatoin = { user_location: null };
+      await updateProfile(locatoin);
+    } catch (error) {
+      console.log("error", error);
+    }
   }
 
-  const handleUpdate = () => {
-    dispatch(updateProfile({ user_location: userLocation }));
+  const handleUpdate = async () => {
+    try {
+      await updateProfile({ user_location: userLocation });
+      message.success("Success");
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   const handlePreviewLocation = (location) => {
@@ -43,7 +59,7 @@ function EditLocation() {
           Location
         </button>
         <button
-          disabled={!user.profile.user_location}
+          disabled={!user.data.profile.user_location}
           onClick={handleRemoveUserLocation}
           className="m-2 bg-red-300 hover:bg-red-400 text-gray-800  py-2 px-7 border-gray-400 rounded shadow hover:bg-red-300 focus:outline-none disabled:opacity-50"
           tabindex="-1"

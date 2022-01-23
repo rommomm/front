@@ -1,5 +1,13 @@
+import Cookies from "js-cookie";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useAuthMeQuery } from "../redux/auth/authApi";
+import {
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
+  useGetCommentsByPostQuery,
+  useUpdateCommentMutation,
+} from "../redux/comments/commentsApi";
 import {
   createComment,
   deleteComment,
@@ -10,21 +18,26 @@ import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 
 function CommentsSystem({ post }) {
-  const { comments } = useSelector(({ all }) => all);
-  const { isLoggedIn } = useSelector(({ user }) => user);
-
+  // const { comments } = useSelector(({ all }) => all);
+  const { data: comments, isLoading } = useGetCommentsByPostQuery(post.id);
+  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
   const dispatch = useDispatch();
+  const [createComment] = useCreateCommentMutation();
+  const [updateComment] = useUpdateCommentMutation();
+  const [deleteComment] = useDeleteCommentMutation();
 
   const handleDeleteComment = async (id) => {
-    dispatch(deleteComment({ id, postId: post.id }));
+    await deleteComment({ id, postId: post.id });
   };
 
   const handleUpdateComment = async (id, updatedData) => {
-    dispatch(updateComment({ id, data: updatedData }));
+    await updateComment({ id, data: updatedData });
   };
 
   const handleSaveComment = async (id, comment) => {
-    dispatch(createComment({ id, comment }));
+    await createComment({ id, comment });
   };
   return (
     <div>
@@ -35,7 +48,7 @@ function CommentsSystem({ post }) {
       )}
 
       <CommentsList
-        comments={comments}
+        comments={comments && comments.data}
         onUpdate={handleUpdateComment}
         onDelete={handleDeleteComment}
       />

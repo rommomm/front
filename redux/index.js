@@ -3,6 +3,11 @@ import postSlice from "./posts/postSlice";
 import authSlice from "./auth/authSlice";
 import profileSlice from "./profile/profileSlice";
 import { configureStore } from "@reduxjs/toolkit";
+import { postsApi } from "./posts/postApi";
+import { authApi } from "./auth/authApi";
+import { commentsApi } from "./comments/commentsApi";
+import { profileApi } from "./profile/profileApi";
+
 let store;
 
 const createStore = (preloadedState) => {
@@ -11,8 +16,18 @@ const createStore = (preloadedState) => {
       profile: profileSlice,
       all: postSlice,
       user: authSlice,
+      [postsApi.reducerPath]: postsApi.reducer,
+      [authApi.reducerPath]: authApi.reducer,
+      [commentsApi.reducerPath]: commentsApi.reducer,
+      [profileApi.reducerPath]: profileApi.reducer,
     },
     preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware()
+        .concat(postsApi.middleware)
+        .concat(authApi.middleware)
+        .concat(commentsApi.middleware)
+        .concat(profileApi.middleware),
   });
 };
 
@@ -36,17 +51,3 @@ export function useStore(initialState) {
   const store = useMemo(() => initializeStore(initialState), [initialState]);
   return store;
 }
-
-export const withRedux = (getServerSideProps) => async (ctx) => {
-  const store = initializeStore();
-  const result = await getServerSideProps(ctx, store);
-
-  return {
-    ...result,
-
-    props: {
-      initialReduxState: store.getState(),
-      ...result.props,
-    },
-  };
-};

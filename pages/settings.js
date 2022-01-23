@@ -14,7 +14,7 @@ function Settings() {
 
   useEffect(() => {
     dispatch(authMe());
-  }, [isLoading]);
+  }, []);
   return (
     <Layout title="Settings page">
       <div className="flex-grow  border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px]">

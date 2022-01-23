@@ -2,8 +2,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { postValidationSchema } from "../validationSchema/post";
 
 function AddPostForm({ onCreate }) {
-  function handleCreate(value, actions) {
-    onCreate(value.content);
+  function handleCreate(values, actions) {
+    onCreate(values);
     actions.resetForm();
   }
 

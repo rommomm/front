@@ -1,13 +1,16 @@
 import React from "react";
 import { ErrorMessage, Field, Form } from "formik";
 import { useSelector } from "react-redux";
+import { useAuthMeQuery } from "../redux/auth/authApi";
+import Cookies from "js-cookie";
 
 function EditUserInfoForm({ values }) {
-  const { user } = useSelector(({ user }) => user);
-
+  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
   const disable =
-    values.first_name === user.first_name &&
-    values.last_name === user.last_name;
+    values.first_name === user.data.first_name &&
+    values.last_name === user.data.last_name;
   return (
     <div>
       <Form>

@@ -9,9 +9,6 @@ import { authMe } from "../redux/auth/authSlice";
 
 export default function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState);
-  if (Cookies?.get && Cookies.get("token")) {
-    store.dispatch(authMe());
-  }
 
   return (
     <div>

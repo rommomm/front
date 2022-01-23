@@ -4,20 +4,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { profileValidationSchema } from "../validationSchema/profile";
 import { updateProfile } from "../redux/profile/profileSlice";
 import EditUserInfoForm from "./EditUserInfoForm";
+import { useAuthMeQuery } from "../redux/auth/authApi";
+import Cookies from "js-cookie";
+import { useUpdateProfileMutation } from "../redux/profile/profileApi";
+import { message } from "antd";
 
 function EditUserInfo() {
-  const { user } = useSelector(({ user }) => user);
-  const dispatch = useDispatch();
-  function handleSave(values) {
-    dispatch(updateProfile(values));
+  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
+  const [updateProfile] = useUpdateProfileMutation();
+  async function handleSave(values) {
+    try {
+      await updateProfile(values);
+      message.success("Success");
+    } catch (error) {
+      console.log("error", error);
+    }
   }
 
   if (!user) {
     return null;
   }
   const formInitialValue = {
-    first_name: user.first_name,
-    last_name: user.last_name,
+    first_name: user.data.first_name,
+    last_name: user.data.last_name,
   };
 
   return (

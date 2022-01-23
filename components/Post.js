@@ -8,10 +8,15 @@ import CommentsCount from "./CommentsCount";
 import { useDispatch, useSelector } from "react-redux";
 import CommentsSystem from "./CommentsSystem";
 import { getAllCommentsByPosts } from "../redux/posts/postSlice";
+import { useAuthMeQuery } from "../redux/auth/authApi";
+import Cookies from "js-cookie";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const { isLoggedIn, user } = useSelector(({ user }) => user);
+  // const { isLoggedIn, user } = useSelector(({ user }) => user);
+  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
+    skip: !(Cookies && Cookies.get("token")),
+  });
   const { openedPostComments } = useSelector(({ all }) => all);
 
   const dispatch = useDispatch();
@@ -97,7 +102,7 @@ function Post({ post, onDelete, onUpdate }) {
           />
         </div>
         <div>
-          {isLoggedIn && user.id === post.author.id && (
+          {isLoggedIn && user.data.id === post.author.id && (
             <Dropdown overlay={menu} trigger={["click"]}>
               <a
                 className="ant-dropdown-link"
