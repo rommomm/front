@@ -14,7 +14,7 @@ function SignUp() {
     try {
       await signUp(values);
       message.success("Success");
-      // router.push("/sign-in");
+      router.push("/sign-in");
     } catch (err) {
       throw err;
     }

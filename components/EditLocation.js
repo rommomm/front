@@ -32,6 +32,7 @@ function EditLocation() {
       await updateProfile({ user_location: userLocation });
       message.success("Success");
       refetch();
+      setIsModalVisible(false);
     } catch (error) {
       console.log("error", error);
     }

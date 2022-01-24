@@ -28,6 +28,7 @@ function EditBackgroundModal() {
       await uploadBackground(formData);
       message.success("Success");
       refetch();
+      setIsModalVisible(false);
     } catch (error) {
       console.log("error", error);
     }

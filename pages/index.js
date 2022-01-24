@@ -60,15 +60,12 @@ function App() {
         </div>
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
-          {isFetchingPosts ? (
-            <Loader />
-          ) : (
-            <PostsList
-              posts={posts.data}
-              onUpdate={handleUpdatePost}
-              onDelete={handleDeletePost}
-            />
-          )}
+
+          <PostsList
+            posts={posts.data}
+            onUpdate={handleUpdatePost}
+            onDelete={handleDeletePost}
+          />
         </div>
       </div>
     </Layout>

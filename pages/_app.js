@@ -1,20 +1,40 @@
 import "tailwindcss/tailwind.css";
 import "antd/dist/antd.css";
 import "../styles/globals.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import { useStore } from "../redux";
 import Cookies from "js-cookie";
 import { authMe } from "../redux/auth/authSlice";
+import { useRouter } from "next/router";
+import Loader from "../components/Loader";
 
 export default function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState);
+  const router = useRouter();
 
+  const [pageLoading, setPageLoading] = useState(false);
+  useEffect(() => {
+    const handleStart = () => {
+      setPageLoading(true);
+    };
+    const handleComplete = () => {
+      setPageLoading(false);
+    };
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleComplete);
+    router.events.on("routeChangeError", handleComplete);
+  }, [router]);
   return (
     <div>
-      <Provider store={store}>
-        <Component {...pageProps} />
-      </Provider>
+      {pageLoading ? (
+        <Loader />
+      ) : (
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
+      )}
     </div>
   );
 }

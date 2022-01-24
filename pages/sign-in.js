@@ -16,7 +16,6 @@ function SignIn() {
     try {
       const response = await signIn(values);
       Cookies.set("token", response.data.token);
-      message.success("Success");
       router.push("/");
     } catch (err) {
       throw err;

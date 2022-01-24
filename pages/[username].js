@@ -73,15 +73,12 @@ function Profile() {
       <div className="border-black border-l border-r w-full max-w-screen-md	">
         <UserHeader author={author.data} postsCount={posts.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
-        {isFetchingPosts ? (
-          <Loader />
-        ) : (
-          <PostsList
-            posts={postsWithAuthor}
-            onUpdate={handleUpdatePost}
-            onDelete={handleDeletePost}
-          />
-        )}
+
+        <PostsList
+          posts={postsWithAuthor}
+          onUpdate={handleUpdatePost}
+          onDelete={handleDeletePost}
+        />
       </div>
     </Layout>
   );
