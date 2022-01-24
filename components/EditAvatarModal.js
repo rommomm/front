@@ -16,7 +16,6 @@ function EditAvatarModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [file, setFile] = useState(null);
   const { data: user, refetch } = useAuthMe();
-
   const [uploadAvatar] = useUploadAvatarMutation();
   const [removeAvatar] = useRemoveAvatarMutation();
 

@@ -4,21 +4,17 @@ import Link from "next/link";
 import router from "next/router";
 import { signUpValidationSchema } from "../validationSchema/signUp";
 import { handleErrors } from "../helpers/handleError";
-import { useDispatch, useSelector } from "react-redux";
 import AuthLayout from "../components/AuthLayout";
 import { useSignUpMutation } from "../redux/auth/authApi";
 import { message } from "antd";
 
 function SignUp() {
   const [signUp, { error }] = useSignUpMutation();
-  const dispatch = useDispatch();
-  // const { errors } = useSelector(({ user }) => user);
-
   async function handleFormSubmit(values) {
     try {
       await signUp(values);
       message.success("Success");
-      router.push("/sign-in");
+      // router.push("/sign-in");
     } catch (err) {
       throw err;
     }

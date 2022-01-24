@@ -25,7 +25,7 @@ export default function DropDownMenu({ children }) {
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link href={`/${user.user_name}`}>
+        <Link href={`/${user.data.user_name}`}>
           <a>Profile</a>
         </Link>
       </Menu.Item>

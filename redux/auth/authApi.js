@@ -31,11 +31,9 @@ export const authApi = createApi({
         },
       }),
       signUp: build.mutation({
-        query: (values) => ({
-          url: "register",
-          method: "POST",
-          body: values,
-        }),
+        query: (values) => {
+          return { url: "register", method: "POST", body: values };
+        },
       }),
       signOut: build.mutation({
         query: () => {

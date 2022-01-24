@@ -3,11 +3,9 @@ import Sidebar from "./Sidebar";
 import Head from "next/head";
 import GuestBanner from "../components/GuestBanner";
 import UserDropDown from "./UserDropDown";
-import { Spin } from "antd";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import useAuthMe from "../hooks/useAutMe";
+import Loader from "./Loader";
 
 function Layout({ children, title }) {
   const router = useRouter();
@@ -26,12 +24,12 @@ function Layout({ children, title }) {
     isSuccess: isLoggedIn,
     refetch,
     isFetching,
+    isLoading,
   } = useAuthMe();
-
+  console.log("user", user);
   useEffect(() => {
     refetch();
   }, [router.pathname]);
-
   return (
     <div>
       <Head>
@@ -39,9 +37,7 @@ function Layout({ children, title }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {isFetching ? (
-        <div className=" fixed inset-1/2 ">
-          <Spin tip="Loading..." size="large" />
-        </div>
+        <Loader />
       ) : (
         <main className="min-h-screen flex max-w-[1500px] mx-auto">
           <Sidebar />

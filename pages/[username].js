@@ -18,6 +18,7 @@ import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import useAuthMe from "../hooks/useAutMe";
+import Loader from "../components/Loader";
 
 function Profile() {
   const router = useRouter();
@@ -61,18 +62,10 @@ function Profile() {
         }))
       : [];
   if (!author && !posts) {
-    return (
-      <div className=" fixed inset-1/2 ">
-        <Spin tip="Loading..." size="large" />
-      </div>
-    );
+    return null;
   }
   if (isLoadingPosts) {
-    return (
-      <div className=" fixed inset-1/2 ">
-        <Spin tip="Loading..." size="large" />
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -81,9 +74,7 @@ function Profile() {
         <UserHeader author={author.data} postsCount={posts.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
         {isFetchingPosts ? (
-          <div className=" fixed inset-1/2 ">
-            <Spin tip="Loading..." size="large" />
-          </div>
+          <Loader />
         ) : (
           <PostsList
             posts={postsWithAuthor}

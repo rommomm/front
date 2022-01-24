@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
+import React from "react";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import Link from "next/link";
 import router from "next/router";
 import { signInValidationSchema } from "../validationSchema/signIn";
 import { handleErrors } from "../helpers/handleError";
-import { useDispatch, useSelector } from "react-redux";
 import AuthLayout from "../components/AuthLayout";
 import { useSignInMutation } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
@@ -12,8 +11,6 @@ import { message } from "antd";
 
 function SignIn() {
   const [signIn, { error }] = useSignInMutation();
-  const dispatch = useDispatch();
-  // const { errors } = useSelector(({ user }) => user);
 
   async function handleFormSubmit(values) {
     try {
