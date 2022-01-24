@@ -8,12 +8,11 @@ import { useSelector } from "react-redux";
 import CommentsCount from "./CommentLikes";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
+import useAuthMe from "../hooks/useAutMe";
 
 function Comment({ comment, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   function handleUpdatePost(values) {
     onUpdate(comment.id, values);
     setEditMode(false);

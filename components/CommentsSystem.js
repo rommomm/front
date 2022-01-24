@@ -2,6 +2,7 @@ import { Spin } from "antd";
 import Cookies from "js-cookie";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import useAuthMe from "../hooks/useAutMe";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import {
   useCreateCommentMutation,
@@ -24,9 +25,7 @@ function CommentsSystem({ post }) {
     return null;
   }
   const { data: comments, isFetching } = useGetCommentsByPostQuery(post.id);
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   const dispatch = useDispatch();
   const [createComment] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();

@@ -2,13 +2,12 @@ import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
 import Cookies from "js-cookie";
 import React from "react";
 import { useSelector } from "react-redux";
+import useAuthMe from "../hooks/useAutMe";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import { useGetAuthorPostsQuery } from "../redux/posts/postApi";
 
 function UserHeader({ author, postsCount }) {
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-1 px-1  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">

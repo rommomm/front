@@ -9,13 +9,13 @@ import {
 import { message } from "antd";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
+import useAuthMe from "../hooks/useAutMe";
 
 function EditBackgroundModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [file, setFile] = useState(null);
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, refetch } = useAuthMe();
+
   const dispatch = useDispatch();
 
   const [uploadBackground] = useUploadBackgroundMutation();
@@ -27,6 +27,7 @@ function EditBackgroundModal() {
       formData.append("profile_background", file);
       await uploadBackground(formData);
       message.success("Success");
+      refetch();
     } catch (error) {
       console.log("error", error);
     }
@@ -38,6 +39,7 @@ function EditBackgroundModal() {
 
   const handleRemoveAvatar = async () => {
     await removeBackground();
+    refetch();
   };
 
   const handleCancel = () => {

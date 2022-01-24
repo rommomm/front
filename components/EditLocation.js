@@ -6,13 +6,13 @@ import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import { useUpdateProfileMutation } from "../redux/profile/profileApi";
 import { message } from "antd";
+import useAuthMe from "../hooks/useAutMe";
 
 function EditLocation() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, refetch } = useAuthMe();
+
   const dispatch = useDispatch();
 
   const [updateProfile] = useUpdateProfileMutation();
@@ -21,6 +21,7 @@ function EditLocation() {
     try {
       const locatoin = { user_location: null };
       await updateProfile(locatoin);
+      refetch();
     } catch (error) {
       console.log("error", error);
     }
@@ -30,6 +31,7 @@ function EditLocation() {
     try {
       await updateProfile({ user_location: userLocation });
       message.success("Success");
+      refetch();
     } catch (error) {
       console.log("error", error);
     }

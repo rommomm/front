@@ -5,11 +5,10 @@ import { logout } from "../redux/auth/authSlice";
 import { useAuthMeQuery, useSignOutMutation } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import router from "next/router";
+import useAuthMe from "../hooks/useAutMe";
 
 export default function DropDownMenu({ children }) {
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   const [signOut] = useSignOutMutation();
   const dispatch = useDispatch();
 

@@ -5,12 +5,11 @@ import router from "next/router";
 import { signUpValidationSchema } from "../validationSchema/signUp";
 import { handleErrors } from "../helpers/handleError";
 import { useDispatch, useSelector } from "react-redux";
-import { signUp } from "../redux/auth/authSlice";
 import AuthLayout from "../components/AuthLayout";
 import { useSignUpMutation } from "../redux/auth/authApi";
 import { message } from "antd";
 
-const SignUp = () => {
+function SignUp() {
   const [signUp, { error }] = useSignUpMutation();
   const dispatch = useDispatch();
   // const { errors } = useSelector(({ user }) => user);
@@ -151,6 +150,6 @@ const SignUp = () => {
       </div>
     </AuthLayout>
   );
-};
+}
 
 export default SignUp;

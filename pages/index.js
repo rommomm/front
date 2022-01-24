@@ -20,9 +20,9 @@ import {
 import { Spin } from "antd";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
+import useAuthMe from "../hooks/useAutMe";
 
 function App() {
-  const dispatch = useDispatch();
   const {
     data: posts,
     isLoading: isLoadingPosts,
@@ -32,9 +32,7 @@ function App() {
     data: user,
     isSuccess: isLoggedIn,
     isLoading: isLoadingUser,
-  } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  } = useAuthMe();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();

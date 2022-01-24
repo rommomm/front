@@ -17,6 +17,7 @@ import { Spin } from "antd";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import useAuthMe from "../hooks/useAutMe";
 
 function Profile() {
   const router = useRouter();
@@ -34,9 +35,7 @@ function Profile() {
   } = useGetUserPostsQuery(author && author.data.user_name, {
     skip: !isSuccess,
   });
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   const dispatch = useDispatch();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
@@ -97,32 +96,26 @@ function Profile() {
   );
 }
 
-// export async function getServerSideProps() {
-//   const store = initializeStore();
+export async function getServerSideProps(router) {
+  const store = initializeStore();
+  await store.dispatch(
+    postsApi.endpoints.getUserPosts.initiate(router.query.username)
+  );
+  const { data: posts } = postsApi.endpoints.getUserPosts.select(
+    router.query.username
+  )(store.getState());
+  const initialPosts = posts;
+  await store.dispatch(postsApi.endpoints.getUserPosts.initiate(initialPosts));
+  if (!posts) {
+    return {
+      notFound: true,
+    };
+  }
+  return {
+    props: {
+      initialPosts,
+    },
+  };
+}
 
-//   await store.dispatch(postsApi.endpoints.getUserPosts.initiate());
-//   const { data: posts } = postsApi.endpoints.getUserPosts.select()(
-//     store.getState()
-//   );
-//   const initialPosts = posts;
-//   await store.dispatch(postsApi.endpoints.getUserPosts.initiate(initialPosts));
-//   return {
-//     props: {
-//       initialPosts,
-//     },
-//   };
-// }
-
-// export const getServerSideProps = withRedux(async (ctx, store) => {
-//   await store.dispatch(getUserPosts(ctx));
-//   const data = store.getState();
-//   if (!data.all.author) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-//   return {
-//     props: {},
-//   };
-// });
 export default Profile;

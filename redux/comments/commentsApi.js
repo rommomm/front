@@ -18,7 +18,7 @@ const apiBaseQuery =
 export const commentsApi = createApi({
   reducerPath: "commentsApi",
   baseQuery: apiBaseQuery(),
-  tagTypes: ["Comments"],
+  tagTypes: ["Comments", "Comment"],
   endpoints(build) {
     return {
       getCommentsByPost: build.query({
@@ -34,20 +34,39 @@ export const commentsApi = createApi({
               ]
             : [{ type: "Comments", id: "LIST" }],
       }),
+      getCommentByPost: build.mutation({
+        query: (id) => ({
+          url: `posts/${id}/comments`,
+          method: "GET",
+        }),
+        providesTags: (result) =>
+          result
+            ? [
+                ...result.data.map(({ id }) => ({ type: "Comment", id })),
+                { type: "Comment", id: "LIST" },
+              ]
+            : [{ type: "Comment", id: "LIST" }],
+      }),
       createComment: build.mutation({
         query: ({ id, comment }) => ({
           url: `posts/${id}/comments`,
           method: "POST",
           body: comment,
         }),
-        invalidatesTags: [{ type: "Comments", id: "LIST" }],
+        invalidatesTags: [
+          { type: "Comments", id: "LIST" },
+          { type: "Comment", id: "LIST" },
+        ],
       }),
       deleteComment: build.mutation({
         query: ({ id }) => ({
           url: `comments/${id}`,
           method: "DELETE",
         }),
-        invalidatesTags: [{ type: "Comments", id: "LIST" }],
+        invalidatesTags: [
+          { type: "Comments", id: "LIST" },
+          { type: "Comment", id: "LIST" },
+        ],
       }),
       updateComment: build.mutation({
         query: ({ id, data }) => ({
@@ -55,13 +74,17 @@ export const commentsApi = createApi({
           method: "PUT",
           body: data,
         }),
-        invalidatesTags: [{ type: "Comments", id: "LIST" }],
+        invalidatesTags: [
+          { type: "Comments", id: "LIST" },
+          { type: "Comment", id: "LIST" },
+        ],
       }),
     };
   },
 });
 
 export const {
+  useGetCommentByPostMutation,
   useGetCommentsByPostQuery,
   useCreateCommentMutation,
   useDeleteCommentMutation,

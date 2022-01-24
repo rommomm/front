@@ -2,16 +2,11 @@ import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
 import Cookies from "js-cookie";
 import React from "react";
 import { useSelector } from "react-redux";
+import useAuthMe from "../hooks/useAutMe";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 
 function HeaderProfilePreview() {
-  const {
-    data: user,
-    isSuccess: isLoggedIn,
-    isLoading,
-  } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user } = useAuthMe();
   return (
     <>
       <div className="relative flex flex-col mx-auto  w-full border-black border">

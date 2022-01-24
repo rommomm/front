@@ -10,16 +10,15 @@ import {
   useUploadAvatarMutation,
 } from "../redux/profile/profileApi";
 import { message } from "antd";
+import useAuthMe from "../hooks/useAutMe";
 
 function EditAvatarModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [file, setFile] = useState(null);
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, refetch } = useAuthMe();
+
   const [uploadAvatar] = useUploadAvatarMutation();
   const [removeAvatar] = useRemoveAvatarMutation();
-  const dispatch = useDispatch();
 
   const handleUploadAvatar = async (e) => {
     try {
@@ -27,6 +26,7 @@ function EditAvatarModal() {
       formData.append("profile_photo", file);
       await uploadAvatar(formData);
       message.success("Success");
+      refetch();
     } catch (error) {
       console.log("error", error);
     }
@@ -34,6 +34,7 @@ function EditAvatarModal() {
 
   const handleRemoveAvatar = async () => {
     await removeAvatar();
+    refetch();
   };
 
   const showModal = () => {

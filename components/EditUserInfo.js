@@ -8,17 +8,17 @@ import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import { useUpdateProfileMutation } from "../redux/profile/profileApi";
 import { message, Spin } from "antd";
+import useAuthMe from "../hooks/useAutMe";
 
 function EditUserInfo() {
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, isSuccess: isLoggedIn, refetch } = useAuthMe();
   const [updateProfile] = useUpdateProfileMutation();
 
   async function handleSave(values) {
     try {
       await updateProfile(values);
       message.success("Success");
+      refetch();
     } catch (error) {
       console.log("error", error);
     }
@@ -27,6 +27,7 @@ function EditUserInfo() {
   if (!user) {
     return null;
   }
+
   const formInitialValue = {
     first_name: user.data.first_name,
     last_name: user.data.last_name,

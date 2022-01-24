@@ -3,29 +3,35 @@ import Sidebar from "./Sidebar";
 import Head from "next/head";
 import GuestBanner from "../components/GuestBanner";
 import UserDropDown from "./UserDropDown";
-import { useSelector } from "react-redux";
 import { Spin } from "antd";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import useAuthMe from "../hooks/useAutMe";
 
 function Layout({ children, title }) {
-  // const { isLoggedIn, isLoading, user } = useSelector(({ user }) => user);
   const router = useRouter();
+  // const {
+  //   data: user,
+  //   isLoading,
+  //   isSuccess: isLoggedIn,
+  //   refetch,
+  //   isFetching,
+  //   isUninitialized,
+  // } = useAuthMeQuery(null, {
+  //   skip: !(Cookies && Cookies.get("token")),
+  // });
   const {
     data: user,
-    isLoading,
     isSuccess: isLoggedIn,
     refetch,
     isFetching,
-    isUninitialized,
-  } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
-  console.log("isUninitialized", isUninitialized);
+  } = useAuthMe();
+
   useEffect(() => {
     refetch();
   }, [router.pathname]);
+
   return (
     <div>
       <Head>

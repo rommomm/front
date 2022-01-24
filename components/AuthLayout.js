@@ -3,11 +3,10 @@ import { useSelector } from "react-redux";
 import router from "next/router";
 import Cookies from "js-cookie";
 import { useAuthMeQuery } from "../redux/auth/authApi";
+import useAuthMe from "../hooks/useAutMe";
 
 function AuthLayout({ children }) {
-  const { isSuccess: isLoggedIn, isLoading } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { isSuccess: isLoggedIn, isLoading } = useAuthMe();
   useEffect(() => {
     if (isLoggedIn) {
       router.push("/");

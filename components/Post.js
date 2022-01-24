@@ -10,13 +10,12 @@ import CommentsSystem from "./CommentsSystem";
 import { getAllCommentsByPosts } from "../redux/posts/postSlice";
 import { useAuthMeQuery } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
+import useAuthMe from "../hooks/useAutMe";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
   // const { isLoggedIn, user } = useSelector(({ user }) => user);
-  const { data: user, isSuccess: isLoggedIn } = useAuthMeQuery(null, {
-    skip: !(Cookies && Cookies.get("token")),
-  });
+  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   const { openedPostComments } = useSelector(({ all }) => all);
 
   const dispatch = useDispatch();
