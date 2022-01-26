@@ -50,7 +50,7 @@ function App() {
   };
 
   if (isLoadingUser || isLoadingPosts) {
-    return null;
+    return <Loader />;
   }
   return (
     <Layout title="Home page">
@@ -60,12 +60,17 @@ function App() {
         </div>
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
-
-          <PostsList
-            posts={posts.data}
-            onUpdate={handleUpdatePost}
-            onDelete={handleDeletePost}
-          />
+          {isFetchingPosts ? (
+            <div className=" relative w-full m-auto flex justify-center">
+              <Loader className="absolute" tip="Loading..." size="large" />
+            </div>
+          ) : (
+            <PostsList
+              posts={posts.data}
+              onUpdate={handleUpdatePost}
+              onDelete={handleDeletePost}
+            />
+          )}
         </div>
       </div>
     </Layout>

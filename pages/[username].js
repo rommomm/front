@@ -61,10 +61,8 @@ function Profile() {
           author: author.data,
         }))
       : [];
-  if (!author && !posts) {
-    return null;
-  }
-  if (isLoadingPosts) {
+
+  if (isLoadingPosts || !(author && posts)) {
     return null;
   }
 
@@ -73,12 +71,17 @@ function Profile() {
       <div className="border-black border-l border-r w-full max-w-screen-md	">
         <UserHeader author={author.data} postsCount={posts.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
-
-        <PostsList
-          posts={postsWithAuthor}
-          onUpdate={handleUpdatePost}
-          onDelete={handleDeletePost}
-        />
+        {isFetchingPosts ? (
+          <div className=" relative w-full m-auto flex justify-center">
+            <Loader className="absolute" tip="Loading..." size="large" />
+          </div>
+        ) : (
+          <PostsList
+            posts={postsWithAuthor}
+            onUpdate={handleUpdatePost}
+            onDelete={handleDeletePost}
+          />
+        )}
       </div>
     </Layout>
   );

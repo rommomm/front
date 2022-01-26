@@ -22,10 +22,12 @@ export const commentsApi = createApi({
   endpoints(build) {
     return {
       getCommentsByPost: build.query({
-        query: (id) => ({
-          url: `posts/${id}/comments`,
-          method: "GET",
-        }),
+        query: (id) => {
+          return {
+            url: `posts/${id}/comments`,
+            method: "GET",
+          };
+        },
         providesTags: (result) =>
           result
             ? [
@@ -33,19 +35,6 @@ export const commentsApi = createApi({
                 { type: "Comments", id: "LIST" },
               ]
             : [{ type: "Comments", id: "LIST" }],
-      }),
-      getCommentByPost: build.mutation({
-        query: (id) => ({
-          url: `posts/${id}/comments`,
-          method: "GET",
-        }),
-        providesTags: (result) =>
-          result
-            ? [
-                ...result.data.map(({ id }) => ({ type: "Comment", id })),
-                { type: "Comment", id: "LIST" },
-              ]
-            : [{ type: "Comment", id: "LIST" }],
       }),
       createComment: build.mutation({
         query: ({ id, comment }) => ({

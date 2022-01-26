@@ -19,14 +19,11 @@ import AddComment from "./AddComment";
 import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 
-function CommentsSystem({ post }) {
-  // const { comments } = useSelector(({ all }) => all);
-  if (!post) {
-    return null;
-  }
-  const { data: comments, isFetching } = useGetCommentsByPostQuery(post.id);
+function CommentsSystem({ post, openedPostComments }) {
+  const { data: comments, isFetching } = useGetCommentsByPostQuery(post.id, {
+    skip: !openedPostComments,
+  });
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
-  const dispatch = useDispatch();
   const [createComment] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();

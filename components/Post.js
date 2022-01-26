@@ -5,28 +5,21 @@ import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import PostEditForm from "./PostEditForm";
 import CommentsCount from "./CommentsCount";
-import { useDispatch, useSelector } from "react-redux";
 import CommentsSystem from "./CommentsSystem";
-import { getAllCommentsByPosts } from "../redux/posts/postSlice";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import useAuthMe from "../hooks/useAutMe";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  // const { isLoggedIn, user } = useSelector(({ user }) => user);
+  const [openedPostComments, setOpenedPostComments] = useState(false);
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
-  const { openedPostComments } = useSelector(({ all }) => all);
-
-  const dispatch = useDispatch();
 
   function handleUpdatePost(value) {
     onUpdate(post.id, value);
     setEditMode(false);
   }
 
-  function showComments() {
-    dispatch(getAllCommentsByPosts(post.id));
+  async function showComments() {
+    setOpenedPostComments(!openedPostComments);
   }
 
   const menu = (
@@ -114,7 +107,9 @@ function Post({ post, onDelete, onUpdate }) {
         </div>
       </div>
       <div className="relative">
-        {openedPostComments === post.id && <CommentsSystem post={post} />}
+        {openedPostComments && (
+          <CommentsSystem post={post} openedPostComments={openedPostComments} />
+        )}
       </div>
     </div>
   );

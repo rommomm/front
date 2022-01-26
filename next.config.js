@@ -3,8 +3,14 @@ module.exports = {
     return [
       {
         source: "/settings",
-        destination: "/",
+        has: [
+          {
+            type: "cookie",
+            key: "token",
+          },
+        ],
         permanent: false,
+        destination: "/",
       },
     ];
   },
