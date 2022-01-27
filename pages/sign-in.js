@@ -1,22 +1,18 @@
 import React from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import Link from "next/link";
-import router from "next/router";
+import { Formik } from "formik";
 import { signInValidationSchema } from "../validationSchema/signIn";
-import { handleErrors } from "../helpers/handleError";
 import AuthLayout from "../components/AuthLayout";
 import { useSignInMutation } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
-import { message } from "antd";
+import SignInForm from "../components/SignInForm";
 
 function SignIn() {
-  const [signIn, { error }] = useSignInMutation();
+  const [signIn, { error, isSuccess }] = useSignInMutation();
 
   async function handleFormSubmit(values) {
     try {
       const response = await signIn(values);
       Cookies.set("token", response.data.token);
-      router.push("/");
     } catch (err) {
       throw err;
     }
@@ -34,55 +30,19 @@ function SignIn() {
             <h1 className="mb-5 text-2xl text-center">Sign in</h1>
             <div className="col-md-8 offset-md-2">
               <Formik
-                errors={handleErrors(error && error.errors)}
                 initialValues={formInitialSchema}
                 validationSchema={signInValidationSchema}
                 onSubmit={handleFormSubmit}
               >
-                <Form>
-                  <div className="col-md-12 mt-4">
-                    <span>Email or username</span>
-
-                    <Field
-                      type="text"
-                      name="login"
-                      className="block border border-black w-full p-3 rounded mb-4"
+                {(props) => {
+                  return (
+                    <SignInForm
+                      {...props}
+                      error={error}
+                      isSuccess={isSuccess}
                     />
-
-                    <p className=" text-sm pl-4 text-rose-500 text-red-600	">
-                      <ErrorMessage name="login" />
-                    </p>
-                  </div>
-                  <div className="col-md-12 mt-4">
-                    <span>Password</span>
-
-                    <Field
-                      type="password"
-                      name="password"
-                      className="block border border-black w-full p-3 rounded mb-4"
-                    />
-
-                    <p className=" text-sm pl-4 text-rose-500 text-red-600	">
-                      <ErrorMessage name="password" />
-                    </p>
-                  </div>
-
-                  <div className="col-md-12 mt-4">
-                    <button
-                      type="submit"
-                      className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4  rounded"
-                    >
-                      Sign Up
-                    </button>
-                  </div>
-                  <div className="text-grey-dark mt-6 text-center ">
-                    <Link href="/sign-up">
-                      <a className="no-underline border-blue text-blue hover:underline">
-                        Register
-                      </a>
-                    </Link>
-                  </div>
-                </Form>
+                  );
+                }}
               </Formik>
             </div>
           </div>

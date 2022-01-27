@@ -1,4 +1,4 @@
-import { Button, Result } from "antd";
+import { Result } from "antd";
 import Link from "next/link";
 import Layout from "../components/Layout";
 

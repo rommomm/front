@@ -12,6 +12,7 @@ function ProfilePreview() {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
   return (
     <>
       <div className="flex flex-col">

@@ -1,4 +1,4 @@
-import { CommentOutlined, LikeOutlined } from "@ant-design/icons/lib/icons";
+import { LikeOutlined } from "@ant-design/icons/lib/icons";
 import React from "react";
 
 function CommentsCount() {

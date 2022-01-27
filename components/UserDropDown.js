@@ -1,9 +1,6 @@
 import React from "react";
 import { Row } from "antd";
 import DropDownMenu from "./DropDownMenu";
-import { useSelector } from "react-redux";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import useAuthMe from "../hooks/useAutMe";
 
 function UserDropDown() {

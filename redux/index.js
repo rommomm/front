@@ -1,11 +1,8 @@
 import { useMemo } from "react";
-import postSlice from "./posts/postSlice";
-import authSlice from "./auth/authSlice";
-import profileSlice from "./profile/profileSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import { postsApi } from "./posts/postApi";
 import { authApi } from "./auth/authApi";
-import { commentsApi } from "./comments/commentsApi";
+import { commentsApi, counterCommentsSlice } from "./comments/commentsApi";
 import { profileApi } from "./profile/profileApi";
 
 let store;
@@ -13,9 +10,7 @@ let store;
 const createStore = (preloadedState) => {
   return configureStore({
     reducer: {
-      profile: profileSlice,
-      all: postSlice,
-      user: authSlice,
+      counterComments: counterCommentsSlice.reducer,
       [postsApi.reducerPath]: postsApi.reducer,
       [authApi.reducerPath]: authApi.reducer,
       [commentsApi.reducerPath]: commentsApi.reducer,

@@ -1,9 +1,6 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
-import Cookies from "js-cookie";
 import React from "react";
-import { useSelector } from "react-redux";
 import useAuthMe from "../hooks/useAutMe";
-import { useAuthMeQuery } from "../redux/auth/authApi";
 
 function HeaderProfilePreview() {
   const { data: user } = useAuthMe();

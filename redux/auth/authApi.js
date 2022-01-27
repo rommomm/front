@@ -1,19 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import api from "../../libs/api";
-
-const apiBaseQuery =
-  ({ baseUrl } = { baseUrl: "http://localhost:8000/api/" }) =>
-  async ({ url, method, body: data }) => {
-    try {
-      const result = await api({ url: baseUrl + url, method, data });
-      return { data: result };
-    } catch (apiError) {
-      let err = apiError;
-      return {
-        error: err,
-      };
-    }
-  };
+import { apiBaseQuery } from "../../libs/apiBaseQuery";
 
 export const authApi = createApi({
   reducerPath: "authApi",

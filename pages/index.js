@@ -1,14 +1,7 @@
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
 import React from "react";
-import { initializeStore, withRedux } from "../redux";
-import {
-  createPost,
-  deletePost,
-  getAllPosts,
-  updatePost,
-} from "../redux/posts/postSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { initializeStore } from "../redux";
 import AddPostForm from "../components/AddPostForm";
 import {
   postsApi,
@@ -17,9 +10,6 @@ import {
   useGetAllPostsQuery,
   useUpdatePostMutation,
 } from "../redux/posts/postApi";
-import { Spin } from "antd";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
 
@@ -29,11 +19,7 @@ function App() {
     isLoading: isLoadingPosts,
     isFetching: isFetchingPosts,
   } = useGetAllPostsQuery();
-  const {
-    data: user,
-    isSuccess: isLoggedIn,
-    isLoading: isLoadingUser,
-  } = useAuthMe();
+  const { isSuccess: isLoggedIn, isLoading: isLoadingUser } = useAuthMe();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
@@ -61,9 +47,7 @@ function App() {
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
           {isFetchingPosts ? (
-            <div className=" relative w-full m-auto flex justify-center">
-              <Loader className="absolute" tip="Loading..." size="large" />
-            </div>
+            <Loader />
           ) : (
             <PostsList
               posts={posts.data}

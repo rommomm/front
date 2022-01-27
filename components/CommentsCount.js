@@ -1,7 +1,11 @@
 import { CommentOutlined, LikeOutlined } from "@ant-design/icons/lib/icons";
 import React from "react";
+import { useSelector } from "react-redux";
+import { selectCount } from "../redux/comments/commentsApi";
 
 function CommentsCount({ counterComments, showComments }) {
+  const count = useSelector(selectCount);
+  console.log("count", count);
   return (
     <div>
       <div className="w-5/6 m-auto	flex justify-start">

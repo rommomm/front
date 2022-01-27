@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import { removeAvatar, uploadAvatar } from "../redux/profile/profileSlice";
-import { useDispatch, useSelector } from "react-redux";
 import Modal from "antd/lib/modal/Modal";
 import EditAvatar from "./EditAvatar";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import {
   useRemoveAvatarMutation,
   useUploadAvatarMutation,
@@ -45,13 +41,13 @@ function EditAvatarModal() {
     setIsModalVisible(false);
   };
 
-  if (!user) {
-    return null;
-  }
-
   const handlePreviewUpload = (file) => {
     setFile(file);
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <>

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Modal from "antd/lib/modal/Modal";
 import Map from "./Map";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import { useUpdateProfileMutation } from "../redux/profile/profileApi";
 import { message } from "antd";
 import useAuthMe from "../hooks/useAutMe";
@@ -12,9 +10,6 @@ function EditLocation() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const { data: user, refetch } = useAuthMe();
-
-  const dispatch = useDispatch();
-
   const [updateProfile] = useUpdateProfileMutation();
 
   async function handleRemoveUserLocation() {
@@ -49,9 +44,11 @@ function EditLocation() {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
   if (!user) {
     return null;
   }
+
   return (
     <>
       <div className="flex flex-col">

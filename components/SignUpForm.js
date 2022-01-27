@@ -4,7 +4,6 @@ import Link from "next/link";
 import router from "next/router";
 import React, { useEffect } from "react";
 import { handleErrors } from "../helpers/handleError";
-import { useSignUpMutation } from "../redux/auth/authApi";
 
 function SignUpForm({ setErrors, error, isSuccess }) {
   useEffect(() => {
@@ -19,6 +18,7 @@ function SignUpForm({ setErrors, error, isSuccess }) {
       router.push("/sign-in");
     }
   }, [isSuccess]);
+
   return (
     <Form>
       <div className="col-md-12 mt-4">

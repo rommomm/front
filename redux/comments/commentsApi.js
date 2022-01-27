@@ -1,19 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import api from "../../libs/api";
-
-const apiBaseQuery =
-  ({ baseUrl } = { baseUrl: "http://localhost:8000/api/" }) =>
-  async ({ url, method, body: data }) => {
-    try {
-      const result = await api({ url: baseUrl + url, method, data });
-      return { data: result };
-    } catch (apiError) {
-      let err = apiError;
-      return {
-        error: err,
-      };
-    }
-  };
+import { apiBaseQuery } from "../../libs/apiBaseQuery";
+import { createSlice } from "@reduxjs/toolkit";
+import { createComment } from "../posts/postSlice";
 
 export const commentsApi = createApi({
   reducerPath: "commentsApi",
@@ -37,25 +25,17 @@ export const commentsApi = createApi({
             : [{ type: "Comments", id: "LIST" }],
       }),
       createComment: build.mutation({
-        query: ({ id, comment }) => ({
-          url: `posts/${id}/comments`,
-          method: "POST",
-          body: comment,
-        }),
-        invalidatesTags: [
-          { type: "Comments", id: "LIST" },
-          { type: "Comment", id: "LIST" },
-        ],
+        query: ({ id, comment }) => {
+          return { url: `posts/${id}/comments`, method: "POST", body: comment };
+        },
+        invalidatesTags: [{ type: "Comments", id: "LIST" }],
       }),
       deleteComment: build.mutation({
         query: ({ id }) => ({
           url: `comments/${id}`,
           method: "DELETE",
         }),
-        invalidatesTags: [
-          { type: "Comments", id: "LIST" },
-          { type: "Comment", id: "LIST" },
-        ],
+        invalidatesTags: [{ type: "Comments", id: "LIST" }],
       }),
       updateComment: build.mutation({
         query: ({ id, data }) => ({
@@ -63,14 +43,40 @@ export const commentsApi = createApi({
           method: "PUT",
           body: data,
         }),
-        invalidatesTags: [
-          { type: "Comments", id: "LIST" },
-          { type: "Comment", id: "LIST" },
-        ],
+        invalidatesTags: [{ type: "Comments", id: "LIST" }],
       }),
     };
   },
 });
+
+export const counterCommentsSlice = createSlice({
+  name: "counter",
+  initialState: {
+    value: null,
+    isLoading: false,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(createComment.pending, (state, action) => {
+      state.statusByName[action.meta.arg] = "pending";
+    });
+
+    builder.addCase(createComment.fulfilled, (state, action) => {
+      console.log("state", state);
+      console.log("action", action);
+      state.statusByName[action.meta.arg] = "fulfilled";
+      state.dataByName[action.meta.arg] = action.payload;
+    });
+
+    builder.addCase(createComment.rejected, (state, action) => {
+      state.statusByName[action.meta.arg] = "rejected";
+    });
+  },
+});
+
+export const { increment, decrement, incrementByAmount } =
+  counterCommentsSlice.actions;
+
+export const selectCount = (state) => state.counterComments.value;
 
 export const {
   useGetCommentByPostMutation,

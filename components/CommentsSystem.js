@@ -1,29 +1,21 @@
-import { Spin } from "antd";
-import Cookies from "js-cookie";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import useAuthMe from "../hooks/useAutMe";
-import { useAuthMeQuery } from "../redux/auth/authApi";
 import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
   useGetCommentsByPostQuery,
   useUpdateCommentMutation,
 } from "../redux/comments/commentsApi";
-import {
-  createComment,
-  deleteComment,
-  updateComment,
-} from "../redux/posts/postSlice";
 import AddComment from "./AddComment";
 import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
+import Loader from "./Loader";
 
 function CommentsSystem({ post, openedPostComments }) {
   const { data: comments, isFetching } = useGetCommentsByPostQuery(post.id, {
     skip: !openedPostComments,
   });
-  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
+  const { isSuccess: isLoggedIn } = useAuthMe();
   const [createComment] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
@@ -37,6 +29,7 @@ function CommentsSystem({ post, openedPostComments }) {
   };
 
   const handleSaveComment = async (id, comment) => {
+    console.log("id", id);
     await createComment({ id, comment });
   };
   return (
@@ -47,9 +40,7 @@ function CommentsSystem({ post, openedPostComments }) {
         <CommentsGuestBanner count={post.comments_count} />
       )}
       {isFetching ? (
-        <div className=" relative w-full m-auto flex justify-center">
-          <Spin className="absolute" tip="Loading..." size="large" />
-        </div>
+        <Loader />
       ) : (
         <CommentsList
           comments={comments && comments.data}

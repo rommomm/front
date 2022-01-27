@@ -1,17 +1,13 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Formik } from "formik";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { profileValidationSchema } from "../validationSchema/profile";
-import { updateProfile } from "../redux/profile/profileSlice";
 import EditUserInfoForm from "./EditUserInfoForm";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import { useUpdateProfileMutation } from "../redux/profile/profileApi";
-import { message, Spin } from "antd";
+import { message } from "antd";
 import useAuthMe from "../hooks/useAutMe";
 
 function EditUserInfo() {
-  const { data: user, isSuccess: isLoggedIn, refetch } = useAuthMe();
+  const { data: user, refetch } = useAuthMe();
   const [updateProfile] = useUpdateProfileMutation();
 
   async function handleSave(values) {
@@ -24,14 +20,14 @@ function EditUserInfo() {
     }
   }
 
-  if (!user) {
-    return null;
-  }
-
   const formInitialValue = {
     first_name: user.data.first_name,
     last_name: user.data.last_name,
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="border-b border-black pb-4">

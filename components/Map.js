@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import { Spin } from "antd";
 import Geocode from "react-geocode";
-import { useDispatch } from "react-redux";
-import { updateProfile } from "../redux/profile/profileSlice";
+import Loader from "./Loader";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 Geocode.setApiKey(API_KEY);
@@ -51,7 +49,7 @@ function Map({ handlePreviewLocation }) {
           {markerPosition && <Marker position={markerPosition} />}
         </GoogleMap>
       ) : (
-        <Spin />
+        <Loader />
       )}
     </div>
   );

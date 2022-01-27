@@ -1,10 +1,14 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useDispatch } from "react-redux";
+import { increment } from "../redux/comments/commentsApi";
 import { commentValidationSchema } from "../validationSchema/comment";
 
 function AddComment({ onCreate, post }) {
+  const dispatch = useDispatch();
   function handleCreate(values, actions) {
     onCreate(post.id, values);
     actions.resetForm();
+    dispatch(increment());
   }
 
   const formInitialValue = {

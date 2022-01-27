@@ -7,8 +7,6 @@ import {
   MailOutlined,
   SettingOutlined,
 } from "@ant-design/icons/lib/icons";
-import Cookies from "js-cookie";
-import { useAuthMeQuery } from "../redux/auth/authApi";
 import useAuthMe from "../hooks/useAutMe";
 
 function Sidebar() {

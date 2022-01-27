@@ -1,16 +1,14 @@
 import Link from "next/link";
 import { Menu, Dropdown } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/auth/authSlice";
-import { useAuthMeQuery, useSignOutMutation } from "../redux/auth/authApi";
+import { useDispatch } from "react-redux";
+import { useSignOutMutation } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import router from "next/router";
 import useAuthMe from "../hooks/useAutMe";
 
 export default function DropDownMenu({ children }) {
-  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
+  const { data: user } = useAuthMe();
   const [signOut] = useSignOutMutation();
-  const dispatch = useDispatch();
 
   async function handleLogout() {
     try {

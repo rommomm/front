@@ -1,10 +1,6 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
-import Cookies from "js-cookie";
 import React from "react";
-import { useSelector } from "react-redux";
 import useAuthMe from "../hooks/useAutMe";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import { useGetAuthorPostsQuery } from "../redux/posts/postApi";
 
 function UserHeader({ author, postsCount }) {
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();

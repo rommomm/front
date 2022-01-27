@@ -1,12 +1,9 @@
 import React from "react";
 import { ErrorMessage, Field, Form } from "formik";
-import { useSelector } from "react-redux";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import useAuthMe from "../hooks/useAutMe";
 
 function EditUserInfoForm({ values }) {
-  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
+  const { data: user } = useAuthMe();
   const disable =
     values.first_name === user.data.first_name &&
     values.last_name === user.data.last_name;

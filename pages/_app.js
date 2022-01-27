@@ -4,8 +4,6 @@ import "../styles/globals.css";
 import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import { useStore } from "../redux";
-import Cookies from "js-cookie";
-import { authMe } from "../redux/auth/authSlice";
 import { useRouter } from "next/router";
 import Loader from "../components/Loader";
 

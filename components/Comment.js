@@ -1,13 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Menu, Dropdown } from "antd";
 import Link from "next/link";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import CommentEditForm from "./CommentEditForm";
-import { useSelector } from "react-redux";
 import CommentsCount from "./CommentLikes";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import useAuthMe from "../hooks/useAutMe";
 
 function Comment({ comment, onDelete, onUpdate }) {

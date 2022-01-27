@@ -7,17 +7,12 @@ import {
   useUploadBackgroundMutation,
 } from "../redux/profile/profileApi";
 import { message } from "antd";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import useAuthMe from "../hooks/useAutMe";
 
 function EditBackgroundModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [file, setFile] = useState(null);
   const { data: user, refetch } = useAuthMe();
-
-  const dispatch = useDispatch();
-
   const [uploadBackground] = useUploadBackgroundMutation();
   const [removeBackground] = useRemoveBackgroundMutation();
 
@@ -47,13 +42,13 @@ function EditBackgroundModal() {
     setIsModalVisible(false);
   };
 
-  if (!user) {
-    return null;
-  }
-
   const handlePreviewUpload = (file) => {
     setFile(file);
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <>

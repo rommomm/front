@@ -13,9 +13,6 @@ import {
   useGetUserPostsQuery,
   useUpdatePostMutation,
 } from "../redux/posts/postApi";
-import { Spin } from "antd";
-import { useAuthMeQuery } from "../redux/auth/authApi";
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
@@ -37,7 +34,6 @@ function Profile() {
     skip: !isSuccess,
   });
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
-  const dispatch = useDispatch();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
@@ -63,18 +59,16 @@ function Profile() {
       : [];
 
   if (isLoadingPosts || !(author && posts)) {
-    return null;
+    return <Loader />;
   }
 
   return (
-    <Layout>
+    <Layout title={author.data.user_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
         <UserHeader author={author.data} postsCount={posts.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
         {isFetchingPosts ? (
-          <div className=" relative w-full m-auto flex justify-center">
-            <Loader className="absolute" tip="Loading..." size="large" />
-          </div>
+          <Loader />
         ) : (
           <PostsList
             posts={postsWithAuthor}

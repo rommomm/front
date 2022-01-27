@@ -1,6 +1,4 @@
-import { Spin } from "antd";
 import React from "react";
-import { useSelector } from "react-redux";
 import Post from "./Post";
 
 function PostsList({ posts, onDelete, onUpdate }) {

@@ -1,17 +1,11 @@
-import { Fragment } from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import Link from "next/link";
-import router from "next/router";
+import { Formik } from "formik";
 import { signUpValidationSchema } from "../validationSchema/signUp";
-import { handleErrors } from "../helpers/handleError";
 import AuthLayout from "../components/AuthLayout";
 import { useSignUpMutation } from "../redux/auth/authApi";
-import { message } from "antd";
 import SignUpForm from "../components/SignUpForm";
 
 function SignUp() {
   const [signUp, { error, isSuccess }] = useSignUpMutation();
-  console.log("errors_per", error);
 
   async function handleFormSubmit(values) {
     try {
