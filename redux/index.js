@@ -10,7 +10,7 @@ let store;
 const createStore = (preloadedState) => {
   return configureStore({
     reducer: {
-      counterComments: counterCommentsSlice.reducer,
+      // counterComments: counterCommentsSlice.reducer,
       [postsApi.reducerPath]: postsApi.reducer,
       [authApi.reducerPath]: authApi.reducer,
       [commentsApi.reducerPath]: commentsApi.reducer,
