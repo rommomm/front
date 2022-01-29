@@ -11,6 +11,7 @@ import {
   updatePost,
 } from "../redux/posts/postSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Empty } from "antd";
 
 function Profile() {
   const { isLoggedIn, user } = useSelector(({ user }) => user);
@@ -40,6 +41,7 @@ function Profile() {
           onUpdate={handleUpdatePost}
           onDelete={handleDeletePost}
         />
+        {posts.length < 1 && <Empty className="pt-10" description="No posts" />}
       </div>
     </Layout>
   );

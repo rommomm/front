@@ -10,6 +10,7 @@ import {
 } from "../redux/posts/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AddPostForm from "../components/AddPostForm";
+import { Empty } from "antd";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,7 +27,6 @@ function App() {
   const handleSavePost = async (post) => {
     dispatch(createPost(post));
   };
-
   return (
     <Layout title="Home page">
       <div className="flex-grow  border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px]">
@@ -42,6 +42,7 @@ function App() {
             onDelete={handleDeletePost}
           />
         </div>
+        {posts.length < 1 && <Empty className="pt-44" description="No posts" />}
       </div>
     </Layout>
   );
