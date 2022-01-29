@@ -12,6 +12,7 @@ import {
 } from "../redux/posts/postApi";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
+import { Empty } from "antd";
 
 function App() {
   const {
@@ -56,6 +57,9 @@ function App() {
             />
           )}
         </div>
+        {posts.data.length < 1 && (
+          <Empty className="pt-44" description="No posts" />
+        )}
       </div>
     </Layout>
   );

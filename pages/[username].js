@@ -16,6 +16,7 @@ import {
 import { useRouter } from "next/router";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
+import { Empty } from "antd";
 
 function Profile() {
   const router = useRouter();
@@ -76,6 +77,7 @@ function Profile() {
             onDelete={handleDeletePost}
           />
         )}
+        {posts.length < 1 && <Empty className="pt-5" description="No posts" />}
       </div>
     </Layout>
   );
