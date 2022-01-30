@@ -1,6 +1,6 @@
 import AddPostForm from "../components/AddPostForm";
 import UserHeader from "../components/UserHeader";
-import React from "react";
+import React, { useEffect } from "react";
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
 import { useDispatch } from "react-redux";
@@ -24,6 +24,8 @@ function Profile() {
     data: author,
     isSuccess,
     isLoading: isLoadingAuthor,
+    refetch: refetchAuthor,
+    isFetching: isFetchingAuthor,
   } = useGetAuthorByPostsQuery(router && router.query.username, {
     skip: !router.query.username,
   });
@@ -50,6 +52,10 @@ function Profile() {
     await createPost(post);
   };
 
+  useEffect(() => {
+    refetchAuthor();
+  }, []);
+
   const showAddPost = isLoggedIn && author && author.data.id === user.data.id;
   const postsWithAuthor =
     posts && posts.length
@@ -59,7 +65,7 @@ function Profile() {
         }))
       : [];
 
-  if (isLoadingPosts || !(author && posts)) {
+  if (isLoadingPosts || isLoadingAuthor || !(author && posts)) {
     return <Loader />;
   }
 

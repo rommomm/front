@@ -1,14 +1,29 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { increment } from "../redux/comments/commentsApi";
+import { useGetAllPostsQuery } from "../redux/posts/postApi";
 import { commentValidationSchema } from "../validationSchema/comment";
 
-function AddComment({ onCreate, post }) {
+function AddComment({ onCreate, post: postComment }) {
+  const {
+    data: posts,
+    isLoading: isLoadingPosts,
+    isFetching: isFetchingPosts,
+  } = useGetAllPostsQuery();
+
+  const { counterComments } = useSelector((state) => state);
+  console.log("counterComments", counterComments);
+
   const dispatch = useDispatch();
   function handleCreate(values, actions) {
-    onCreate(post.id, values);
+    onCreate(postComment.id, values);
     actions.resetForm();
-    dispatch(increment());
+    posts &&
+      posts.data.length &&
+      posts.data.filter((post) => {
+        post.id === postComment.id ? dispatch(increment()) : null;
+      });
   }
 
   const formInitialValue = {

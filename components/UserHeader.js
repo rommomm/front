@@ -1,9 +1,10 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
-import React from "react";
+import React, { useEffect } from "react";
 import useAuthMe from "../hooks/useAutMe";
 
 function UserHeader({ author, postsCount }) {
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
+
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-1 px-1  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
@@ -20,7 +21,7 @@ function UserHeader({ author, postsCount }) {
         <div className="profile w-full flex flex-col text-white">
           <img
             className="max-h-32 object-cover	 w-full"
-            src={author.profile.profile_background || "/default/background.png"}
+            src={author.profile_background || "/default/background.png"}
             alt=""
           />
           <div
@@ -29,7 +30,7 @@ function UserHeader({ author, postsCount }) {
           >
             <img
               class="w-36 h-36 p-1 bg-white rounded-full"
-              src={author.profile.profile_photo || "/default/avatar.png"}
+              src={author.profile_avatar || "/default/avatar.png"}
               alt=""
             />
             {isLoggedIn && author.id !== user.data.id && (
@@ -60,7 +61,7 @@ function UserHeader({ author, postsCount }) {
               <div className="m-auto flex justify-start  ">
                 <EnvironmentOutlined />
                 <span class=" pl-1 inline-block align-bottom text-xs">
-                  {author.profile.user_location || "Запорожье"}
+                  {author.user_location || "Запорожье"}
                 </span>
               </div>
 

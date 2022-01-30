@@ -48,35 +48,6 @@ export const commentsApi = createApi({
   },
 });
 
-// export const counterCommentsSlice = createSlice({
-//   name: "counter",
-//   initialState: {
-//     value: null,
-//     isLoading: false,
-//   },
-//   extraReducers: (builder) => {
-//     builder.addCase(createComment.pending, (state, action) => {
-//       state.statusByName[action.meta.arg] = "pending";
-//     });
-
-//     builder.addCase(createComment.fulfilled, (state, action) => {
-//       console.log("state", state);
-//       console.log("action", action);
-//       state.statusByName[action.meta.arg] = "fulfilled";
-//       state.dataByName[action.meta.arg] = action.payload;
-//     });
-
-//     builder.addCase(createComment.rejected, (state, action) => {
-//       state.statusByName[action.meta.arg] = "rejected";
-//     });
-//   },
-// });
-
-// export const { increment, decrement, incrementByAmount } =
-//   counterCommentsSlice.actions;
-
-// export const selectCount = (state) => state.counterComments.value;
-
 export const {
   useGetCommentByPostMutation,
   useGetCommentsByPostQuery,

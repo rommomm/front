@@ -48,7 +48,7 @@ function Post({ post, onDelete, onUpdate }) {
           <div className="flex">
             <Link href={`/` + post.author.user_name}>
               <img
-                src={post.author.profile.profile_photo || "/default/avatar.png"}
+                src={post.author.profile_avatar || "/default/avatar.png"}
                 alt=""
                 className="h-12 w-12 rounded-full mr-4"
               />

@@ -10,9 +10,7 @@ function HeaderProfilePreview() {
         <div className="profile w-full flex flex-col text-white">
           <img
             className="max-h-32 object-cover	 w-full"
-            src={
-              user.data.profile.profile_background || "/default/background.png"
-            }
+            src={user.data.profile_background || "/default/background.png"}
             alt=""
           />
           <div
@@ -21,7 +19,7 @@ function HeaderProfilePreview() {
           >
             <img
               class="w-36 h-36 p-1 bg-white rounded-full"
-              src={user.data.profile.profile_photo || "/default/avatar.png"}
+              src={user.data.profile_avatar || "/default/avatar.png"}
               alt=""
             />
 
@@ -51,7 +49,7 @@ function HeaderProfilePreview() {
               <div className="m-auto flex justify-start  ">
                 <EnvironmentOutlined />
                 <span class=" pl-1 inline-block align-bottom text-xs">
-                  {user.data.profile.user_location || "Запорожье"}
+                  {user.data.user_location || "Запорожье"}
                 </span>
               </div>
               <div>

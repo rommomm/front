@@ -18,7 +18,7 @@ function EditAvatarModal() {
   const handleUploadAvatar = async (e) => {
     try {
       const formData = new FormData();
-      formData.append("profile_photo", file);
+      formData.append("profile_avatar", file);
       await uploadAvatar(formData);
       message.success("Success");
       refetch();
@@ -59,7 +59,7 @@ function EditAvatarModal() {
           Upload avatar
         </button>
         <button
-          disabled={!user.data.profile.profile_photo}
+          disabled={!user.data.profile_avatar}
           onClick={handleRemoveAvatar}
           className="m-2 bg-red-300 hover:bg-red-400 text-gray-800  py-2 px-7 border-gray-400 rounded shadow hover:bg-red-300 focus:outline-none disabled:opacity-50"
           tabindex="-1"

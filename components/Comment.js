@@ -42,7 +42,7 @@ function Comment({ comment, onDelete, onUpdate }) {
           <Link href={`/` + comment.author.user_name}>
             <img
               src={
-                comment.author.profile.profile_photo || "/default/avatar.png"
+                comment.author.profile_avatar || "/default/avatar.png"
               }
               alt=""
               className="h-10 w-10 rounded-full mr-4"
