@@ -43,7 +43,7 @@ function EditLocation() {
           Location
         </button>
         <button
-          disabled={!user.profile.user_location}
+          disabled={!user.user_location}
           onClick={handleRemoveUserLocation}
           className="m-2 bg-red-300 hover:bg-red-400 text-gray-800  py-2 px-7 border-gray-400 rounded shadow hover:bg-red-300 focus:outline-none disabled:opacity-50"
           tabindex="-1"

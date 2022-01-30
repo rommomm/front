@@ -11,7 +11,7 @@ function UserDropDown() {
         <DropDownMenu>
           <Row>
             <img
-              src={user.profile.profile_photo || "/default/avatar.png"}
+              src={user.profile_avatar || "/default/avatar.png"}
               alt=""
               className="h-10 w-10 rounded-full xl:mr-2.5"
             />

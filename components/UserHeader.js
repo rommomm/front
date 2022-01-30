@@ -21,7 +21,7 @@ function UserHeader({ userInfo, posts }) {
         <div className="profile w-full flex flex-col text-white">
           <img
             className="max-h-32 object-cover	 w-full"
-            src={author.profile.profile_background || "/default/background.png"}
+            src={author.profile_background || "/default/background.png"}
             alt=""
           />
           <div
@@ -30,7 +30,7 @@ function UserHeader({ userInfo, posts }) {
           >
             <img
               class="w-36 h-36 p-1 bg-white rounded-full"
-              src={author.profile.profile_photo || "/default/avatar.png"}
+              src={author.profile_avatar || "/default/avatar.png"}
               alt=""
             />
             {isLoggedIn && userInfo.id !== user.id && (
@@ -61,7 +61,7 @@ function UserHeader({ userInfo, posts }) {
               <div className="m-auto flex justify-start  ">
                 <EnvironmentOutlined />
                 <span class=" pl-1 inline-block align-bottom text-xs">
-                  {author.profile.user_location || "Запорожье"}
+                  {author.user_location || "Запорожье"}
                 </span>
               </div>
 

@@ -10,6 +10,7 @@ import CommentsSystem from "./CommentsSystem";
 import { getAllCommentsByPosts } from "../redux/posts/postSlice";
 
 function Post({ post, onDelete, onUpdate }) {
+  console.log("post", post);
   const [editMode, setEditMode] = useState(false);
   const { isLoggedIn, user } = useSelector(({ user }) => user);
   const { openedPostComments } = useSelector(({ all }) => all);
@@ -52,7 +53,7 @@ function Post({ post, onDelete, onUpdate }) {
           <div className="flex">
             <Link href={`/` + post.author.user_name}>
               <img
-                src={post.author.profile.profile_photo || "/default/avatar.png"}
+                src={post.author.profile_avatar || "/default/avatar.png"}
                 alt=""
                 className="h-12 w-12 rounded-full mr-4"
               />
