@@ -31,9 +31,13 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.0",
     "jest": "^27.4.7",
     "postcss": "^8.4.4",
+    "redux-mock-store": "^1.5.4",
     "tailwindcss": "^2.2.19"
   }
 }

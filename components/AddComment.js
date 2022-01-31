@@ -18,6 +18,7 @@ function AddComment({ onCreate, post }) {
           initialValues={formInitialValue}
           validationSchema={commentValidationSchema}
           onSubmit={handleCreate}
+          name={"123"}
         >
           <Form className="w-full">
             <Field
@@ -36,7 +37,10 @@ function AddComment({ onCreate, post }) {
                 </p>
               </div>
               <div>
-                <button className="bg-blue-200 hover:bg-blue-500 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                <button
+                  type="submit"
+                  className="bg-blue-200 hover:bg-blue-500 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                >
                   Comment
                 </button>
               </div>
