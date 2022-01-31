@@ -4,7 +4,7 @@ import Link from "next/link";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import CommentEditForm from "./CommentEditForm";
-import CommentsCount from "./CommentLikes";
+import CommentsLikes from "./CommentsLikes";
 import useAuthMe from "../hooks/useAutMe";
 
 function Comment({ comment, onDelete, onUpdate }) {
@@ -29,7 +29,6 @@ function Comment({ comment, onDelete, onUpdate }) {
   );
 
   const formattedCreateAt = useFormateDate(comment.created_at, "dd LLL yyyy");
-
   const formattedUpdateAt = useFormateDate(
     comment.updated_at,
     "dd LLL yyyy HH:mm:ss"
@@ -41,9 +40,7 @@ function Comment({ comment, onDelete, onUpdate }) {
         <div className=" pl-12 flex ">
           <Link href={`/` + comment.author.user_name}>
             <img
-              src={
-                comment.author.profile_avatar || "/default/avatar.png"
-              }
+              src={comment.author.profile_avatar || "/default/avatar.png"}
               alt=""
               className="h-10 w-10 rounded-full mr-4"
             />
@@ -89,7 +86,7 @@ function Comment({ comment, onDelete, onUpdate }) {
             )}
           </div>
         </div>
-        <CommentsCount />
+        <CommentsLikes />
       </div>
 
       <div>

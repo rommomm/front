@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiBaseQuery } from "../../libs/apiBaseQuery";
-import { createSlice } from "@reduxjs/toolkit";
 
 export const commentsApi = createApi({
   reducerPath: "commentsApi",

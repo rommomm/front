@@ -16,12 +16,10 @@ import { Empty } from "antd";
 import { useSelector } from "react-redux";
 
 function App() {
-  const {
-    data: posts,
-    isLoading: isLoadingPosts,
-    isFetching: isFetchingPosts,
-  } = useGetAllPostsQuery();
-  const { isSuccess: isLoggedIn, isLoading: isLoadingUser } = useAuthMe();
+  const { allPosts } = useSelector(({ counter }) => counter);
+  const { isLoading: isLoadingPosts, isFetching: isFetchingPosts } =
+    useGetAllPostsQuery();
+  const { isSuccess: isLoggedIn } = useAuthMe();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
@@ -32,12 +30,11 @@ function App() {
   const handleUpdatePost = async (id, updatedData) => {
     await updatePost({ id, data: updatedData });
   };
-
   const handleSavePost = async (post) => {
     await createPost(post);
   };
 
-  if (isLoadingUser || isLoadingPosts) {
+  if (isLoadingPosts) {
     return <Loader />;
   }
   return (
@@ -48,17 +45,17 @@ function App() {
         </div>
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
-          {isFetchingPosts ? (
+          {isLoadingPosts || isFetchingPosts ? (
             <Loader />
           ) : (
             <PostsList
-              posts={posts.data}
+              posts={allPosts}
               onUpdate={handleUpdatePost}
               onDelete={handleDeletePost}
             />
           )}
         </div>
-        {posts.data.length < 1 && (
+        {allPosts.length < 1 && (
           <Empty className="pt-44" description="No posts" />
         )}
       </div>

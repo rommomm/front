@@ -3,8 +3,7 @@ import UserHeader from "../components/UserHeader";
 import React, { useEffect } from "react";
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import { useDispatch } from "react-redux";
-import { initializeStore, withRedux } from "../redux";
+import { initializeStore } from "../redux";
 import {
   postsApi,
   useCreatePostMutation,
@@ -17,15 +16,17 @@ import { useRouter } from "next/router";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
 import { Empty } from "antd";
+import { useSelector } from "react-redux";
 
 function Profile() {
+  const { userPosts } = useSelector(({ counter }) => counter);
+  console.log("userPosts", userPosts);
   const router = useRouter();
   const {
     data: author,
     isSuccess,
     isLoading: isLoadingAuthor,
     refetch: refetchAuthor,
-    isFetching: isFetchingAuthor,
   } = useGetAuthorByPostsQuery(router && router.query.username, {
     skip: !router.query.username,
   });
@@ -47,7 +48,6 @@ function Profile() {
   const handleUpdatePost = async (id, updatedData) => {
     await updatePost({ id, data: updatedData });
   };
-
   const handleSavePost = async (post) => {
     await createPost(post);
   };
@@ -58,21 +58,21 @@ function Profile() {
 
   const showAddPost = isLoggedIn && author && author.data.id === user.data.id;
   const postsWithAuthor =
-    posts && posts.length
-      ? posts.map((post) => ({
+    userPosts && userPosts.length
+      ? userPosts.map((post) => ({
           ...post,
           author: author.data,
         }))
       : [];
 
-  if (isLoadingPosts || isLoadingAuthor || !(author && posts)) {
+  if (isLoadingAuthor || !(author && userPosts)) {
     return <Loader />;
   }
 
   return (
     <Layout title={author.data.user_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader author={author.data} postsCount={posts.length} />
+        <UserHeader author={author.data} postsCount={userPosts.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
         {isFetchingPosts ? (
           <Loader />
@@ -83,19 +83,21 @@ function Profile() {
             onDelete={handleDeletePost}
           />
         )}
-        {posts.length < 1 && <Empty className="pt-5" description="No posts" />}
+        {userPosts.length < 1 && (
+          <Empty className="pt-5" description="No posts" />
+        )}
       </div>
     </Layout>
   );
 }
 
-export async function getServerSideProps(router) {
+export async function getServerSideProps(ctx) {
   const store = initializeStore();
   await store.dispatch(
-    postsApi.endpoints.getUserPosts.initiate(router.query.username)
+    postsApi.endpoints.getUserPosts.initiate(ctx.query.username)
   );
   const { data: posts } = postsApi.endpoints.getUserPosts.select(
-    router.query.username
+    ctx.query.username
   )(store.getState());
   const initialPosts = posts;
   await store.dispatch(postsApi.endpoints.getUserPosts.initiate(initialPosts));

@@ -10,13 +10,73 @@ export const commentsSlice = createSlice({
     builder.addMatcher(
       postsApi.endpoints.getAllPosts.matchFulfilled,
       (state, { payload }) => {
-        state.posts = payload;
+        state.allPosts = payload.data;
+      }
+    );
+
+    builder.addMatcher(
+      postsApi.endpoints.getUserPosts.matchFulfilled,
+      (state, { payload }) => {
+        state.userPosts = payload;
+      }
+    );
+
+    builder.addMatcher(
+      commentsApi.endpoints.createComment.matchFulfilled,
+      (state, action) => {
+        state.allPosts = state.allPosts.map((post) => {
+          if (post.id === action.meta.arg.originalArgs.id) {
+          }
+          return post.id === action.meta.arg.originalArgs.id
+            ? {
+                ...post,
+                comments_count: post?.comments_count
+                  ? ++post.comments_count
+                  : 1,
+              }
+            : post;
+        });
+        state.userPosts = state.userPosts.map((post) => {
+          if (post.id === action.meta.arg.originalArgs.id) {
+          }
+          return post.id === action.meta.arg.originalArgs.id
+            ? {
+                ...post,
+                comments_count: post?.comments_count
+                  ? ++post.comments_count
+                  : 1,
+              }
+            : post;
+        });
       }
     );
     builder.addMatcher(
-      commentsApi.endpoints.createComment.matchFulfilled,
-      (state, { payload }) => {
-        state.comment = payload;
+      commentsApi.endpoints.deleteComment.matchFulfilled,
+      (state, action) => {
+        state.allPosts = state.allPosts.map((post) => {
+          if (post.id === action.meta.arg.originalArgs.postId) {
+          }
+          return post.id === action.meta.arg.originalArgs.postId
+            ? {
+                ...post,
+                comments_count: post?.comments_count
+                  ? --post.comments_count
+                  : 1,
+              }
+            : post;
+        });
+        state.userPosts = state.userPosts.map((post) => {
+          if (post.id === action.meta.arg.originalArgs.postId) {
+          }
+          return post.id === action.meta.arg.originalArgs.postId
+            ? {
+                ...post,
+                comments_count: post?.comments_count
+                  ? --post.comments_count
+                  : 1,
+              }
+            : post;
+        });
       }
     );
   },

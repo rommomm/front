@@ -6,24 +6,9 @@ import { useGetAllPostsQuery } from "../redux/posts/postApi";
 import { commentValidationSchema } from "../validationSchema/comment";
 
 function AddComment({ onCreate, post: postComment }) {
-  const {
-    data: posts,
-    isLoading: isLoadingPosts,
-    isFetching: isFetchingPosts,
-  } = useGetAllPostsQuery();
-
-  const { counterComments } = useSelector((state) => state);
-  console.log("counterComments", counterComments);
-
-  const dispatch = useDispatch();
   function handleCreate(values, actions) {
     onCreate(postComment.id, values);
     actions.resetForm();
-    posts &&
-      posts.data.length &&
-      posts.data.filter((post) => {
-        post.id === postComment.id ? dispatch(increment()) : null;
-      });
   }
 
   const formInitialValue = {

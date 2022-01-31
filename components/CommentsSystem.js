@@ -10,6 +10,7 @@ import AddComment from "./AddComment";
 import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 import Loader from "./Loader";
+import { useSelector } from "react-redux";
 
 function CommentsSystem({ post, openedPostComments }) {
   const { data: comments, isFetching } = useGetCommentsByPostQuery(post.id, {
@@ -29,7 +30,6 @@ function CommentsSystem({ post, openedPostComments }) {
   };
 
   const handleSaveComment = async (id, comment) => {
-    console.log("id", id);
     await createComment({ id, comment });
   };
   return (
