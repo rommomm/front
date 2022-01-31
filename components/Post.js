@@ -10,7 +10,6 @@ import CommentsSystem from "./CommentsSystem";
 import { getAllCommentsByPosts } from "../redux/posts/postSlice";
 
 function Post({ post, onDelete, onUpdate }) {
-  console.log("post", post);
   const [editMode, setEditMode] = useState(false);
   const { isLoggedIn, user } = useSelector(({ user }) => user);
   const { openedPostComments } = useSelector(({ all }) => all);

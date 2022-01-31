@@ -14,7 +14,6 @@ function EditBackgroundModal() {
   const dispatch = useDispatch();
 
   function handleUploadBackground(e) {
-    console.log("file", file);
     const formData = new FormData();
 
     formData.append("profile_background", file);
@@ -38,7 +37,6 @@ function EditBackgroundModal() {
   }
 
   const handlePreviewUpload = (file) => {
-    console.log("file", file);
     setFile(file);
   };
 

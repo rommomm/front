@@ -19,6 +19,9 @@ function SignIn() {
       console.log(`error`, error);
     }
   }
+
+  module.exports = handleFormSubmit;
+
   const formInitialSchema = {
     login: "",
     password: "",

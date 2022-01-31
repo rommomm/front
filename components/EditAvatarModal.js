@@ -11,7 +11,6 @@ function EditAvatarModal() {
   const dispatch = useDispatch();
 
   function handleUploadAvatar(e) {
-    console.log("file", file);
     const formData = new FormData();
 
     formData.append("profile_avatar", file);
@@ -35,7 +34,6 @@ function EditAvatarModal() {
   }
 
   const handlePreviewUpload = (file) => {
-    console.log("file", file);
     setFile(file);
   };
 
