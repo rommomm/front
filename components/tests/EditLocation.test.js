@@ -27,12 +27,27 @@ describe("EditLocation", () => {
 
   const mockStore = configureStore();
   let store;
-  it("EditLocation", () => {
+  it("EditLocation", async () => {
     store = mockStore(initialState);
-    render(
+    const { queryAllByTitle } = render(
       <Provider store={store}>
         <EditLocation />
       </Provider>
     );
+    const showModal = queryAllByTitle("showModal");
+    expect(showModal).toBeTruthy();
+  });
+});
+
+describe("clickButton", () => {
+  it("onClick", () => {
+    store = mockStore(initialState);
+    const { queryAllByTitle } = render(
+      <Provider store={store}>
+        <EditLocation />
+      </Provider>
+    );
+    const showModal = queryAllByTitle("showModal");
+    fireEvent.click(showModal);
   });
 });
