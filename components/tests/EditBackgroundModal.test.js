@@ -1,5 +1,5 @@
 import React from "react";
-import Comment from "../Comment";
+import EditBackgroundModal from "../EditBackgroundModal";
 import {
   render,
   screen,
@@ -12,7 +12,7 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 
-describe("AddComment", () => {
+describe("EditBackgroundModal", () => {
   const initialState = {
     user: {
       isLoggedIn: true,
@@ -27,29 +27,12 @@ describe("AddComment", () => {
 
   const mockStore = configureStore();
   let store;
-  it("renders a heading", () => {
-    const comment = {
-      id: 47,
-      content: "qfeeeeeeeeeeeeeeeqfeqfeqfeqfe",
-      created_at: "2022-01-31T20:54:54.000000Z",
-      updated_at: "2022-01-31T20:54:54.000000Z",
-      author: {
-        id: 3,
-        user_name: "test",
-        first_name: "test",
-        profile_avatar: null,
-      },
-    };
-
+  it("EditBackgroundModal", () => {
     store = mockStore(initialState);
     render(
       <Provider store={store}>
-        <Comment comment={comment} />
+        <EditBackgroundModal />
       </Provider>
-    );
-
-    expect(screen.getByText(comment.author.first_name)).toHaveTextContent(
-      comment.author.first_name
     );
   });
 });

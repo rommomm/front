@@ -23,7 +23,7 @@ export default function DropDownMenu({ children }) {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <a onClick={handleLogout}>Logout</a>
+        <button onClick={handleLogout}>Logout</button>
       </Menu.Item>
     </Menu>
   );

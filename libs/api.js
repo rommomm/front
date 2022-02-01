@@ -28,6 +28,7 @@ instance.interceptors.response.use(
   },
   async function (error) {
     if (error.response.status === 401) {
+      Cookies.remove("token");
       message.error(error.response.data.message);
       router.reload();
     }

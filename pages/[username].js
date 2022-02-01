@@ -34,7 +34,7 @@ function Profile() {
   return (
     <Layout title={author.first_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader userInfo={author} posts={posts} />
+        <UserHeader posts={posts} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
         <PostsList
           posts={posts}

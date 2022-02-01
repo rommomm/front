@@ -12,7 +12,6 @@ function HeaderProfilePreview() {
           <img
             className="max-h-32 object-cover	 w-full"
             src={user.profile_background || "/default/background.png"}
-            alt=""
           />
           <div
             className="w-full flex justify-center relative"
@@ -21,7 +20,6 @@ function HeaderProfilePreview() {
             <img
               class="w-36 h-36 p-1 bg-white rounded-full"
               src={user.profile_avatar || "/default/avatar.png"}
-              alt=""
             />
 
             <div className="absolute bottom-0 buttons flex justify-end font-bold right-0 space-x-0 my-3.5 mr-3 ">

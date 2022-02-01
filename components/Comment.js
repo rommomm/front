@@ -36,13 +36,12 @@ function Comment({ comment, onDelete, onUpdate }) {
   );
 
   return (
-    <div className=" flex  justify-between p-2 cursor-pointer border-b">
-      <div className="w-full ">
-        <div className=" pl-12 flex ">
+    <div className="flex justify-between p-2 cursor-pointer border-b">
+      <div className="w-full">
+        <div className="pl-12 flex">
           <Link href={`/` + comment.author.user_name}>
             <img
               src={comment.author.profile_avatar || "/default/avatar.png"}
-              alt=""
               className="h-10 w-10 rounded-full mr-4"
             />
           </Link>
@@ -56,14 +55,14 @@ function Comment({ comment, onDelete, onUpdate }) {
                 </Link>
               </div>
               <div>
-                <span className="text-xs	 pl-1 $">
+                <span className="text-xs pl-1">
                   @{comment.author.user_name}
                 </span>
               </div>
               <div>
-                <span className="ml-2 text-xs	">{formattedCreateAt}</span>
+                <span className="ml-2 text-xs">{formattedCreateAt}</span>
                 {comment.created_at !== comment.updated_at && (
-                  <span className="ml-2 border text-xs	">
+                  <span className="ml-2 border text-xs">
                     {formattedUpdateAt}
                   </span>
                 )}
@@ -78,12 +77,7 @@ function Comment({ comment, onDelete, onUpdate }) {
                 setEditMode={setEditMode}
               />
             ) : (
-              <p
-                className="break-words break-all text-xs	
-              "
-              >
-                {comment.content}
-              </p>
+              <p className="break-words break-all text-xs">{comment.content}</p>
             )}
           </div>
         </div>
