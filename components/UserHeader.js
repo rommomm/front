@@ -29,7 +29,7 @@ function UserHeader({ author, postsCount }) {
             style={{ marginTop: "-5rem" }}
           >
             <img
-              class="w-36 h-36 p-1 bg-white rounded-full"
+              className="w-36 h-36 p-1 bg-white rounded-full"
               src={author.profile_avatar || "/default/avatar.png"}
               alt=""
             />
@@ -49,7 +49,7 @@ function UserHeader({ author, postsCount }) {
             )}
           </div>
           <div style={{ marginTop: "-4rem" }}>
-            <div class="buttons left-0 space-x-0 my-3.5 ml-3 text-black ">
+            <div className="buttons left-0 space-x-0 my-3.5 ml-3 text-black ">
               <div className="pr-4">
                 <h2 className="text-2xl font-bold ">{author.first_name}</h2>
               </div>
@@ -60,7 +60,7 @@ function UserHeader({ author, postsCount }) {
             <div class=" left-0 space-x-0 my-3.5 ml-3 text-black ">
               <div className="m-auto flex justify-start  ">
                 <EnvironmentOutlined />
-                <span class=" pl-1 inline-block align-bottom text-xs">
+                <span className=" pl-1 inline-block align-bottom text-xs">
                   {author.user_location || "Запорожье"}
                 </span>
               </div>

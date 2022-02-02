@@ -3,8 +3,6 @@ import { apiBaseQuery } from "../../libs/apiBaseQuery";
 import { postsApi } from "../posts/postApi";
 import { current } from "@reduxjs/toolkit";
 
-console.log("postsApi.util.updateQueryData", postsApi.util);
-
 export const commentsApi = createApi({
   reducerPath: "commentsApi",
   baseQuery: apiBaseQuery(),
@@ -36,7 +34,6 @@ export const commentsApi = createApi({
         },
         invalidatesTags: [{ type: "Comment", id: "LIST" }],
         async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
-          console.log("postId", id);
           try {
             dispatch(
               postsApi.util.updateQueryData(
