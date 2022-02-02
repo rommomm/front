@@ -29,7 +29,7 @@ function AddComment({ onCreate, post: postComment }) {
               type="content"
               name="content"
               placeholder="Text"
-              rows="4"
+              rows="3"
               className="resize-none bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full "
             />
 
@@ -40,7 +40,10 @@ function AddComment({ onCreate, post: postComment }) {
                 </p>
               </div>
               <div>
-                <button className="bg-blue-200 hover:bg-blue-500 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                <button
+                  type="submit"
+                  className="bg-blue-200 hover:bg-blue-500 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                >
                   Comment
                 </button>
               </div>

@@ -4,14 +4,12 @@ import { postsApi } from "./posts/postApi";
 import { authApi } from "./auth/authApi";
 import { commentsApi } from "./comments/commentsApi";
 import { profileApi } from "./profile/profileApi";
-import { commentsSlice } from "./comments/commentsSlice";
 
 let store;
 
 const createStore = (preloadedState) => {
   return configureStore({
     reducer: {
-      counter: commentsSlice.reducer,
       [postsApi.reducerPath]: postsApi.reducer,
       [authApi.reducerPath]: authApi.reducer,
       [commentsApi.reducerPath]: commentsApi.reducer,

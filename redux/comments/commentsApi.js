@@ -1,39 +1,79 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiBaseQuery } from "../../libs/apiBaseQuery";
+import { postsApi } from "../posts/postApi";
+import { current } from "@reduxjs/toolkit";
+
+console.log("postsApi.util.updateQueryData", postsApi.util);
 
 export const commentsApi = createApi({
   reducerPath: "commentsApi",
   baseQuery: apiBaseQuery(),
-  tagTypes: ["Comments", "Comment"],
+  tagTypes: ["Comment"],
   endpoints(build) {
     return {
       getCommentsByPost: build.query({
-        query: (id) => {
+        query: (postId) => {
           return {
-            url: `posts/${id}/comments`,
+            url: `posts/${postId}/comments`,
             method: "GET",
           };
         },
         providesTags: (result) =>
           result
             ? [
-                ...result.data.map(({ id }) => ({ type: "Comments", id })),
-                { type: "Comments", id: "LIST" },
+                ...result.data.map(({ id }) => ({ type: "Comment", id })),
+                { type: "Comment", id: "LIST" },
               ]
-            : [{ type: "Comments", id: "LIST" }],
+            : [{ type: "Comment", id: "LIST" }],
       }),
       createComment: build.mutation({
         query: ({ id, comment }) => {
-          return { url: `posts/${id}/comments`, method: "POST", body: comment };
+          return {
+            url: `posts/${id}/comments`,
+            method: "POST",
+            body: comment,
+          };
         },
-        invalidatesTags: [{ type: "Comments", id: "LIST" }],
+        invalidatesTags: [{ type: "Comment", id: "LIST" }],
+        async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+          console.log("postId", id);
+          try {
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getSinglePost",
+                `${id}`,
+                (draft) => {
+                  ++draft.data.comments_count;
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       deleteComment: build.mutation({
-        query: ({ id }) => ({
+        query: ({ id, postId }) => ({
           url: `comments/${id}`,
           method: "DELETE",
         }),
-        invalidatesTags: [{ type: "Comments", id: "LIST" }],
+        invalidatesTags: [{ type: "Comment", id: "LIST" }],
+
+        async onQueryStarted({ postId }, { dispatch, queryFulfilled }) {
+          try {
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getSinglePost",
+                `${postId}`,
+                (draft) => {
+                  --draft.data.comments_count;
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       updateComment: build.mutation({
         query: ({ id, data }) => ({
@@ -41,7 +81,7 @@ export const commentsApi = createApi({
           method: "PUT",
           body: data,
         }),
-        invalidatesTags: [{ type: "Comments", id: "LIST" }],
+        invalidatesTags: [{ type: "Comment", id: "LIST" }],
       }),
     };
   },

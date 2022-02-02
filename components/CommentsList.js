@@ -3,7 +3,7 @@ import Comment from "./Comment";
 
 function CommentsList({ comments, onUpdate, onDelete }) {
   return (
-    <div className="bg-gray-100 border-gray-400 border-t">
+    <div className=" border-gray-400 border-t">
       {comments && comments.length
         ? comments.map((comment) => (
             <Comment

@@ -8,7 +8,7 @@ import CommentsCount from "./CommentsCount";
 import CommentsSystem from "./CommentsSystem";
 import useAuthMe from "../hooks/useAutMe";
 
-function Post({ post, onDelete, onUpdate }) {
+function SinglePostByAuthor({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
   const [openedPostComments, setOpenedPostComments] = useState(false);
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
@@ -43,17 +43,17 @@ function Post({ post, onDelete, onUpdate }) {
 
   return (
     <div>
-      <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">
-        <div className="m-2 space-y-2 w-full">
+      <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700 ">
+        <div className="m-2 space-y-2 w-full p-2 ">
           <div className="flex">
             <Link href={`/` + post.author.user_name}>
               <img
                 src={post.author.profile_avatar || "/default/avatar.png"}
                 alt=""
-                className="h-12 w-12 rounded-full mr-4"
+                className="h-20 w-20 rounded-full mr-4"
               />
             </Link>
-            <div className="text-[#6e767d] w-full">
+            <div className="text-[#6e767d] w-full ">
               <div className="flex">
                 <div>
                   <Link href={`/` + post.author.user_name}>
@@ -83,15 +83,10 @@ function Post({ post, onDelete, onUpdate }) {
                   setEditMode={setEditMode}
                 />
               ) : (
-                <p className="break-words break-all">{post.content}</p>
+                <p className="break-words break-all text-lg">{post.content}</p>
               )}
             </div>
           </div>
-          <Link href={"/post/" + post.id}>
-            <a>
-              <CommentsCount counterComments={post.comments_count} />
-            </a>
-          </Link>
         </div>
         <div>
           {isLoggedIn && user.data.id === post.author.id && (
@@ -106,13 +101,8 @@ function Post({ post, onDelete, onUpdate }) {
           )}
         </div>
       </div>
-      <div className="relative">
-        {openedPostComments && (
-          <CommentsSystem post={post} openedPostComments={openedPostComments} />
-        )}
-      </div>
     </div>
   );
 }
 
-export default Post;
+export default SinglePostByAuthor;

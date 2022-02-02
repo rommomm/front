@@ -20,7 +20,7 @@ function CommentEditForm({ value, onSave, isLoggedIn, editMode, setEditMode }) {
                 component="textarea"
                 type="content"
                 name="content"
-                rows="4"
+                rows="3"
                 className="resize-none border border-gray-700 bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-11/12 "
               />
               <div>

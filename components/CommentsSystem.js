@@ -1,3 +1,4 @@
+import { Empty } from "antd";
 import React from "react";
 import useAuthMe from "../hooks/useAutMe";
 import {
@@ -10,10 +11,13 @@ import AddComment from "./AddComment";
 import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 import Loader from "./Loader";
-import { useSelector } from "react-redux";
 
 function CommentsSystem({ post, openedPostComments }) {
-  const { data: comments, isFetching } = useGetCommentsByPostQuery(post.id, {
+  const {
+    data: comments,
+    isFetching: isFetchingComments,
+    isLoading: isLoadingComments,
+  } = useGetCommentsByPostQuery(post.id, {
     skip: !openedPostComments,
   });
   const { isSuccess: isLoggedIn } = useAuthMe();
@@ -39,7 +43,7 @@ function CommentsSystem({ post, openedPostComments }) {
       ) : (
         <CommentsGuestBanner count={post.comments_count} />
       )}
-      {isFetching ? (
+      {isFetchingComments ? (
         <Loader />
       ) : (
         <CommentsList
@@ -47,6 +51,9 @@ function CommentsSystem({ post, openedPostComments }) {
           onUpdate={handleUpdateComment}
           onDelete={handleDeleteComment}
         />
+      )}
+      {comments && comments.data < 1 && (
+        <Empty className="pt-10" description="No comments" />
       )}
     </div>
   );

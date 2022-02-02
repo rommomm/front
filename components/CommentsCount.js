@@ -5,15 +5,11 @@ function CommentsCount({ counterComments, showComments }) {
   return (
     <div>
       <div className="w-5/6 m-auto	flex justify-start">
-        <a onClick={showComments}>
+        <a>
           <CommentOutlined style={{ fontSize: "22px" }} />
           <span className="inline-block align-bottom text-sm pl-1">
             {!counterComments ? 0 : counterComments}
           </span>
-        </a>
-        <a className="pl-2" onClick={showComments}>
-          <LikeOutlined style={{ fontSize: "22px" }} />
-          <span className="inline-block align-bottom text-sm pl-1">0</span>
         </a>
       </div>
     </div>

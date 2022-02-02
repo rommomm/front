@@ -16,9 +16,11 @@ import { Empty } from "antd";
 import { useSelector } from "react-redux";
 
 function App() {
-  const { allPosts } = useSelector(({ counter }) => counter);
-  const { isLoading: isLoadingPosts, isFetching: isFetchingPosts } =
-    useGetAllPostsQuery();
+  const {
+    data: posts,
+    isLoading: isLoadingPosts,
+    isFetching: isFetchingPosts,
+  } = useGetAllPostsQuery();
   const { isSuccess: isLoggedIn } = useAuthMe();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
@@ -34,9 +36,6 @@ function App() {
     await createPost(post);
   };
 
-  if (isLoadingPosts) {
-    return <Loader />;
-  }
   return (
     <Layout title="Home page">
       <div className="flex-grow  border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px]">
@@ -49,13 +48,13 @@ function App() {
             <Loader />
           ) : (
             <PostsList
-              posts={allPosts}
+              posts={posts && posts.data}
               onUpdate={handleUpdatePost}
               onDelete={handleDeletePost}
             />
           )}
         </div>
-        {allPosts.length < 1 && (
+        {posts && posts.data.length < 1 && (
           <Empty className="pt-44" description="No posts" />
         )}
       </div>

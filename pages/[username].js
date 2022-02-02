@@ -16,11 +16,8 @@ import { useRouter } from "next/router";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
 import { Empty } from "antd";
-import { useSelector } from "react-redux";
 
 function Profile() {
-  const { userPosts } = useSelector(({ counter }) => counter);
-  console.log("userPosts", userPosts);
   const router = useRouter();
   const {
     data: author,
@@ -58,21 +55,21 @@ function Profile() {
 
   const showAddPost = isLoggedIn && author && author.data.id === user.data.id;
   const postsWithAuthor =
-    userPosts && userPosts.length
-      ? userPosts.map((post) => ({
+    posts && posts.length
+      ? posts.map((post) => ({
           ...post,
-          author: author.data,
+          author: author && author.data,
         }))
       : [];
 
-  if (isLoadingAuthor || !(author && userPosts)) {
+  if (isLoadingAuthor || !(author && posts)) {
     return <Loader />;
   }
 
   return (
     <Layout title={author.data.user_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader author={author.data} postsCount={userPosts.length} />
+        <UserHeader author={author.data} postsCount={posts.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
         {isFetchingPosts ? (
           <Loader />
@@ -83,9 +80,7 @@ function Profile() {
             onDelete={handleDeletePost}
           />
         )}
-        {userPosts.length < 1 && (
-          <Empty className="pt-5" description="No posts" />
-        )}
+        {posts.length < 1 && <Empty className="pt-5" description="No posts" />}
       </div>
     </Layout>
   );

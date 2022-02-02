@@ -4,7 +4,7 @@ import { apiBaseQuery } from "../../libs/apiBaseQuery";
 export const postsApi = createApi({
   reducerPath: "postsApi",
   baseQuery: apiBaseQuery(),
-  tagTypes: ["Posts", "UserPosts"],
+  tagTypes: ["Posts", "UserPosts", "Post"],
   endpoints(build) {
     return {
       getAllPosts: build.query({
@@ -19,6 +19,15 @@ export const postsApi = createApi({
                 { type: "Posts", id: "LIST" },
               ]
             : [{ type: "Posts", id: "LIST" }],
+      }),
+      getSinglePost: build.query({
+        query: (id) => {
+          return {
+            url: `posts/${id}`,
+            method: "GET",
+          };
+        },
+        providesTags: [{ type: "Post", id: "LIST" }],
       }),
       getAuthorByPosts: build.query({
         query: (username) => ({
@@ -69,6 +78,7 @@ export const postsApi = createApi({
         invalidatesTags: [
           { type: "Posts", id: "LIST" },
           { type: "UserPosts", id: "LIST" },
+          { type: "Post", id: "LIST" },
         ],
       }),
     };
@@ -76,6 +86,7 @@ export const postsApi = createApi({
 });
 
 export const {
+  useGetSinglePostQuery,
   useGetAuthorByPostsQuery,
   useGetUserPostsQuery,
   useGetAllPostsQuery,

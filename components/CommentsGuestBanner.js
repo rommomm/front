@@ -3,7 +3,7 @@ import React from "react";
 
 function CommentsGuestBanner({ count }) {
   return (
-    <div className="w-full  p-2 border-black border-b">
+    <div className="w-full  p-2 ">
       {count > 0 ? (
         <span>You must be logged in to post a comment</span>
       ) : (

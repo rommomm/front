@@ -35,9 +35,9 @@ function Comment({ comment, onDelete, onUpdate }) {
   );
 
   return (
-    <div className=" flex  justify-between p-2 cursor-pointer border-b">
+    <div className=" flex  justify-between p-2 cursor-pointer border-gray-500 border-b">
       <div className="w-full ">
-        <div className=" pl-12 flex ">
+        <div className=" pl-1 flex ">
           <Link href={`/` + comment.author.user_name}>
             <img
               src={comment.author.profile_avatar || "/default/avatar.png"}
