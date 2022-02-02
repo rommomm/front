@@ -1,10 +1,10 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiBaseQuery } from "../../libs/apiBaseQuery";
+import { authApi } from "../auth/authApi";
 
 export const profileApi = createApi({
   reducerPath: "profileApi",
   baseQuery: apiBaseQuery(),
-  tagTypes: ["Profile"],
   endpoints(build) {
     return {
       updateProfile: build.mutation({
@@ -13,6 +13,18 @@ export const profileApi = createApi({
           method: "PUT",
           body: values,
         }),
+        async onQueryStarted({ values }, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              authApi.util.updateQueryData("authMe", null, (draft) => {
+                return { draft, ...data };
+              })
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       uploadAvatar: build.mutation({
         query: (avatar) => ({
@@ -20,6 +32,18 @@ export const profileApi = createApi({
           method: "POST",
           body: avatar,
         }),
+        async onQueryStarted({ values }, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              authApi.util.updateQueryData("authMe", null, (draft) => {
+                return { draft, ...data };
+              })
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       removeAvatar: build.mutation({
         query: () => ({
@@ -33,6 +57,18 @@ export const profileApi = createApi({
           method: "POST",
           body: background,
         }),
+        async onQueryStarted({ values }, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              authApi.util.updateQueryData("authMe", null, (draft) => {
+                return { draft, ...data };
+              })
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       removeBackground: build.mutation({
         query: () => ({

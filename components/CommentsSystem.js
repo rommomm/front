@@ -13,13 +13,10 @@ import CommentsList from "./CommentsList";
 import Loader from "./Loader";
 
 function CommentsSystem({ post, openedPostComments }) {
-  const {
-    data: comments,
-    isFetching: isFetchingComments,
-    isLoading: isLoadingComments,
-  } = useGetCommentsByPostQuery(post.id, {
-    skip: !openedPostComments,
-  });
+  const { data: comments, isFetching: isFetchingComments } =
+    useGetCommentsByPostQuery(post.id, {
+      skip: !post.id,
+    });
   const { isSuccess: isLoggedIn } = useAuthMe();
   const [createComment] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();

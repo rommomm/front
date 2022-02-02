@@ -10,15 +10,10 @@ import useAuthMe from "../hooks/useAutMe";
 
 function SinglePostByAuthor({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const [openedPostComments, setOpenedPostComments] = useState(false);
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   function handleUpdatePost(value) {
     onUpdate(post.id, value);
     setEditMode(false);
-  }
-
-  async function showComments() {
-    setOpenedPostComments(!openedPostComments);
   }
 
   const menu = (

@@ -21,7 +21,6 @@ function EditAvatarModal() {
       formData.append("profile_avatar", file);
       await uploadAvatar(formData);
       message.success("Success");
-      refetch();
       setIsModalVisible(false);
     } catch (error) {
       console.log("error", error);

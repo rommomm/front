@@ -14,7 +14,6 @@ function EditUserInfo() {
     try {
       await updateProfile(values);
       message.success("Success");
-      refetch();
     } catch (error) {
       console.log("error", error);
     }

@@ -1,20 +1,12 @@
-import PostsList from "../../components/PostsList";
 import Layout from "../../components/Layout";
 import React, { useState } from "react";
 import { initializeStore } from "../../redux";
-import AddPostForm from "../../components/AddPostForm";
 import {
-  postsApi,
-  useCreatePostMutation,
   useDeletePostMutation,
-  useGetAllPostsQuery,
   useGetSinglePostQuery,
   useUpdatePostMutation,
 } from "../../redux/posts/postApi";
-import useAuthMe from "../../hooks/useAutMe";
 import Loader from "../../components/Loader";
-import { Empty } from "antd";
-import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import SinglePostByAuthor from "../../components/SinglePostByAuthor";
 import CommentsSystem from "../../components/CommentsSystem";

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import CommentEditForm from "./CommentEditForm";
-import CommentsLikes from "./CommentsLikes";
+import CommentLikes from "./CommentLikes";
 import useAuthMe from "../hooks/useAutMe";
 
 function Comment({ comment, onDelete, onUpdate }) {
@@ -86,7 +86,7 @@ function Comment({ comment, onDelete, onUpdate }) {
             )}
           </div>
         </div>
-        <CommentsLikes />
+        <CommentLikes />
       </div>
 
       <div>

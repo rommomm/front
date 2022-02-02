@@ -5,20 +5,14 @@ import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import PostEditForm from "./PostEditForm";
 import CommentsCount from "./CommentsCount";
-import CommentsSystem from "./CommentsSystem";
 import useAuthMe from "../hooks/useAutMe";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
-  const [openedPostComments, setOpenedPostComments] = useState(false);
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   function handleUpdatePost(value) {
     onUpdate(post.id, value);
     setEditMode(false);
-  }
-
-  async function showComments() {
-    setOpenedPostComments(!openedPostComments);
   }
 
   const menu = (
@@ -87,12 +81,9 @@ function Post({ post, onDelete, onUpdate }) {
               )}
             </div>
           </div>
-          <Link href={"/post/" + post.id}>
-            <a>
-              <CommentsCount counterComments={post.comments_count} />
-            </a>
-          </Link>
+          <CommentsCount post={post} />
         </div>
+
         <div>
           {isLoggedIn && user.data.id === post.author.id && (
             <Dropdown overlay={menu} trigger={["click"]}>
@@ -105,11 +96,6 @@ function Post({ post, onDelete, onUpdate }) {
             </Dropdown>
           )}
         </div>
-      </div>
-      <div className="relative">
-        {openedPostComments && (
-          <CommentsSystem post={post} openedPostComments={openedPostComments} />
-        )}
       </div>
     </div>
   );

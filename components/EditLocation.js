@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import Modal from "antd/lib/modal/Modal";
 import Map from "./Map";
 import { useUpdateProfileMutation } from "../redux/profile/profileApi";
@@ -9,14 +8,13 @@ import useAuthMe from "../hooks/useAutMe";
 function EditLocation() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
-  const { data: user, refetch } = useAuthMe();
+  const { data: user } = useAuthMe();
   const [updateProfile] = useUpdateProfileMutation();
 
   async function handleRemoveUserLocation() {
     try {
       const locatoin = { user_location: null };
       await updateProfile(locatoin);
-      refetch();
     } catch (error) {
       console.log("error", error);
     }
@@ -26,7 +24,6 @@ function EditLocation() {
     try {
       await updateProfile({ user_location: userLocation });
       message.success("Success");
-      refetch();
       setIsModalVisible(false);
     } catch (error) {
       console.log("error", error);

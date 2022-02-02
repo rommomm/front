@@ -1,5 +1,5 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
-import React, { useEffect } from "react";
+import React from "react";
 import useAuthMe from "../hooks/useAutMe";
 
 function UserHeader({ author, postsCount }) {
