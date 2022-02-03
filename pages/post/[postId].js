@@ -26,7 +26,6 @@ function SinglePost() {
       skip: !router.query.postId,
     }
   );
-  console.log("post", post);
 
   const { data: comments, isFetching: isFetchingComments } =
     useGetCommentsByPostQuery(

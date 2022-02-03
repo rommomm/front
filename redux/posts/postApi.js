@@ -1,9 +1,15 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiBaseQuery } from "../../libs/apiBaseQuery";
+import { HYDRATE } from "next-redux-wrapper";
 
 export const postsApi = createApi({
   reducerPath: "postsApi",
   baseQuery: apiBaseQuery(),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   tagTypes: ["Posts", "UserPosts", "Post"],
   endpoints(build) {
     return {
@@ -12,7 +18,6 @@ export const postsApi = createApi({
           url: cursor ? `posts?cursor=${cursor}` : "posts",
           method: "GET",
         }),
-        transformResponse: (response) => response,
         providesTags: (result) =>
           result
             ? [
@@ -21,14 +26,18 @@ export const postsApi = createApi({
               ]
             : [{ type: "Posts", id: "LIST" }],
 
-        async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+        async onQueryStarted(id, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
             dispatch(
-              postsApi.util.updateQueryData("getAllPosts", id, (draft) => {
-                draft.data.push(...data.data);
-                draft.links = data.links;
-              })
+              postsApi.util.updateQueryData(
+                "getAllPosts",
+                undefined,
+                (draft) => {
+                  draft.data.push(...data.data);
+                  draft.links = data.links;
+                }
+              )
             );
           } catch (error) {
             console.error("error", error);
@@ -108,4 +117,7 @@ export const {
   useCreatePostMutation,
   useDeletePostMutation,
   useUpdatePostMutation,
+  util: { getRunningOperationPromises },
 } = postsApi;
+
+export const { getAllPosts, getUserPosts } = postsApi.endpoints;
