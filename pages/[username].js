@@ -1,6 +1,6 @@
 import AddPostForm from "../components/AddPostForm";
 import UserHeader from "../components/UserHeader";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
 import { initializeStore } from "../redux";
@@ -15,9 +15,10 @@ import {
 import { useRouter } from "next/router";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
-import { Empty } from "antd";
+import { Empty, Pagination } from "antd";
 
 function Profile() {
+  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
   const {
     data: author,
@@ -31,13 +32,20 @@ function Profile() {
     data: posts,
     isLoading: isLoadingPosts,
     isFetching: isFetchingPosts,
-  } = useGetUserPostsQuery(author && author.data.user_name, {
-    skip: !isSuccess,
-  });
+  } = useGetUserPostsQuery(
+    { username: author && author.data.user_name, page: currentPage },
+    {
+      skip: !isSuccess,
+    }
+  );
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
+
+  function perPage(page) {
+    setCurrentPage(page);
+  }
 
   const handleDeletePost = async (id) => {
     await deletePost(id);
@@ -55,8 +63,8 @@ function Profile() {
 
   const showAddPost = isLoggedIn && author && author.data.id === user.data.id;
   const postsWithAuthor =
-    posts && posts.length
-      ? posts.map((post) => ({
+    posts && posts.data && posts.data.length
+      ? posts.data.map((post) => ({
           ...post,
           author: author && author.data,
         }))
@@ -69,7 +77,7 @@ function Profile() {
   return (
     <Layout title={author.data.user_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader author={author.data} postsCount={posts.length} />
+        <UserHeader author={author.data} postsCount={posts.total} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
         {isFetchingPosts ? (
           <Loader />
@@ -80,7 +88,18 @@ function Profile() {
             onDelete={handleDeletePost}
           />
         )}
-        {posts.length < 1 && <Empty className="pt-5" description="No posts" />}
+        {posts.data.length < 1 && (
+          <Empty className="pt-5" description="No posts" />
+        )}
+        <div
+          className={`bottom-0 m-auto  py-1 px-1  border-black
+            ${!isLoggedIn && "pb-20"}
+          `}
+        >
+          {posts && posts.data.length ? (
+            <Pagination size="small" total={posts.total} onChange={perPage} />
+          ) : null}
+        </div>
       </div>
     </Layout>
   );
@@ -89,11 +108,15 @@ function Profile() {
 export async function getServerSideProps(ctx) {
   const store = initializeStore();
   await store.dispatch(
-    postsApi.endpoints.getUserPosts.initiate(ctx.query.username)
+    postsApi.endpoints.getUserPosts.initiate({
+      username: ctx.query.username,
+      page: 1,
+    })
   );
-  const { data: posts } = postsApi.endpoints.getUserPosts.select(
-    ctx.query.username
-  )(store.getState());
+  const { data: posts } = postsApi.endpoints.getUserPosts.select({
+    username: ctx.query.username,
+    page: 1,
+  })(store.getState());
   const initialPosts = posts;
   await store.dispatch(postsApi.endpoints.getUserPosts.initiate(initialPosts));
   if (!posts) {

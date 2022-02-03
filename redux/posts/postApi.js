@@ -8,8 +8,8 @@ export const postsApi = createApi({
   endpoints(build) {
     return {
       getAllPosts: build.query({
-        query: () => ({
-          url: "posts",
+        query: (page) => ({
+          url: `posts?page=${page}`,
           method: "GET",
         }),
         providesTags: (result) =>
@@ -36,14 +36,14 @@ export const postsApi = createApi({
         }),
       }),
       getUserPosts: build.query({
-        query: (username) => ({
-          url: `users/${username}/posts`,
+        query: ({ username, page }) => ({
+          url: `users/${username}/posts?page=${page}`,
           method: "GET",
         }),
         providesTags: (result) =>
           result
             ? [
-                ...result.map(({ id }) => ({ type: "UserPosts", id })),
+                ...result.data.map(({ id }) => ({ type: "UserPosts", id })),
                 { type: "UserPosts", id: "LIST" },
               ]
             : [{ type: "UserPosts", id: "LIST" }],

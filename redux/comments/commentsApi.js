@@ -10,9 +10,9 @@ export const commentsApi = createApi({
   endpoints(build) {
     return {
       getCommentsByPost: build.query({
-        query: (postId) => {
+        query: ({ postId, page }) => {
           return {
-            url: `posts/${postId}/comments`,
+            url: `posts/${postId}/comments?page=${page}`,
             method: "GET",
           };
         },

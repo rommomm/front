@@ -21,7 +21,7 @@ function Layout({ children, title }) {
       {isLoadingUser ? (
         <Loader />
       ) : (
-        <main className="min-h-screen flex max-w-[1500px] mx-auto ">
+        <main className="min-h-screen flex max-w-[1500px] mx-auto">
           <Sidebar />
           <div className="fixed bottom-0 h-16">
             {isLoggedIn && user && <UserDropDown />}

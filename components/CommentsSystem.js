@@ -12,11 +12,7 @@ import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 import Loader from "./Loader";
 
-function CommentsSystem({ post, openedPostComments }) {
-  const { data: comments, isFetching: isFetchingComments } =
-    useGetCommentsByPostQuery(post.id, {
-      skip: !post.id,
-    });
+function CommentsSystem({ post, comments, isFetchingComments }) {
   const { isSuccess: isLoggedIn } = useAuthMe();
   const [createComment] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();
@@ -44,7 +40,7 @@ function CommentsSystem({ post, openedPostComments }) {
         <Loader />
       ) : (
         <CommentsList
-          comments={comments && comments.data}
+          comments={comments}
           onUpdate={handleUpdateComment}
           onDelete={handleDeleteComment}
         />

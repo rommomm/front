@@ -10,9 +10,15 @@ import Loader from "../../components/Loader";
 import { useRouter } from "next/router";
 import SinglePostByAuthor from "../../components/SinglePostByAuthor";
 import CommentsSystem from "../../components/CommentsSystem";
-import { commentsApi } from "../../redux/comments/commentsApi";
+import {
+  commentsApi,
+  useGetCommentsByPostQuery,
+} from "../../redux/comments/commentsApi";
+import { Pagination } from "antd";
+import useAuthMe from "../../hooks/useAutMe";
 
 function SinglePost() {
+  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
   const { data: post, isLoading: isLoadingPost } = useGetSinglePostQuery(
     router && router.query.postId,
@@ -20,9 +26,26 @@ function SinglePost() {
       skip: !router.query.postId,
     }
   );
+  console.log("post", post);
+
+  const { data: comments, isFetching: isFetchingComments } =
+    useGetCommentsByPostQuery(
+      { postId: post && post.data && post.data.id, page: currentPage },
+      {
+        skip: !(post && post.data && post.data.id),
+      }
+    );
+
+  const { isSuccess: isLoggedIn } = useAuthMe();
+
   const [openedPostComments, setOpenedPostComments] = useState(true);
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
+
+  function perPage(page) {
+    setCurrentPage(page);
+  }
+
   const handleDeletePost = async (id) => {
     await deletePost(id);
     router.push("/");
@@ -52,9 +75,24 @@ function SinglePost() {
               <CommentsSystem
                 post={post && post.data}
                 openedPostComments={openedPostComments}
+                comments={comments && comments.data}
+                isFetchingComments={isFetchingComments}
               />
             </div>
           )}
+        </div>
+        <div
+          className={`bottom-0 m-auto  py-1 px-1  
+            ${!isLoggedIn && "pb-20"}
+          `}
+        >
+          {comments ? (
+            <Pagination
+              size="small"
+              total={comments.meta.total}
+              onChange={perPage}
+            />
+          ) : null}
         </div>
       </div>
     </Layout>
@@ -64,11 +102,15 @@ function SinglePost() {
 export async function getServerSideProps(ctx) {
   const store = initializeStore();
   await store.dispatch(
-    commentsApi.endpoints.getCommentsByPost.initiate(ctx.query.postId)
+    commentsApi.endpoints.getCommentsByPost.initiate({
+      postId: ctx.query.postId,
+      page: 1,
+    })
   );
-  const { data: comments } = commentsApi.endpoints.getCommentsByPost.select(
-    ctx.query.postId
-  )(store.getState());
+  const { data: comments } = commentsApi.endpoints.getCommentsByPost.select({
+    postId: ctx.query.postId,
+    page: 1,
+  })(store.getState());
   const initialComments = comments;
   await store.dispatch(
     commentsApi.endpoints.getCommentsByPost.initiate(initialComments)
