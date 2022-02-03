@@ -4,7 +4,6 @@ import useAuthMe from "../hooks/useAutMe";
 import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
-  useGetCommentsByPostQuery,
   useUpdateCommentMutation,
 } from "../redux/comments/commentsApi";
 import AddComment from "./AddComment";

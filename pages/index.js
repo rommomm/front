@@ -1,6 +1,6 @@
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { initializeStore } from "../redux";
 import AddPostForm from "../components/AddPostForm";
 import {
@@ -13,23 +13,43 @@ import {
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
 import { Empty, Pagination } from "antd";
-import { useSelector } from "react-redux";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useDispatch } from "react-redux";
+import { current } from "@reduxjs/toolkit";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [cursor, setCursor] = useState();
   const {
     data: posts,
     isLoading: isLoadingPosts,
     isFetching: isFetchingPosts,
-  } = useGetAllPostsQuery(currentPage);
+  } = useGetAllPostsQuery(cursor);
+  console.log("posts", posts);
+  const { data } = useGetAllPostsQuery();
+
+  const dispatch = useDispatch();
+
   const { isSuccess: isLoggedIn } = useAuthMe();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
 
-  function perPage(page) {
-    setCurrentPage(page);
+  async function getNextPosts() {
+    await dispatch(postsApi.endpoints.getAllPosts.initiate(nextCursor));
   }
+
+  // useEffect(() => {
+  //   document.addEventListener("scroll", handleInfiniteScroll);
+  //   return () => document.removeEventListener("scroll", handleInfiniteScroll);
+  // });
+
+  // const handleInfiniteScroll = (e) => {
+  //   const { scrollHeight, scrollTop } = e.target.documentElement;
+
+  //   if (scrollHeight <= scrollTop + window.innerHeight && nextCursor) {
+  //     setCursor(nextCursor);
+  //   }
+  // };
 
   const handleDeletePost = async (id) => {
     await deletePost(id);
@@ -40,6 +60,14 @@ function App() {
   const handleSavePost = async (post) => {
     await createPost(post);
   };
+
+  if (!posts || !data) {
+    return null;
+  }
+
+  const nextCursor = posts.links.next
+    ? posts.links.next.match(/cursor=(\w+)/)[1]
+    : posts.links.next;
 
   return (
     <Layout title="Home page">
@@ -52,29 +80,28 @@ function App() {
           {isLoadingPosts || isFetchingPosts ? (
             <Loader />
           ) : (
-            <PostsList
-              posts={posts && posts.data}
-              onUpdate={handleUpdatePost}
-              onDelete={handleDeletePost}
-            />
+            <InfiniteScroll
+              dataLength={posts.data.length}
+              hasMore={true}
+              next={getNextPosts}
+            >
+              <PostsList
+                posts={posts && posts.data}
+                onUpdate={handleUpdatePost}
+                onDelete={handleDeletePost}
+              />
+            </InfiniteScroll>
           )}
+
+          {/* <PostsList
+            posts={data && data.data}
+            onUpdate={handleUpdatePost}
+            onDelete={handleDeletePost}
+          /> */}
         </div>
         {posts && posts.data.length < 1 && (
           <Empty className="pt-44" description="No posts" />
         )}
-        <div
-          className={`bottom-0 m-auto  py-1 px-1  border-black border-l border-r border-b 
-            ${!isLoggedIn && "pb-20"}
-          `}
-        >
-          {posts && posts.data.length ? (
-            <Pagination
-              size="small"
-              total={posts.meta.total}
-              onChange={perPage}
-            />
-          ) : null}
-        </div>
       </div>
     </Layout>
   );

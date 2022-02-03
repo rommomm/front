@@ -38,7 +38,6 @@ function SinglePost() {
 
   const { isSuccess: isLoggedIn } = useAuthMe();
 
-  const [openedPostComments, setOpenedPostComments] = useState(true);
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
 
@@ -74,7 +73,6 @@ function SinglePost() {
               />
               <CommentsSystem
                 post={post && post.data}
-                openedPostComments={openedPostComments}
                 comments={comments && comments.data}
                 isFetchingComments={isFetchingComments}
               />

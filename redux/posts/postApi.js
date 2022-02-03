@@ -8,10 +8,11 @@ export const postsApi = createApi({
   endpoints(build) {
     return {
       getAllPosts: build.query({
-        query: (page) => ({
-          url: `posts?page=${page}`,
+        query: (cursor) => ({
+          url: cursor ? `posts?cursor=${cursor}` : "posts",
           method: "GET",
         }),
+        transformResponse: (response) => response,
         providesTags: (result) =>
           result
             ? [
@@ -19,6 +20,20 @@ export const postsApi = createApi({
                 { type: "Posts", id: "LIST" },
               ]
             : [{ type: "Posts", id: "LIST" }],
+
+        async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              postsApi.util.updateQueryData("getAllPosts", id, (draft) => {
+                draft.data.push(...data.data);
+                draft.links = data.links;
+              })
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       getSinglePost: build.query({
         query: (id) => {
