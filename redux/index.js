@@ -4,12 +4,14 @@ import { postsApi } from "./posts/postApi";
 import { authApi } from "./auth/authApi";
 import { commentsApi } from "./comments/commentsApi";
 import { profileApi } from "./profile/profileApi";
+import { userApi } from "./user/userApi";
 
 let store;
 
 const createStore = (preloadedState) => {
   return configureStore({
     reducer: {
+      [userApi.reducerPath]: userApi.reducer,
       [postsApi.reducerPath]: postsApi.reducer,
       [authApi.reducerPath]: authApi.reducer,
       [commentsApi.reducerPath]: commentsApi.reducer,
@@ -21,7 +23,8 @@ const createStore = (preloadedState) => {
         .concat(postsApi.middleware)
         .concat(authApi.middleware)
         .concat(commentsApi.middleware)
-        .concat(profileApi.middleware),
+        .concat(profileApi.middleware)
+        .concat(userApi.middleware),
   });
 };
 

@@ -23,7 +23,11 @@ function Sidebar() {
           {isLoggedIn && (
             <>
               <SidebarLink text="Messages" Icon={MailOutlined} />
-              <SidebarLink text="Users" Icon={UserOutlined} />
+              <Link href="/users">
+                <a>
+                  <SidebarLink text="Users" Icon={UserOutlined} />
+                </a>
+              </Link>
             </>
           )}
           {isLoggedIn && user && (
