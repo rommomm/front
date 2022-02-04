@@ -1,6 +1,6 @@
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddPostForm from "../components/AddPostForm";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
@@ -13,12 +13,15 @@ import {
   useGetAllPostsQuery,
   useUpdatePostMutation,
   getAllPosts,
+  postsApi,
 } from "../redux/posts/postApi";
 import { Empty } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../redux";
 
 function App() {
+  const postsData = useSelector(({ posts }) => posts);
+  console.log("postsData", postsData);
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
@@ -32,6 +35,7 @@ function App() {
   if (!posts) {
     return null;
   }
+
   const { data: nextPosts, links } = posts;
   const nextCursor = links.next
     ? links.next.match(/cursor=(\w+)/)[1]

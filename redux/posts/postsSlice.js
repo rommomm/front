@@ -9,7 +9,7 @@ export const postsSlice = createSlice({
     builder.addMatcher(
       postsApi.endpoints.getAllPosts.matchFulfilled,
       (state, { payload }) => {
-        state.allPosts = payload.data;
+        state.posts = payload.data;
       }
     );
 

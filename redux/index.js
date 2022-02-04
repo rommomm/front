@@ -12,7 +12,7 @@ let store;
 const createStore = (preloadedState) => {
   return configureStore({
     reducer: {
-      postsSlice: postsSlice.reducer,
+      posts: postsSlice,
       [userApi.reducerPath]: userApi.reducer,
       [postsApi.reducerPath]: postsApi.reducer,
       [authApi.reducerPath]: authApi.reducer,
