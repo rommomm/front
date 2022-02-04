@@ -3,9 +3,13 @@ import UserHeader from "../components/UserHeader";
 import React, { useEffect, useState } from "react";
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import { initializeStore } from "../redux";
+import useAuthMe from "../hooks/useAutMe";
+import Loader from "../components/Loader";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import {
-  postsApi,
+  getRunningOperationPromises,
+  getUserPosts,
   useCreatePostMutation,
   useDeletePostMutation,
   useGetAuthorByPostsQuery,
@@ -13,38 +17,49 @@ import {
   useUpdatePostMutation,
 } from "../redux/posts/postApi";
 import { useRouter } from "next/router";
-import useAuthMe from "../hooks/useAutMe";
-import Loader from "../components/Loader";
-import { Empty, Pagination } from "antd";
+import { Empty } from "antd";
+import { useDispatch } from "react-redux";
+import { initializeStore } from "../redux";
 
 function Profile() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const router = useRouter();
-  const {
-    data: author,
-    isSuccess,
-    isLoading: isLoadingAuthor,
-    refetch: refetchAuthor,
-  } = useGetAuthorByPostsQuery(router && router.query.username, {
-    skip: !router.query.username,
-  });
-  const {
-    data: posts,
-    isLoading: isLoadingPosts,
-    isFetching: isFetchingPosts,
-  } = useGetUserPostsQuery(
-    { username: author && author.data.user_name, page: currentPage },
-    {
-      skip: !isSuccess,
-    }
-  );
-  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
 
-  function perPage(page) {
-    setCurrentPage(page);
+  const [loader, setLoader] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const pathname = router && router.query.username;
+
+  const { data: user, isSuccess: isLoggedIn } = useAuthMe();
+
+  const { data: author } = useGetAuthorByPostsQuery(pathname, {
+    skip: !pathname,
+  });
+  const { data: posts, isFetching: isFetchingPosts } = useGetUserPostsQuery(
+    { username: pathname },
+    { skip: !pathname }
+  );
+
+  if (!posts) {
+    return null;
+  }
+  const { data: nextPosts, next_page_url } = posts;
+  const nextCursor = next_page_url
+    ? next_page_url.match(/cursor=(\w+)/)[1]
+    : next_page_url;
+
+  async function getNextPosts() {
+    await dispatch(
+      getUserPosts.initiate({
+        username: pathname,
+        cursor: nextCursor,
+      })
+    );
+    setLoader(true);
+    setTimeout(() => {
+      setLoader(false);
+    }, 500);
   }
 
   const handleDeletePost = async (id) => {
@@ -57,49 +72,39 @@ function Profile() {
     await createPost(post);
   };
 
-  useEffect(() => {
-    refetchAuthor();
-  }, []);
-
   const showAddPost = isLoggedIn && author && author.data.id === user.data.id;
   const postsWithAuthor =
-    posts && posts.data && posts.data.length
-      ? posts.data.map((post) => ({
+    nextPosts && nextPosts.length
+      ? nextPosts.map((post) => ({
           ...post,
           author: author && author.data,
         }))
       : [];
 
-  if (isLoadingAuthor || !(author && posts)) {
-    return <Loader />;
-  }
-
   return (
     <Layout title={author.data.user_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader author={author.data} postsCount={posts.total} />
+        <UserHeader author={author.data} postsCount={posts.data.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
-        {isFetchingPosts ? (
-          <Loader />
-        ) : (
-          <PostsList
-            posts={postsWithAuthor}
-            onUpdate={handleUpdatePost}
-            onDelete={handleDeletePost}
-          />
-        )}
+        <InfiniteScroll
+          dataLength={nextPosts.length}
+          hasMore={nextCursor && true}
+          next={getNextPosts}
+          loader={loader && <Loader />}
+        >
+          {isFetchingPosts ? (
+            <Loader />
+          ) : (
+            <PostsList
+              posts={postsWithAuthor}
+              onUpdate={handleUpdatePost}
+              onDelete={handleDeletePost}
+            />
+          )}
+        </InfiniteScroll>
         {posts.data.length < 1 && (
           <Empty className="pt-5" description="No posts" />
         )}
-        <div
-          className={`bottom-0 m-auto  py-1 px-1  border-black
-            ${!isLoggedIn && "pb-20"}
-          `}
-        >
-          {posts && posts.data.length ? (
-            <Pagination size="small" total={posts.total} onChange={perPage} />
-          ) : null}
-        </div>
       </div>
     </Layout>
   );
@@ -108,18 +113,16 @@ function Profile() {
 export async function getServerSideProps(ctx) {
   const store = initializeStore();
   await store.dispatch(
-    postsApi.endpoints.getUserPosts.initiate({
+    getUserPosts.initiate({
       username: ctx.query.username,
-      page: 1,
     })
   );
-  const { data: posts } = postsApi.endpoints.getUserPosts.select({
+  const { data: initialPosts } = getUserPosts.select({
     username: ctx.query.username,
-    page: 1,
   })(store.getState());
-  const initialPosts = posts;
-  await store.dispatch(postsApi.endpoints.getUserPosts.initiate(initialPosts));
-  if (!posts) {
+  console.log("initialPosts", initialPosts);
+  await Promise.all(getRunningOperationPromises());
+  if (!initialPosts) {
     return {
       notFound: true,
     };

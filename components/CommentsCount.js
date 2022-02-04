@@ -1,8 +1,6 @@
 import { CommentOutlined, LikeOutlined } from "@ant-design/icons/lib/icons";
 import Link from "next/link";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCount } from "../redux/comments/commentsApi";
 
 function CommentsCount({ post }) {
   return (

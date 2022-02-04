@@ -1,18 +1,25 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiBaseQuery } from "../../libs/apiBaseQuery";
 import { postsApi } from "../posts/postApi";
-import { current } from "@reduxjs/toolkit";
+import { HYDRATE } from "next-redux-wrapper";
 
 export const commentsApi = createApi({
   reducerPath: "commentsApi",
   baseQuery: apiBaseQuery(),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   tagTypes: ["Comment"],
   endpoints(build) {
     return {
       getCommentsByPost: build.query({
-        query: ({ postId, page }) => {
+        query: ({ postId, cursor }) => {
           return {
-            url: `posts/${postId}/comments?page=${page}`,
+            url: cursor
+              ? `posts/${postId}/comments?cursor=${cursor}`
+              : `posts/${postId}/comments`,
             method: "GET",
           };
         },
@@ -23,6 +30,24 @@ export const commentsApi = createApi({
                 { type: "Comment", id: "LIST" },
               ]
             : [{ type: "Comment", id: "LIST" }],
+
+        async onQueryStarted(postId, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              commentsApi.util.updateQueryData(
+                "getCommentsByPost",
+                postId,
+                (draft) => {
+                  draft.data.push(...data.data);
+                  draft.links = data.links;
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       createComment: build.mutation({
         query: ({ id, comment }) => {
@@ -90,4 +115,7 @@ export const {
   useCreateCommentMutation,
   useDeleteCommentMutation,
   useUpdateCommentMutation,
+  util: { getRunningOperationPromises },
 } = commentsApi;
+
+export const { getCommentsByPost } = commentsApi.endpoints;

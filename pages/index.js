@@ -1,8 +1,11 @@
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import React from "react";
-import { initializeStore } from "../redux";
+import React, { useState } from "react";
 import AddPostForm from "../components/AddPostForm";
+import useAuthMe from "../hooks/useAutMe";
+import Loader from "../components/Loader";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import {
   getRunningOperationPromises,
   useCreatePostMutation,
@@ -11,38 +14,45 @@ import {
   useUpdatePostMutation,
   getAllPosts,
 } from "../redux/posts/postApi";
-import useAuthMe from "../hooks/useAutMe";
-import Loader from "../components/Loader";
 import { Empty } from "antd";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch } from "react-redux";
+import { initializeStore } from "../redux";
 
 function App() {
-  const dispatch = useDispatch();
-  const { data: posts } = useGetAllPostsQuery();
-  const { isSuccess: isLoggedIn } = useAuthMe();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
+
+  const [loader, setLoader] = useState(false);
+  const dispatch = useDispatch();
+
+  const { isSuccess: isLoggedIn } = useAuthMe();
+  const { data: posts, isFetching: isFetchingPosts } = useGetAllPostsQuery();
 
   if (!posts) {
     return null;
   }
   const { data: nextPosts, links } = posts;
-
+  const nextCursor = links.next
+    ? links.next.match(/cursor=(\w+)/)[1]
+    : links.next;
+  console.log("nextPosts", nextPosts);
   async function getNextPosts() {
-    const nextCursor = links.next
-      ? links.next.match(/cursor=(\w+)/)[1]
-      : links.next;
     await dispatch(getAllPosts.initiate(nextCursor));
+    setLoader(true);
+    setTimeout(() => {
+      setLoader(false);
+    }, 500);
   }
 
   const handleDeletePost = async (id) => {
     await deletePost(id);
   };
+
   const handleUpdatePost = async (id, updatedData) => {
     await updatePost({ id, data: updatedData });
   };
+
   const handleSavePost = async (post) => {
     await createPost(post);
   };
@@ -58,20 +68,19 @@ function App() {
           {nextPosts && (
             <InfiniteScroll
               dataLength={nextPosts.length}
-              hasMore={true}
+              hasMore={nextCursor && true}
               next={getNextPosts}
-              loader={<Loader />}
+              loader={loader && <Loader />}
             >
-              {nextPosts && nextPosts.length
-                ? nextPosts.map((post) => (
-                    <PostsList
-                      id={post.id}
-                      post={post}
-                      onUpdate={handleUpdatePost}
-                      onDelete={handleDeletePost}
-                    />
-                  ))
-                : null}
+              {isFetchingPosts ? (
+                <Loader />
+              ) : (
+                <PostsList
+                  posts={nextPosts}
+                  onUpdate={handleUpdatePost}
+                  onDelete={handleDeletePost}
+                />
+              )}
             </InfiniteScroll>
           )}
         </div>
@@ -86,9 +95,9 @@ function App() {
 export async function getServerSideProps() {
   const store = initializeStore();
   await store.dispatch(getAllPosts.initiate());
-  const { data: posts } = getAllPosts.select()(store.getState());
+  const { data: initialPosts } = getAllPosts.select()(store.getState());
   await Promise.all(getRunningOperationPromises());
-  return { props: { posts } };
+  return { props: { initialPosts } };
 }
 
 export default App;

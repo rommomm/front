@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Menu, Dropdown } from "antd";
-import { useDispatch } from "react-redux";
 import { useSignOutMutation } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import router from "next/router";

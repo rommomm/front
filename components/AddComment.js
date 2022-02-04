@@ -1,8 +1,4 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { increment } from "../redux/comments/commentsApi";
-import { useGetAllPostsQuery } from "../redux/posts/postApi";
 import { commentValidationSchema } from "../validationSchema/comment";
 
 function AddComment({ onCreate, post: postComment }) {

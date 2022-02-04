@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React from "react";
 import EditAvatarModal from "../components/EditAvatarModal";
 import EditBackgroundModal from "../components/EditBackgroundModal";
@@ -25,6 +26,20 @@ function Settings() {
       </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps(ctx) {
+  if (!ctx.req.cookies.token) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 }
 
 export default Settings;

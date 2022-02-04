@@ -1,59 +1,87 @@
 import Layout from "../../components/Layout";
 import React, { useState } from "react";
-import { initializeStore } from "../../redux";
+import Loader from "../../components/Loader";
+import SinglePostByAuthor from "../../components/SinglePostByAuthor";
+import CommentsSystem from "../../components/CommentsSystem";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import {
   useDeletePostMutation,
   useGetSinglePostQuery,
   useUpdatePostMutation,
 } from "../../redux/posts/postApi";
-import Loader from "../../components/Loader";
-import { useRouter } from "next/router";
-import SinglePostByAuthor from "../../components/SinglePostByAuthor";
-import CommentsSystem from "../../components/CommentsSystem";
 import {
-  commentsApi,
+  getCommentsByPost,
+  getRunningOperationPromises,
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
   useGetCommentsByPostQuery,
+  useUpdateCommentMutation,
 } from "../../redux/comments/commentsApi";
-import { Pagination } from "antd";
-import useAuthMe from "../../hooks/useAutMe";
+import { useDispatch } from "react-redux";
+import { initializeStore } from "../../redux";
+import { useRouter } from "next/router";
 
 function SinglePost() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const router = useRouter();
-  const { data: post, isLoading: isLoadingPost } = useGetSinglePostQuery(
-    router && router.query.postId,
-    {
-      skip: !router.query.postId,
-    }
-  );
-
-  const { data: comments, isFetching: isFetchingComments } =
-    useGetCommentsByPostQuery(
-      { postId: post && post.data && post.data.id, page: currentPage },
-      {
-        skip: !(post && post.data && post.data.id),
-      }
-    );
-
-  const { isSuccess: isLoggedIn } = useAuthMe();
-
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
+  const [createComment] = useCreateCommentMutation();
+  const [updateComment] = useUpdateCommentMutation();
+  const [deleteComment] = useDeleteCommentMutation();
 
-  function perPage(page) {
-    setCurrentPage(page);
+  const [loader, setLoader] = useState(false);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const pathname = router && router.query.postId;
+
+  const { data: post } = useGetSinglePostQuery(pathname, { skip: !pathname });
+  const postId = post && post.data && post.data.id;
+
+  const { data: comments, isFetching: isFetchingComments } =
+    useGetCommentsByPostQuery({ postId }, { skip: !postId });
+  if (!comments) {
+    return null;
   }
+  const { data: nextComments, links } = comments;
+
+  const nextCursor = links.next
+    ? links.next.match(/cursor=(\w+)/)[1]
+    : links.next;
+
+  async function getNextComments() {
+    await dispatch(
+      getCommentsByPost.initiate({
+        postId,
+        cursor: nextCursor,
+      })
+    );
+    setLoader(true);
+    setTimeout(() => {
+      setLoader(false);
+    }, 500);
+  }
+
+  const handleDeleteComment = async (id) => {
+    await deleteComment({ id, postId: post.id });
+  };
+
+  const handleUpdateComment = async (id, updatedData) => {
+    await updateComment({ id, data: updatedData });
+  };
+
+  const handleSaveComment = async (id, comment) => {
+    await createComment({ id, comment });
+  };
 
   const handleDeletePost = async (id) => {
     await deletePost(id);
     router.push("/");
   };
+
   const handleUpdatePost = async (id, updatedData) => {
     await updatePost({ id, data: updatedData });
   };
-  if (!post) {
-    return <Loader />;
-  }
+
   return (
     <Layout title="Post">
       <div className="flex-grow  border-gray-700 max-w-3xl sm:ml-[73px] xl:ml-[380px] border-black border-l border-r">
@@ -61,35 +89,30 @@ function SinglePost() {
           {post && post.data.comments_count} comments
         </div>
         <div className=" w-full max-w-screen-md	">
-          {isLoadingPost ? (
-            <Loader />
-          ) : (
-            <div>
-              <SinglePostByAuthor
-                post={post && post.data}
-                onUpdate={handleUpdatePost}
-                onDelete={handleDeletePost}
-              />
-              <CommentsSystem
-                post={post && post.data}
-                comments={comments && comments.data}
-                isFetchingComments={isFetchingComments}
-              />
-            </div>
-          )}
-        </div>
-        <div
-          className={`bottom-0 m-auto  py-1 px-1  
-            ${!isLoggedIn && "pb-20"}
-          `}
-        >
-          {comments ? (
-            <Pagination
-              size="small"
-              total={comments.meta.total}
-              onChange={perPage}
+          <div>
+            <SinglePostByAuthor
+              post={post && post.data}
+              onUpdate={handleUpdatePost}
+              onDelete={handleDeletePost}
             />
-          ) : null}
+            {nextComments && post && (
+              <InfiniteScroll
+                dataLength={nextComments.length}
+                hasMore={nextCursor && true}
+                next={getNextComments}
+                loader={loader && <Loader />}
+              >
+                <CommentsSystem
+                  post={post.data}
+                  comments={nextComments}
+                  isFetchingComments={isFetchingComments}
+                  onUpdate={handleUpdateComment}
+                  onDelete={handleDeleteComment}
+                  onCreate={handleSaveComment}
+                />
+              </InfiniteScroll>
+            )}
+          </div>
         </div>
       </div>
     </Layout>
@@ -99,20 +122,15 @@ function SinglePost() {
 export async function getServerSideProps(ctx) {
   const store = initializeStore();
   await store.dispatch(
-    commentsApi.endpoints.getCommentsByPost.initiate({
+    getCommentsByPost.initiate({
       postId: ctx.query.postId,
-      page: 1,
     })
   );
-  const { data: comments } = commentsApi.endpoints.getCommentsByPost.select({
+  const { data: initialComments } = getCommentsByPost.select({
     postId: ctx.query.postId,
-    page: 1,
   })(store.getState());
-  const initialComments = comments;
-  await store.dispatch(
-    commentsApi.endpoints.getCommentsByPost.initiate(initialComments)
-  );
-  if (!comments) {
+  await Promise.all(getRunningOperationPromises());
+  if (!initialComments) {
     return {
       notFound: true,
     };

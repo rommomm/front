@@ -7,7 +7,7 @@ import { message } from "antd";
 import useAuthMe from "../hooks/useAutMe";
 
 function EditUserInfo() {
-  const { data: user, refetch } = useAuthMe();
+  const { data: user } = useAuthMe();
   const [updateProfile] = useUpdateProfileMutation();
 
   async function handleSave(values) {
@@ -19,14 +19,14 @@ function EditUserInfo() {
     }
   }
 
+  if (!user) {
+    return null;
+  }
+
   const formInitialValue = {
     first_name: user.data.first_name,
     last_name: user.data.last_name,
   };
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <div className="border-b border-black pb-4">

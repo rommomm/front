@@ -1,37 +1,25 @@
 import { Empty } from "antd";
 import React from "react";
 import useAuthMe from "../hooks/useAutMe";
-import {
-  useCreateCommentMutation,
-  useDeleteCommentMutation,
-  useUpdateCommentMutation,
-} from "../redux/comments/commentsApi";
 import AddComment from "./AddComment";
 import CommentsGuestBanner from "./CommentsGuestBanner";
 import CommentsList from "./CommentsList";
 import Loader from "./Loader";
 
-function CommentsSystem({ post, comments, isFetchingComments }) {
+function CommentsSystem({
+  post,
+  comments,
+  isFetchingComments,
+  onUpdate,
+  onDelete,
+  onCreate,
+}) {
   const { isSuccess: isLoggedIn } = useAuthMe();
-  const [createComment] = useCreateCommentMutation();
-  const [updateComment] = useUpdateCommentMutation();
-  const [deleteComment] = useDeleteCommentMutation();
 
-  const handleDeleteComment = async (id) => {
-    await deleteComment({ id, postId: post.id });
-  };
-
-  const handleUpdateComment = async (id, updatedData) => {
-    await updateComment({ id, data: updatedData });
-  };
-
-  const handleSaveComment = async (id, comment) => {
-    await createComment({ id, comment });
-  };
   return (
     <div>
       {isLoggedIn ? (
-        <AddComment onCreate={handleSaveComment} post={post} />
+        <AddComment onCreate={onCreate} post={post} />
       ) : (
         <CommentsGuestBanner count={post.comments_count} />
       )}
@@ -40,11 +28,11 @@ function CommentsSystem({ post, comments, isFetchingComments }) {
       ) : (
         <CommentsList
           comments={comments}
-          onUpdate={handleUpdateComment}
-          onDelete={handleDeleteComment}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
         />
       )}
-      {comments && comments.data < 1 && (
+      {comments.length < 1 && (
         <Empty className="pt-10" description="No comments" />
       )}
     </div>

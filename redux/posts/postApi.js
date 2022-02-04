@@ -60,10 +60,13 @@ export const postsApi = createApi({
         }),
       }),
       getUserPosts: build.query({
-        query: ({ username, page }) => ({
-          url: `users/${username}/posts?page=${page}`,
+        query: ({ username, cursor }) => ({
+          url: cursor
+            ? `users/${username}/posts?cursor=${cursor}`
+            : `users/${username}/posts`,
           method: "GET",
         }),
+
         providesTags: (result) =>
           result
             ? [
@@ -71,6 +74,24 @@ export const postsApi = createApi({
                 { type: "UserPosts", id: "LIST" },
               ]
             : [{ type: "UserPosts", id: "LIST" }],
+
+        async onQueryStarted(username, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getUserPosts",
+                username,
+                (draft) => {
+                  draft.data.push(...data.data);
+                  draft.next_page_url = data.next_page_url;
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       createPost: build.mutation({
         query: (post) => ({
@@ -110,6 +131,7 @@ export const postsApi = createApi({
 });
 
 export const {
+  useGetPostsMutation,
   useGetSinglePostQuery,
   useGetAuthorByPostsQuery,
   useGetUserPostsQuery,
