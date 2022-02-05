@@ -18,10 +18,12 @@ import {
 } from "../redux/posts/postApi";
 import { useRouter } from "next/router";
 import { Empty } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../redux";
 
 function Profile() {
+  const { posts: postsData } = useSelector(({ posts }) => posts);
+  console.log("postsData", postsData);
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();

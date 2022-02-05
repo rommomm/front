@@ -15,35 +15,49 @@ export const postsApi = createApi({
   endpoints(build) {
     return {
       getAllPosts: build.query({
-        query: (cursor) => ({
-          url: cursor ? `posts?cursor=${cursor}` : "posts",
-          method: "GET",
-        }),
-        providesTags: (result) =>
-          result
+        query: (cursor, a) => {
+          console.log("aaaa", a);
+          console.log("cursor", cursor);
+          return {
+            url: cursor ? `posts?cursor=${cursor}` : "posts",
+            method: "GET",
+          };
+        },
+        providesTags: (result) => {
+          return result
             ? [
                 ...result.data.map(({ id }) => ({ type: "Posts", id })),
                 { type: "Posts", id: "LIST" },
               ]
-            : [{ type: "Posts", id: "LIST" }],
+            : [{ type: "Posts", id: "LIST" }];
+        },
 
-        // async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        //   try {
-        //     const { data } = await queryFulfilled;
-        //     dispatch(
-        //       postsApi.util.updateQueryData(
-        //         "getAllPosts",
-        //         undefined,
-        //         (draft) => {
-        //           draft.data.push(...data.data);
-        //           draft.links = data.links;
-        //         }
-        //       )
-        //     );
-        //   } catch (error) {
-        //     console.error("error", error);
-        //   }
-        // },
+        async onQueryStarted(id, { dispatch, queryFulfilled }) {
+          try {
+            console.log("getAllPostsgetAllPosts", data);
+            const { data } = await queryFulfilled;
+
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getAllPosts",
+                undefined,
+                (draft) => {
+                  console.log("data", data);
+                  if (data.links.prev) {
+                    console.log("draft.data", current(draft.data));
+                    draft.data.push(...data.data);
+                    draft.links = data.links;
+                  } else {
+                    draft.data = data.data;
+                    draft.links = data.links;
+                  }
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       getSinglePost: build.query({
         query: (id) => {
@@ -84,8 +98,12 @@ export const postsApi = createApi({
                 "getUserPosts",
                 username,
                 (draft) => {
-                  draft.data.push(...data.data);
-                  draft.next_page_url = data.next_page_url;
+                  if (data.links.prev) {
+                    draft.data.push(...data.data);
+                    draft.next_page_url = data.next_page_url;
+                  } else {
+                    draft.data = data.data;
+                  }
                 }
               )
             );
@@ -105,7 +123,7 @@ export const postsApi = createApi({
             const { data } = await queryFulfilled;
             dispatch(
               postsApi.util.updateQueryData("getAllPosts", id, (draft) => {
-                draft.data.push(data.data);
+                draft.data.unshift(data.data);
               })
             );
           } catch (error) {

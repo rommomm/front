@@ -19,34 +19,40 @@ import { Empty } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../redux";
 
-function App() {
+function App({ initialPosts }) {
+  console.log("initialPosts", initialPosts);
   const postsData = useSelector(({ posts }) => posts);
-  console.log("postsData", postsData);
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
 
-  const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
 
   const { isSuccess: isLoggedIn } = useAuthMe();
-  const { data: posts, isFetching: isFetchingPosts } = useGetAllPostsQuery();
+  const {
+    data: posts,
+    isFetching: isFetchingPosts,
+    isLoading,
+  } = useGetAllPostsQuery();
 
-  if (!posts) {
+  useEffect(() => {
+    console.log("useEffect");
+    dispatch(getAllPosts.initiate());
+  }, []);
+
+  if (!posts || !postsData.posts[0].author) {
     return null;
   }
 
   const { data: nextPosts, links } = posts;
+
   const nextCursor = links.next
     ? links.next.match(/cursor=(\w+)/)[1]
     : links.next;
-  console.log("nextPosts", nextPosts);
+
   async function getNextPosts() {
+    console.log("next");
     await dispatch(getAllPosts.initiate(nextCursor));
-    setLoader(true);
-    setTimeout(() => {
-      setLoader(false);
-    }, 500);
   }
 
   const handleDeletePost = async (id) => {
@@ -60,6 +66,9 @@ function App() {
   const handleSavePost = async (post) => {
     await createPost(post);
   };
+  console.log("links", links);
+  console.log("nextPosts", nextPosts);
+  console.log("postsData", postsData);
 
   return (
     <Layout title="Home page">
@@ -69,24 +78,24 @@ function App() {
         </div>
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
-          {/* {nextPosts && (
+          {nextPosts && (
             <InfiniteScroll
               dataLength={nextPosts.length}
-              hasMore={nextCursor && true}
+              hasMore={nextCursor}
               next={getNextPosts}
-              loader={loader && <Loader />}
-            > */}
-          {isFetchingPosts ? (
-            <Loader />
-          ) : (
-            <PostsList
-              posts={posts.data}
-              onUpdate={handleUpdatePost}
-              onDelete={handleDeletePost}
-            />
+              // loader={loader && <Loader />}
+            >
+              {isFetchingPosts ? (
+                <Loader />
+              ) : (
+                <PostsList
+                  posts={postsData.posts}
+                  onUpdate={handleUpdatePost}
+                  onDelete={handleDeletePost}
+                />
+              )}
+            </InfiniteScroll>
           )}
-          {/* </InfiniteScroll>
-          )} */}
         </div>
         {nextPosts && nextPosts.length < 1 && (
           <Empty className="pt-44" description="No posts" />

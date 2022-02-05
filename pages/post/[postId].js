@@ -35,6 +35,7 @@ function SinglePost() {
   const pathname = router && router.query.postId;
 
   const { data: post } = useGetSinglePostQuery(pathname, { skip: !pathname });
+
   const postId = post && post.data && post.data.id;
 
   const { data: comments, isFetching: isFetchingComments } =

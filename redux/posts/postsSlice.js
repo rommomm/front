@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { postsApi } from "../posts/postApi";
 
 export const postsSlice = createSlice({
@@ -9,17 +9,28 @@ export const postsSlice = createSlice({
     builder.addMatcher(
       postsApi.endpoints.getAllPosts.matchFulfilled,
       (state, { payload }) => {
-        state.posts = payload.data;
+        console.log("payload", payload);
+        state.posts = state.posts
+          ? current(state.posts).concat(payload.data)
+          : payload.data;
       }
     );
 
     builder.addMatcher(
       postsApi.endpoints.getUserPosts.matchFulfilled,
       (state, { payload }) => {
-        state.userPosts = payload;
+        state.posts = state.posts
+          ? current(state.posts).concat(payload.data)
+          : payload.data;
       }
     );
 
+    builder.addMatcher(
+      postsApi.endpoints.createPost.matchFulfilled,
+      (state, { payload }) => {
+        state.posts = [payload.data, ...current(state.posts)];
+      }
+    );
     // builder.addMatcher(
     //   commentsApi.endpoints.createComment.matchFulfilled,
     //   (state, action) => {
