@@ -9,6 +9,9 @@ import CommentsSystem from "./CommentsSystem";
 import useAuthMe from "../hooks/useAutMe";
 
 function SinglePostByAuthor({ post, onDelete, onUpdate }) {
+  if (!post) {
+    return null;
+  }
   const [editMode, setEditMode] = useState(false);
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   function handleUpdatePost(value) {

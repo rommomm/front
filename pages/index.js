@@ -69,24 +69,24 @@ function App() {
         </div>
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
-          {nextPosts && (
+          {/* {nextPosts && (
             <InfiniteScroll
               dataLength={nextPosts.length}
               hasMore={nextCursor && true}
               next={getNextPosts}
               loader={loader && <Loader />}
-            >
-              {isFetchingPosts ? (
-                <Loader />
-              ) : (
-                <PostsList
-                  posts={nextPosts}
-                  onUpdate={handleUpdatePost}
-                  onDelete={handleDeletePost}
-                />
-              )}
-            </InfiniteScroll>
+            > */}
+          {isFetchingPosts ? (
+            <Loader />
+          ) : (
+            <PostsList
+              posts={posts.data}
+              onUpdate={handleUpdatePost}
+              onDelete={handleDeletePost}
+            />
           )}
+          {/* </InfiniteScroll>
+          )} */}
         </div>
         {nextPosts && nextPosts.length < 1 && (
           <Empty className="pt-44" description="No posts" />

@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiBaseQuery } from "../../libs/apiBaseQuery";
 import { HYDRATE } from "next-redux-wrapper";
+import { current } from "@reduxjs/toolkit";
 
 export const postsApi = createApi({
   reducerPath: "postsApi",
@@ -26,23 +27,23 @@ export const postsApi = createApi({
               ]
             : [{ type: "Posts", id: "LIST" }],
 
-        async onQueryStarted(id, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(
-              postsApi.util.updateQueryData(
-                "getAllPosts",
-                undefined,
-                (draft) => {
-                  draft.data.push(...data.data);
-                  draft.links = data.links;
-                }
-              )
-            );
-          } catch (error) {
-            console.error("error", error);
-          }
-        },
+        // async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        //   try {
+        //     const { data } = await queryFulfilled;
+        //     dispatch(
+        //       postsApi.util.updateQueryData(
+        //         "getAllPosts",
+        //         undefined,
+        //         (draft) => {
+        //           draft.data.push(...data.data);
+        //           draft.links = data.links;
+        //         }
+        //       )
+        //     );
+        //   } catch (error) {
+        //     console.error("error", error);
+        //   }
+        // },
       }),
       getSinglePost: build.query({
         query: (id) => {
@@ -99,20 +100,39 @@ export const postsApi = createApi({
           method: "POST",
           body: post,
         }),
-        invalidatesTags: [
-          { type: "Posts", id: "LIST" },
-          { type: "UserPosts", id: "LIST" },
-        ],
+        async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              postsApi.util.updateQueryData("getAllPosts", id, (draft) => {
+                draft.data.push(data.data);
+              })
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       deletePost: build.mutation({
-        query: (id) => ({
-          url: `posts/${id}`,
+        query: (postId) => ({
+          url: `posts/${postId}`,
           method: "DELETE",
         }),
-        invalidatesTags: [
-          { type: "Posts", id: "LIST" },
-          { type: "UserPosts", id: "LIST" },
-        ],
+        async onQueryStarted(postId, { dispatch, queryFulfilled }) {
+          try {
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getAllPosts",
+                undefined,
+                (draft) => {
+                  draft.data = draft.data.filter((post) => post.id !== postId);
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
       updatePost: build.mutation({
         query: ({ id, data }) => ({
@@ -120,11 +140,24 @@ export const postsApi = createApi({
           method: "PUT",
           body: data,
         }),
-        invalidatesTags: [
-          { type: "Posts", id: "LIST" },
-          { type: "UserPosts", id: "LIST" },
-          { type: "Post", id: "LIST" },
-        ],
+        async onQueryStarted(id, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getAllPosts",
+                undefined,
+                (draft) => {
+                  draft.data = draft.data.map((post) =>
+                    post.id === data.data.id ? { ...post, ...data.data } : post
+                  );
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
     };
   },

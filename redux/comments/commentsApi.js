@@ -31,23 +31,23 @@ export const commentsApi = createApi({
               ]
             : [{ type: "Comment", id: "LIST" }],
 
-        async onQueryStarted(postId, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(
-              commentsApi.util.updateQueryData(
-                "getCommentsByPost",
-                postId,
-                (draft) => {
-                  draft.data.push(...data.data);
-                  draft.links = data.links;
-                }
-              )
-            );
-          } catch (error) {
-            console.error("error", error);
-          }
-        },
+        // async onQueryStarted(postId, { dispatch, queryFulfilled }) {
+        //   try {
+        //     const { data } = await queryFulfilled;
+        //     dispatch(
+        //       commentsApi.util.updateQueryData(
+        //         "getCommentsByPost",
+        //         postId,
+        //         (draft) => {
+        //           draft.data.push(...data.data);
+        //           draft.links = data.links;
+        //         }
+        //       )
+        //     );
+        //   } catch (error) {
+        //     console.error("error", error);
+        //   }
+        // },
       }),
       createComment: build.mutation({
         query: ({ id, comment }) => {
@@ -57,9 +57,9 @@ export const commentsApi = createApi({
             body: comment,
           };
         },
-        invalidatesTags: [{ type: "Comment", id: "LIST" }],
         async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
           try {
+            const { data } = await queryFulfilled;
             dispatch(
               postsApi.util.updateQueryData(
                 "getSinglePost",
@@ -67,28 +67,68 @@ export const commentsApi = createApi({
                 (draft) => {
                   ++draft.data.comments_count;
                 }
+              ),
+              commentsApi.util.updateQueryData(
+                "getCommentsByPost",
+                `postId:${id}`,
+                (draft) => {
+                  console.log("data", data);
+                  console.log("draft", draft);
+                  // draft.data.push(data.data);
+                }
               )
             );
           } catch (error) {
             console.error("error", error);
           }
         },
+        // async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        //   try {
+        //     const { data } = await queryFulfilled;
+        //     console.log("data", data);
+        //     dispatch(
+        //       commentsApi.util.updateQueryData(
+        //         "getCommentsByPost",
+        //         id,
+        //         (draft) => {
+        //           console.log("id", id);
+        //           console.log("draft", draft);
+        //         }
+        //       )
+        //     );
+        //   } catch (error) {
+        //     console.error("error", error);
+        //   }
+        // },
       }),
       deleteComment: build.mutation({
         query: ({ id, postId }) => ({
           url: `comments/${id}`,
           method: "DELETE",
         }),
-        invalidatesTags: [{ type: "Comment", id: "LIST" }],
+        // invalidatesTags: [{ type: "Comment", id: "LIST" }],
 
-        async onQueryStarted({ postId }, { dispatch, queryFulfilled }) {
+        async onQueryStarted(
+          { id, postId },
+          { dispatch, queryFulfilled, originalArgs }
+        ) {
           try {
             dispatch(
-              postsApi.util.updateQueryData(
-                "getSinglePost",
-                `${postId}`,
+              // postsApi.util.updateQueryData(
+              //   "getSinglePost",
+              //   postId,
+              //   (draft) => {
+              //     --draft.data.comments_count;
+              //   }
+              // ),
+              commentsApi.util.updateQueryData(
+                "getCommentsByPost",
+                { postId },
                 (draft) => {
-                  --draft.data.comments_count;
+                  console.log("draft", draft);
+                  // draft.data = draft.data.filter(
+                  //   (comment) => comment.id !== id
+                  // );
                 }
               )
             );
