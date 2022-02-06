@@ -1,3 +1,4 @@
+import { current } from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiBaseQuery } from "../../libs/apiBaseQuery";
 import { authApi } from "../auth/authApi";
@@ -45,18 +46,33 @@ export const profileApi = createApi({
           }
         },
       }),
+
       removeAvatar: build.mutation({
         query: () => ({
           url: "profile/avatar",
           method: "DELETE",
         }),
+        async onQueryStarted(values, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              authApi.util.updateQueryData("authMe", null, (draft) => {
+                return { draft, ...data };
+              })
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
+
       uploadBackground: build.mutation({
         query: (background) => ({
           url: "profile/background",
           method: "POST",
           body: background,
         }),
+
         async onQueryStarted({ values }, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
@@ -70,11 +86,24 @@ export const profileApi = createApi({
           }
         },
       }),
+
       removeBackground: build.mutation({
         query: () => ({
           url: "profile/background",
           method: "DELETE",
         }),
+        async onQueryStarted(values, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              authApi.util.updateQueryData("authMe", null, (draft) => {
+                return { draft, ...data };
+              })
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
     };
   },

@@ -5,6 +5,7 @@ import AddPostForm from "../components/AddPostForm";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { reset } from "../redux/posts/postsSlice";
 
 import {
   getRunningOperationPromises,
@@ -20,8 +21,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../redux";
 
 function App({ initialPosts }) {
-  console.log("initialPosts", initialPosts);
   const postsData = useSelector(({ posts }) => posts);
+  const [_posts, setPosts] = useState([]);
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
@@ -36,11 +37,26 @@ function App({ initialPosts }) {
   } = useGetAllPostsQuery();
 
   useEffect(() => {
-    console.log("useEffect");
-    dispatch(getAllPosts.initiate());
+    dispatch(postsApi.util.resetApiState());
   }, []);
 
-  if (!posts || !postsData.posts[0].author) {
+  console.log("posts", posts);
+
+  useEffect(() => {
+    if (!_posts.length) {
+      setPosts([...initialPosts.data]);
+    } else if (
+      posts &&
+      posts.links &&
+      posts.links.prev &&
+      postsData.posts &&
+      postsData.posts.length
+    ) {
+      setPosts([..._posts, ...postsData.posts]);
+    }
+  }, [postsData.posts, initialPosts]);
+
+  if (!posts) {
     return null;
   }
 
@@ -51,7 +67,7 @@ function App({ initialPosts }) {
     : links.next;
 
   async function getNextPosts() {
-    console.log("next");
+    console.log("getNextPosts");
     await dispatch(getAllPosts.initiate(nextCursor));
   }
 
@@ -66,9 +82,9 @@ function App({ initialPosts }) {
   const handleSavePost = async (post) => {
     await createPost(post);
   };
-  console.log("links", links);
-  console.log("nextPosts", nextPosts);
-  console.log("postsData", postsData);
+
+  console.log("_posts", _posts);
+  // const _posts = postsData.posts.filter((post) => post.author);
 
   return (
     <Layout title="Home page">
@@ -89,7 +105,7 @@ function App({ initialPosts }) {
                 <Loader />
               ) : (
                 <PostsList
-                  posts={postsData.posts}
+                  posts={_posts}
                   onUpdate={handleUpdatePost}
                   onDelete={handleDeletePost}
                 />
@@ -107,6 +123,9 @@ function App({ initialPosts }) {
 
 export async function getServerSideProps() {
   const store = initializeStore();
+  store.dispatch(reset());
+  store.dispatch(postsApi.util.resetApiState());
+
   await store.dispatch(getAllPosts.initiate());
   const { data: initialPosts } = getAllPosts.select()(store.getState());
   await Promise.all(getRunningOperationPromises());

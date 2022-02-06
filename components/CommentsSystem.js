@@ -15,7 +15,9 @@ function CommentsSystem({
   onCreate,
 }) {
   const { isSuccess: isLoggedIn } = useAuthMe();
-
+  if (!comments) {
+    return null;
+  }
   return (
     <div>
       {isLoggedIn ? (

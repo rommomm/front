@@ -12,7 +12,7 @@ import useAuthMe from "../hooks/useAutMe";
 function EditBackgroundModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [file, setFile] = useState(null);
-  const { data: user, refetch } = useAuthMe();
+  const { data: user } = useAuthMe();
   const [uploadBackground] = useUploadBackgroundMutation();
   const [removeBackground] = useRemoveBackgroundMutation();
 
@@ -34,7 +34,6 @@ function EditBackgroundModal() {
 
   const handleRemoveAvatar = async () => {
     await removeBackground();
-    refetch();
   };
 
   const handleCancel = () => {

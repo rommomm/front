@@ -10,6 +10,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import {
   getRunningOperationPromises,
   getUserPosts,
+  postsApi,
   useCreatePostMutation,
   useDeletePostMutation,
   useGetAuthorByPostsQuery,
@@ -20,15 +21,15 @@ import { useRouter } from "next/router";
 import { Empty } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../redux";
+import { reset } from "../redux/posts/postsSlice";
 
 function Profile() {
-  const { posts: postsData } = useSelector(({ posts }) => posts);
-  console.log("postsData", postsData);
+  const postsData = useSelector(({ posts }) => posts);
+
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
 
-  const [loader, setLoader] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const pathname = router && router.query.username;
@@ -43,25 +44,28 @@ function Profile() {
     { skip: !pathname }
   );
 
-  if (!posts) {
+  useEffect(() => {
+    console.log("useEffect");
+    dispatch(getUserPosts.initiate());
+  }, []);
+
+  if (!(posts && author)) {
     return null;
   }
   const { data: nextPosts, next_page_url } = posts;
+
   const nextCursor = next_page_url
     ? next_page_url.match(/cursor=(\w+)/)[1]
     : next_page_url;
 
   async function getNextPosts() {
+    console.log("getNextPostsgetNextPosts");
     await dispatch(
       getUserPosts.initiate({
         username: pathname,
         cursor: nextCursor,
       })
     );
-    setLoader(true);
-    setTimeout(() => {
-      setLoader(false);
-    }, 500);
   }
 
   const handleDeletePost = async (id) => {
@@ -76,35 +80,36 @@ function Profile() {
 
   const showAddPost = isLoggedIn && author && author.data.id === user.data.id;
   const postsWithAuthor =
-    nextPosts && nextPosts.length
-      ? nextPosts.map((post) => ({
+    postsData.posts && postsData.posts.length
+      ? postsData.posts.map((post) => ({
           ...post,
           author: author && author.data,
         }))
       : [];
 
+  console.log("nextPosts", nextPosts);
+
+  // const _posts = postsWithAuthor.filter((post) => post.author_id);
+
   return (
     <Layout title={author.data.user_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader author={author.data} postsCount={posts.data.length} />
+        <UserHeader author={author.data} postsCount={nextPosts.length} />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
-        <InfiniteScroll
-          dataLength={nextPosts.length}
-          hasMore={nextCursor && true}
-          next={getNextPosts}
-          loader={loader && <Loader />}
-        >
-          {isFetchingPosts ? (
-            <Loader />
-          ) : (
+        {nextPosts && (
+          <InfiniteScroll
+            dataLength={nextPosts.length}
+            hasMore={nextCursor}
+            next={getNextPosts}
+          >
             <PostsList
               posts={postsWithAuthor}
               onUpdate={handleUpdatePost}
               onDelete={handleDeletePost}
             />
-          )}
-        </InfiniteScroll>
-        {posts.data.length < 1 && (
+          </InfiniteScroll>
+        )}
+        {nextPosts && nextPosts.length < 1 && (
           <Empty className="pt-5" description="No posts" />
         )}
       </div>
@@ -114,6 +119,8 @@ function Profile() {
 
 export async function getServerSideProps(ctx) {
   const store = initializeStore();
+  store.dispatch(reset());
+  store.dispatch(postsApi.util.resetApiState());
   await store.dispatch(
     getUserPosts.initiate({
       username: ctx.query.username,

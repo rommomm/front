@@ -18,18 +18,19 @@ import {
   useGetCommentsByPostQuery,
   useUpdateCommentMutation,
 } from "../../redux/comments/commentsApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../../redux";
 import { useRouter } from "next/router";
 
 function SinglePost() {
+  const commentsData = useSelector(({ comments }) => comments);
+  console.log("commentsData", commentsData);
   const [deletePost] = useDeletePostMutation();
   const [updatePost] = useUpdatePostMutation();
   const [createComment] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
-  const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const pathname = router && router.query.postId;
@@ -40,27 +41,25 @@ function SinglePost() {
 
   const { data: comments, isFetching: isFetchingComments } =
     useGetCommentsByPostQuery({ postId }, { skip: !postId });
+
   if (!(comments && post)) {
     return null;
   }
-  // const { data: nextComments, links } = comments;
 
-  // const nextCursor = links.next
-  //   ? links.next.match(/cursor=(\w+)/)[1]
-  //   : links.next;
+  const { data: nextComments, links } = comments;
 
-  // async function getNextComments() {
-  //   await dispatch(
-  //     getCommentsByPost.initiate({
-  //       postId,
-  //       cursor: nextCursor,
-  //     })
-  //   );
-  //   setLoader(true);
-  //   setTimeout(() => {
-  //     setLoader(false);
-  //   }, 500);
-  // }
+  const nextCursor = links.next
+    ? links.next.match(/cursor=(\w+)/)[1]
+    : links.next;
+
+  async function getNextComments() {
+    await dispatch(
+      getCommentsByPost.initiate({
+        postId,
+        cursor: nextCursor,
+      })
+    );
+  }
   const handleDeleteComment = async (id) => {
     await deleteComment({ id, postId: pathname });
   };
@@ -95,23 +94,22 @@ function SinglePost() {
               onUpdate={handleUpdatePost}
               onDelete={handleDeletePost}
             />
-            {/* {nextComments && post && (
+            {nextComments && post && (
               <InfiniteScroll
                 dataLength={nextComments.length}
                 hasMore={nextCursor && true}
                 next={getNextComments}
-                loader={loader && <Loader />}
-              > */}
-            <CommentsSystem
-              post={post.data}
-              comments={comments.data}
-              isFetchingComments={isFetchingComments}
-              onUpdate={handleUpdateComment}
-              onDelete={handleDeleteComment}
-              onCreate={handleSaveComment}
-            />
-            {/* </InfiniteScroll> */}
-            {/* )} */}
+              >
+                <CommentsSystem
+                  post={post.data}
+                  comments={commentsData.comments}
+                  isFetchingComments={isFetchingComments}
+                  onUpdate={handleUpdateComment}
+                  onDelete={handleDeleteComment}
+                  onCreate={handleSaveComment}
+                />
+              </InfiniteScroll>
+            )}
           </div>
         </div>
       </div>

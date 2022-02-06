@@ -15,9 +15,7 @@ export const postsApi = createApi({
   endpoints(build) {
     return {
       getAllPosts: build.query({
-        query: (cursor, a) => {
-          console.log("aaaa", a);
-          console.log("cursor", cursor);
+        query: (cursor) => {
           return {
             url: cursor ? `posts?cursor=${cursor}` : "posts",
             method: "GET",
@@ -34,17 +32,13 @@ export const postsApi = createApi({
 
         async onQueryStarted(id, { dispatch, queryFulfilled }) {
           try {
-            console.log("getAllPostsgetAllPosts", data);
             const { data } = await queryFulfilled;
-
             dispatch(
               postsApi.util.updateQueryData(
                 "getAllPosts",
                 undefined,
                 (draft) => {
-                  console.log("data", data);
                   if (data.links.prev) {
-                    console.log("draft.data", current(draft.data));
                     draft.data.push(...data.data);
                     draft.links = data.links;
                   } else {
@@ -59,6 +53,54 @@ export const postsApi = createApi({
           }
         },
       }),
+
+      getAuthorByPosts: build.query({
+        query: (username) => ({
+          url: `users/${username}`,
+          method: "GET",
+        }),
+      }),
+
+      getUserPosts: build.query({
+        query: ({ username, cursor }) => ({
+          url: cursor
+            ? `users/${username}/posts?cursor=${cursor}`
+            : `users/${username}/posts`,
+          method: "GET",
+        }),
+        providesTags: (result) =>
+          result
+            ? [
+                ...result.data.map(({ id }) => ({ type: "UserPosts", id })),
+                { type: "UserPosts", id: "LIST" },
+              ]
+            : [{ type: "UserPosts", id: "LIST" }],
+        async onQueryStarted(username, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getUserPosts",
+                username,
+                (draft) => {
+                  if (data.prev_page_url) {
+                    draft.data.push(...data.data);
+                    draft.next_page_url = data.next_page_url;
+                    draft.prev_page_url = data.prev_page_url;
+                  } else {
+                    draft.data = data.data;
+                    draft.next_page_url = data.next_page_url;
+                    draft.prev_page_url = data.prev_page_url;
+                  }
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
+      }),
+
       getSinglePost: build.query({
         query: (id) => {
           return {
@@ -68,114 +110,27 @@ export const postsApi = createApi({
         },
         providesTags: [{ type: "Post", id: "LIST" }],
       }),
-      getAuthorByPosts: build.query({
-        query: (username) => ({
-          url: `users/${username}`,
-          method: "GET",
-        }),
-      }),
-      getUserPosts: build.query({
-        query: ({ username, cursor }) => ({
-          url: cursor
-            ? `users/${username}/posts?cursor=${cursor}`
-            : `users/${username}/posts`,
-          method: "GET",
-        }),
-
-        providesTags: (result) =>
-          result
-            ? [
-                ...result.data.map(({ id }) => ({ type: "UserPosts", id })),
-                { type: "UserPosts", id: "LIST" },
-              ]
-            : [{ type: "UserPosts", id: "LIST" }],
-
-        async onQueryStarted(username, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(
-              postsApi.util.updateQueryData(
-                "getUserPosts",
-                username,
-                (draft) => {
-                  if (data.links.prev) {
-                    draft.data.push(...data.data);
-                    draft.next_page_url = data.next_page_url;
-                  } else {
-                    draft.data = data.data;
-                  }
-                }
-              )
-            );
-          } catch (error) {
-            console.error("error", error);
-          }
-        },
-      }),
       createPost: build.mutation({
         query: (post) => ({
           url: "posts",
           method: "POST",
           body: post,
         }),
-        async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(
-              postsApi.util.updateQueryData("getAllPosts", id, (draft) => {
-                draft.data.unshift(data.data);
-              })
-            );
-          } catch (error) {
-            console.error("error", error);
-          }
-        },
       }),
+
       deletePost: build.mutation({
         query: (postId) => ({
           url: `posts/${postId}`,
           method: "DELETE",
         }),
-        async onQueryStarted(postId, { dispatch, queryFulfilled }) {
-          try {
-            dispatch(
-              postsApi.util.updateQueryData(
-                "getAllPosts",
-                undefined,
-                (draft) => {
-                  draft.data = draft.data.filter((post) => post.id !== postId);
-                }
-              )
-            );
-          } catch (error) {
-            console.error("error", error);
-          }
-        },
       }),
+
       updatePost: build.mutation({
         query: ({ id, data }) => ({
           url: `posts/${id}`,
           method: "PUT",
           body: data,
         }),
-        async onQueryStarted(id, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(
-              postsApi.util.updateQueryData(
-                "getAllPosts",
-                undefined,
-                (draft) => {
-                  draft.data = draft.data.map((post) =>
-                    post.id === data.data.id ? { ...post, ...data.data } : post
-                  );
-                }
-              )
-            );
-          } catch (error) {
-            console.error("error", error);
-          }
-        },
       }),
     };
   },

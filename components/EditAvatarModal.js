@@ -11,7 +11,7 @@ import useAuthMe from "../hooks/useAutMe";
 function EditAvatarModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [file, setFile] = useState(null);
-  const { data: user, refetch } = useAuthMe();
+  const { data: user } = useAuthMe();
   const [uploadAvatar] = useUploadAvatarMutation();
   const [removeAvatar] = useRemoveAvatarMutation();
 
@@ -29,7 +29,6 @@ function EditAvatarModal() {
 
   const handleRemoveAvatar = async () => {
     await removeAvatar();
-    refetch();
   };
 
   const showModal = () => {

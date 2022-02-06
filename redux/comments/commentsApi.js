@@ -31,25 +31,30 @@ export const commentsApi = createApi({
                 { type: "Comment", id: "LIST" },
               ]
             : [{ type: "Comment", id: "LIST" }],
-
-        // async onQueryStarted(postId, { dispatch, queryFulfilled }) {
-        //   try {
-        //     const { data } = await queryFulfilled;
-        //     dispatch(
-        //       commentsApi.util.updateQueryData(
-        //         "getCommentsByPost",
-        //         postId,
-        //         (draft) => {
-        //           draft.data.push(...data.data);
-        //           draft.links = data.links;
-        //         }
-        //       )
-        //     );
-        //   } catch (error) {
-        //     console.error("error", error);
-        //   }
-        // },
+        async onQueryStarted(postId, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              commentsApi.util.updateQueryData(
+                "getCommentsByPost",
+                postId,
+                (draft) => {
+                  if (data.links.prev) {
+                    draft.data.push(...data.data);
+                    draft.links = data.links;
+                  } else {
+                    draft.data = data.data;
+                    draft.links = data.links;
+                  }
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
+
       createComment: build.mutation({
         query: ({ id, comment }) => {
           return {
@@ -58,14 +63,8 @@ export const commentsApi = createApi({
             body: comment,
           };
         },
-        async onQueryStarted({ id }, { dispatch, queryFulfilled, extra }) {
-          console.log("extra", extra);
-          const rrrr = await extra;
-          console.log("rrr", rrrr);
-          console.log(typeof extra);
+        async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
           try {
-            const { data } = await queryFulfilled;
-            console.log("id", id);
             dispatch(
               postsApi.util.updateQueryData(
                 "getSinglePost",
@@ -75,70 +74,25 @@ export const commentsApi = createApi({
                 }
               )
             );
-            console.log("idididid");
-            // dispatch(
-            //   console.log("first")
-            //   // commentsApi.util.updateQueryData(
-            //   //   "getCommentsByPost",
-            //   //   id,
-            //   //   (draft) => {
-            //   //     console.log("data", data);
-            //   //     console.log("draft", draft);
-            //   //     // draft.data.push(data.data);
-            //   //   }
-            //   // )
-            // );
-          } catch (error) {
-            console.error("error", error);
-          }
-        },
-        async onQueryStarted(id, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            console.log("data", data);
-            dispatch(
-              commentsApi.util.updateQueryData(
-                "getCommentsByPost",
-                id,
-                (draft) => {
-                  console.log("id", id);
-                  console.log("draft", draft);
-                }
-              )
-            );
           } catch (error) {
             console.error("error", error);
           }
         },
       }),
+
       deleteComment: build.mutation({
         query: ({ id, postId }) => ({
           url: `comments/${id}`,
           method: "DELETE",
         }),
-        // invalidatesTags: [{ type: "Comment", id: "LIST" }],
-
-        async onQueryStarted(
-          { id, postId },
-          { dispatch, queryFulfilled, originalArgs }
-        ) {
+        async onQueryStarted({ id, postId }, { dispatch, queryFulfilled }) {
           try {
             dispatch(
-              // postsApi.util.updateQueryData(
-              //   "getSinglePost",
-              //   postId,
-              //   (draft) => {
-              //     --draft.data.comments_count;
-              //   }
-              // ),
-              commentsApi.util.updateQueryData(
-                "getCommentsByPost",
-                { postId },
+              postsApi.util.updateQueryData(
+                "getSinglePost",
+                postId,
                 (draft) => {
-                  console.log("draft", draft);
-                  // draft.data = draft.data.filter(
-                  //   (comment) => comment.id !== id
-                  // );
+                  --draft.data.comments_count;
                 }
               )
             );
@@ -147,13 +101,13 @@ export const commentsApi = createApi({
           }
         },
       }),
+
       updateComment: build.mutation({
         query: ({ id, data }) => ({
           url: `comments/${id}`,
           method: "PUT",
           body: data,
         }),
-        invalidatesTags: [{ type: "Comment", id: "LIST" }],
       }),
     };
   },
