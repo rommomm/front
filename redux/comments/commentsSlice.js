@@ -10,9 +10,15 @@ export const commentsSlice = createSlice({
     builder.addMatcher(
       commentsApi.endpoints.getCommentsByPost.matchFulfilled,
       (state, { payload }) => {
-        state.comments = state.comments
-          ? current(state.comments).concat(payload.data)
-          : payload.data;
+        if (!payload.links.prev) {
+          state.comments = payload.data;
+          state.nextUrl = payload.links.next;
+        } else {
+          state.comments = state.comments
+            ? current(state.comments).concat(payload.data)
+            : payload.data;
+          state.nextUrl = payload.links.next;
+        }
       }
     );
     builder.addMatcher(

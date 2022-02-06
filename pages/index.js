@@ -20,55 +20,30 @@ import { Empty } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../redux";
 
-function App({ initialPosts }) {
+function App() {
   const postsData = useSelector(({ posts }) => posts);
-  const [_posts, setPosts] = useState([]);
-  const [createPost] = useCreatePostMutation();
-  const [deletePost] = useDeletePostMutation();
-  const [updatePost] = useUpdatePostMutation();
+  const [createPost, { isLoading: isLoadingCreatePost }] =
+    useCreatePostMutation();
+  const [deletePost, { isLoading: isLoadingDeletePost }] =
+    useDeletePostMutation();
+  const [updatePost, { isLoading: isLoadingUpdatePost }] =
+    useUpdatePostMutation();
 
   const dispatch = useDispatch();
 
   const { isSuccess: isLoggedIn } = useAuthMe();
-  const {
-    data: posts,
-    isFetching: isFetchingPosts,
-    isLoading,
-  } = useGetAllPostsQuery();
+  const { data: posts } = useGetAllPostsQuery();
 
   useEffect(() => {
     dispatch(postsApi.util.resetApiState());
+
+    return () => {
+      dispatch(postsApi.util.resetApiState());
+    };
   }, []);
 
-  console.log("posts", posts);
-
-  useEffect(() => {
-    if (!_posts.length) {
-      setPosts([...initialPosts.data]);
-    } else if (
-      posts &&
-      posts.links &&
-      posts.links.prev &&
-      postsData.posts &&
-      postsData.posts.length
-    ) {
-      setPosts([..._posts, ...postsData.posts]);
-    }
-  }, [postsData.posts, initialPosts]);
-
-  if (!posts) {
-    return null;
-  }
-
-  const { data: nextPosts, links } = posts;
-
-  const nextCursor = links.next
-    ? links.next.match(/cursor=(\w+)/)[1]
-    : links.next;
-
-  async function getNextPosts() {
-    console.log("getNextPosts");
-    await dispatch(getAllPosts.initiate(nextCursor));
+  function getNextPosts() {
+    dispatch(getAllPosts.initiate(nextCursor));
   }
 
   const handleDeletePost = async (id) => {
@@ -83,8 +58,19 @@ function App({ initialPosts }) {
     await createPost(post);
   };
 
-  console.log("_posts", _posts);
-  // const _posts = postsData.posts.filter((post) => post.author);
+  if (!posts || !(postsData && postsData.posts)) {
+    return null;
+  }
+
+  const { data: nextPosts, links } = posts;
+  const nextCursor = links.next
+    ? links.next.match(/cursor=(\w+)/)[1]
+    : links.next;
+
+  const isLoadingPost =
+    isLoadingCreatePost || isLoadingDeletePost || isLoadingUpdatePost;
+
+  console.log("nextPosts.length", nextPosts.length);
 
   return (
     <Layout title="Home page">
@@ -94,24 +80,21 @@ function App({ initialPosts }) {
         </div>
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
-          {nextPosts && (
-            <InfiniteScroll
-              dataLength={nextPosts.length}
-              hasMore={nextCursor}
-              next={getNextPosts}
-              // loader={loader && <Loader />}
-            >
-              {isFetchingPosts ? (
-                <Loader />
-              ) : (
-                <PostsList
-                  posts={_posts}
-                  onUpdate={handleUpdatePost}
-                  onDelete={handleDeletePost}
-                />
-              )}
-            </InfiniteScroll>
-          )}
+          <InfiniteScroll
+            dataLength={nextPosts.length}
+            hasMore={nextCursor}
+            next={getNextPosts}
+          >
+            {isLoadingPost ? (
+              <Loader />
+            ) : (
+              <PostsList
+                posts={postsData.posts}
+                onUpdate={handleUpdatePost}
+                onDelete={handleDeletePost}
+              />
+            )}
+          </InfiniteScroll>
         </div>
         {nextPosts && nextPosts.length < 1 && (
           <Empty className="pt-44" description="No posts" />
@@ -123,9 +106,6 @@ function App({ initialPosts }) {
 
 export async function getServerSideProps() {
   const store = initializeStore();
-  store.dispatch(reset());
-  store.dispatch(postsApi.util.resetApiState());
-
   await store.dispatch(getAllPosts.initiate());
   const { data: initialPosts } = getAllPosts.select()(store.getState());
   await Promise.all(getRunningOperationPromises());

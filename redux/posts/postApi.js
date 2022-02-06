@@ -11,7 +11,7 @@ export const postsApi = createApi({
       return action.payload[reducerPath];
     }
   },
-  tagTypes: ["Posts", "UserPosts", "Post"],
+  tagTypes: ["Posts", "UserPosts"],
   endpoints(build) {
     return {
       getAllPosts: build.query({
@@ -62,27 +62,36 @@ export const postsApi = createApi({
       }),
 
       getUserPosts: build.query({
-        query: ({ username, cursor }) => ({
-          url: cursor
-            ? `users/${username}/posts?cursor=${cursor}`
-            : `users/${username}/posts`,
-          method: "GET",
-        }),
+        query: ({ username, cursor }) => {
+          console.log("cursor", cursor);
+          return {
+            url: cursor
+              ? `users/${username}/posts?cursor=${cursor}`
+              : `users/${username}/posts`,
+            method: "GET",
+          };
+        },
         providesTags: (result) =>
           result
             ? [
-                ...result.data.map(({ id }) => ({ type: "UserPosts", id })),
+                ...result.data.map(({ id }) => ({
+                  type: "UserPosts",
+                  id,
+                })),
                 { type: "UserPosts", id: "LIST" },
               ]
             : [{ type: "UserPosts", id: "LIST" }],
+
         async onQueryStarted(username, { dispatch, queryFulfilled }) {
           try {
+            console.log("username", username);
             const { data } = await queryFulfilled;
             dispatch(
               postsApi.util.updateQueryData(
                 "getUserPosts",
                 username,
                 (draft) => {
+                  console.log("data.prev_page_url", data.prev_page_url);
                   if (data.prev_page_url) {
                     draft.data.push(...data.data);
                     draft.next_page_url = data.next_page_url;
@@ -108,8 +117,8 @@ export const postsApi = createApi({
             method: "GET",
           };
         },
-        providesTags: [{ type: "Post", id: "LIST" }],
       }),
+
       createPost: build.mutation({
         query: (post) => ({
           url: "posts",
@@ -131,6 +140,22 @@ export const postsApi = createApi({
           method: "PUT",
           body: data,
         }),
+        async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getSinglePost",
+                `${id}`,
+                (draft) => {
+                  draft.data = { ...draft.data, ...data.data };
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
       }),
     };
   },

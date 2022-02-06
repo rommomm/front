@@ -14,8 +14,8 @@ function SinglePostByAuthor({ post, onDelete, onUpdate }) {
   }
   const [editMode, setEditMode] = useState(false);
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
-  function handleUpdatePost(value) {
-    onUpdate(post.id, value);
+  function handleUpdatePost(values) {
+    onUpdate(post.id, values);
     setEditMode(false);
   }
 

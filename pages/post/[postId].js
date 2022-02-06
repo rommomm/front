@@ -1,5 +1,5 @@
 import Layout from "../../components/Layout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "../../components/Loader";
 import SinglePostByAuthor from "../../components/SinglePostByAuthor";
 import CommentsSystem from "../../components/CommentsSystem";
@@ -11,6 +11,7 @@ import {
   useUpdatePostMutation,
 } from "../../redux/posts/postApi";
 import {
+  commentsApi,
   getCommentsByPost,
   getRunningOperationPromises,
   useCreateCommentMutation,
@@ -23,49 +24,42 @@ import { initializeStore } from "../../redux";
 import { useRouter } from "next/router";
 
 function SinglePost() {
-  const commentsData = useSelector(({ comments }) => comments);
-  console.log("commentsData", commentsData);
-  const [deletePost] = useDeletePostMutation();
-  const [updatePost] = useUpdatePostMutation();
-  const [createComment] = useCreateCommentMutation();
-  const [updateComment] = useUpdateCommentMutation();
-  const [deleteComment] = useDeleteCommentMutation();
+  const { comments: commentsData, nextUrl } = useSelector(
+    ({ comments }) => comments
+  );
+
+  const [deletePost, { isLoading: isLoadingDeletePost }] =
+    useDeletePostMutation();
+  const [updatePost, { isLoading: isLoadingUpdatePost }] =
+    useUpdatePostMutation();
+  const [createComment, { isLoading: isLoadingCreateComment }] =
+    useCreateCommentMutation();
+  const [updateComment, { isLoading: isLoadingUpdateComment }] =
+    useUpdateCommentMutation();
+  const [deleteComment, { isLoading: isLoadingDeleteComment }] =
+    useDeleteCommentMutation();
 
   const dispatch = useDispatch();
   const router = useRouter();
   const pathname = router && router.query.postId;
-
   const { data: post } = useGetSinglePostQuery(pathname, { skip: !pathname });
-
   const postId = post && post.data && post.data.id;
-
   const { data: comments, isFetching: isFetchingComments } =
     useGetCommentsByPostQuery({ postId }, { skip: !postId });
 
-  if (!(comments && post)) {
-    return null;
-  }
+  useEffect(() => {
+    dispatch(commentsApi.util.resetApiState());
+    return () => {
+      dispatch(commentsApi.util.resetApiState());
+    };
+  }, []);
 
-  const { data: nextComments, links } = comments;
-
-  const nextCursor = links.next
-    ? links.next.match(/cursor=(\w+)/)[1]
-    : links.next;
-
-  async function getNextComments() {
-    await dispatch(
-      getCommentsByPost.initiate({
-        postId,
-        cursor: nextCursor,
-      })
-    );
-  }
   const handleDeleteComment = async (id) => {
     await deleteComment({ id, postId: pathname });
   };
 
-  const handleUpdateComment = async (id, updatedData) => {
-    await updateComment({ id, data: updatedData });
+  const handleUpdateComment = async (id, updatedComment) => {
+    await updateComment({ id, data: updatedComment });
   };
 
   const handleSaveComment = async (id, comment) => {
@@ -77,9 +71,33 @@ function SinglePost() {
     router.push("/");
   };
 
-  const handleUpdatePost = async (id, updatedData) => {
-    await updatePost({ id, data: updatedData });
+  const handleUpdatePost = async (id, updatedPost) => {
+    await updatePost({ id, data: updatedPost });
   };
+
+  if (!(comments && post)) {
+    return null;
+  }
+
+  const { data: nextComments, links } = comments;
+
+  const nextCursor = nextUrl && nextUrl.match(/cursor=(\w+)/)[1];
+
+  const getNextComments = () => {
+    if (nextCursor) {
+      dispatch(
+        getCommentsByPost.initiate({
+          postId,
+          cursor: nextUrl && nextUrl.match(/cursor=(\w+)/)[1],
+        })
+      );
+    }
+  };
+
+  const isLoadingComment =
+    isLoadingCreateComment || isLoadingDeleteComment || isLoadingUpdateComment;
+
+  const isLoadingPost = isLoadingDeletePost || isLoadingUpdatePost;
 
   return (
     <Layout title="Post">
@@ -89,27 +107,33 @@ function SinglePost() {
         </div>
         <div className=" w-full max-w-screen-md	">
           <div>
-            <SinglePostByAuthor
-              post={post && post.data}
-              onUpdate={handleUpdatePost}
-              onDelete={handleDeletePost}
-            />
-            {nextComments && post && (
-              <InfiniteScroll
-                dataLength={nextComments.length}
-                hasMore={nextCursor && true}
-                next={getNextComments}
-              >
+            {isLoadingPost ? (
+              <Loader />
+            ) : (
+              <SinglePostByAuthor
+                post={post && post.data}
+                onUpdate={handleUpdatePost}
+                onDelete={handleDeletePost}
+              />
+            )}
+            <InfiniteScroll
+              dataLength={commentsData.length}
+              hasMore={nextCursor}
+              next={getNextComments}
+            >
+              {isLoadingComment ? (
+                <Loader />
+              ) : (
                 <CommentsSystem
                   post={post.data}
-                  comments={commentsData.comments}
+                  comments={commentsData}
                   isFetchingComments={isFetchingComments}
                   onUpdate={handleUpdateComment}
                   onDelete={handleDeleteComment}
                   onCreate={handleSaveComment}
                 />
-              </InfiniteScroll>
-            )}
+              )}
+            </InfiniteScroll>
           </div>
         </div>
       </div>
