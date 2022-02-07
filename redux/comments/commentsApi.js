@@ -16,7 +16,6 @@ export const commentsApi = createApi({
     return {
       getCommentsByPost: build.query({
         query: ({ postId, cursor }) => {
-          console.log("postId", postId);
           return {
             url: cursor
               ? `posts/${postId}/comments?cursor=${cursor}`

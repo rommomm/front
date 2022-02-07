@@ -17,10 +17,12 @@ export const postsSlice = createSlice({
       (state, { payload }) => {
         if (!payload.links.prev) {
           state.posts = payload.data;
+          state.nextUrl = payload.links.next;
         } else {
           state.posts = state.posts
             ? current(state.posts).concat(payload.data)
             : payload.data;
+          state.nextUrl = payload.links.next;
         }
       }
     );

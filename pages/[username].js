@@ -24,7 +24,6 @@ import { initializeStore } from "../redux";
 
 function Profile() {
   const { posts: postsData, nextUrl } = useSelector(({ posts }) => posts);
-  console.log("nextUrl", nextUrl);
 
   const [createPost, { isLoading: isLoadingCreatePost }] =
     useCreatePostMutation();
@@ -69,10 +68,9 @@ function Profile() {
     return null;
   }
 
-  const { data: nextPosts, next_page_url } = posts;
   const nextCursor = nextUrl && nextUrl.match(/cursor=(\w+)/)[1];
 
-  const getNextPosts = () => {
+  function getNextPosts() {
     if (nextCursor) {
       dispatch(
         getUserPosts.initiate({
@@ -81,7 +79,7 @@ function Profile() {
         })
       );
     }
-  };
+  }
 
   const showAddPost = isLoggedIn && author && author.data.id === user.data.id;
 
@@ -92,8 +90,6 @@ function Profile() {
           author: author && author.data,
         }))
       : [];
-
-  // const _posts = postsWithAuthor.filter((post) => post.author_id);
 
   const isLoadingPost =
     isLoadingCreatePost || isLoadingDeletePost || isLoadingUpdatePost;
@@ -118,7 +114,7 @@ function Profile() {
             />
           )}
         </InfiniteScroll>
-        {nextPosts && nextPosts.length < 1 && (
+        {postsData && postsData.length < 1 && (
           <Empty className="pt-5" description="No posts" />
         )}
       </div>

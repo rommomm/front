@@ -1,5 +1,4 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { postsApi } from "../posts/postApi";
 import { commentsApi } from "./commentsApi";
 
 export const commentsSlice = createSlice({
@@ -38,7 +37,6 @@ export const commentsSlice = createSlice({
     builder.addMatcher(
       commentsApi.endpoints.updateComment.matchFulfilled,
       (state, { payload }) => {
-        console.log("payloadUpdate", payload);
         state.comments = state.comments.map((comment) =>
           comment.id === payload.data.id
             ? { ...comment, ...payload.data }

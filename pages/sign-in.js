@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik } from "formik";
 import { signInValidationSchema } from "../validationSchema/signIn";
 import AuthLayout from "../components/AuthLayout";
-import { useAuthMeQuery, useSignInMutation } from "../redux/auth/authApi";
+import {
+  authApi,
+  useAuthMeQuery,
+  useSignInMutation,
+} from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import SignInForm from "../components/SignInForm";
-import useAuthMe from "../hooks/useAutMe";
 
 function SignIn() {
   const [signIn, { error, isSuccess }] = useSignInMutation();

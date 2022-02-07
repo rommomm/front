@@ -1,7 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { apiBaseQuery } from "../../libs/apiBaseQuery";
 import { HYDRATE } from "next-redux-wrapper";
-import { current } from "@reduxjs/toolkit";
 
 export const postsApi = createApi({
   reducerPath: "postsApi",
@@ -63,7 +62,6 @@ export const postsApi = createApi({
 
       getUserPosts: build.query({
         query: ({ username, cursor }) => {
-          console.log("cursor", cursor);
           return {
             url: cursor
               ? `users/${username}/posts?cursor=${cursor}`
@@ -84,14 +82,12 @@ export const postsApi = createApi({
 
         async onQueryStarted(username, { dispatch, queryFulfilled }) {
           try {
-            console.log("username", username);
             const { data } = await queryFulfilled;
             dispatch(
               postsApi.util.updateQueryData(
                 "getUserPosts",
                 username,
                 (draft) => {
-                  console.log("data.prev_page_url", data.prev_page_url);
                   if (data.prev_page_url) {
                     draft.data.push(...data.data);
                     draft.next_page_url = data.next_page_url;

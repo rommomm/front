@@ -1,5 +1,5 @@
 import Layout from "../../components/Layout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Loader from "../../components/Loader";
 import SinglePostByAuthor from "../../components/SinglePostByAuthor";
 import CommentsSystem from "../../components/CommentsSystem";
@@ -78,8 +78,6 @@ function SinglePost() {
   if (!(comments && post)) {
     return null;
   }
-
-  const { data: nextComments, links } = comments;
 
   const nextCursor = nextUrl && nextUrl.match(/cursor=(\w+)/)[1];
 

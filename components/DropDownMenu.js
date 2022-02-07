@@ -1,19 +1,23 @@
 import Link from "next/link";
 import { Menu, Dropdown } from "antd";
-import { useSignOutMutation } from "../redux/auth/authApi";
+import { authApi, useSignOutMutation } from "../redux/auth/authApi";
 import Cookies from "js-cookie";
 import router from "next/router";
 import useAuthMe from "../hooks/useAutMe";
+import { useDispatch } from "react-redux";
 
 export default function DropDownMenu({ children }) {
   const { data: user } = useAuthMe();
   const [signOut] = useSignOutMutation();
+
+  const dispatch = useDispatch();
 
   async function handleLogout() {
     try {
       await signOut();
       Cookies.remove("token");
       router.push("/");
+      dispatch(authApi.util.resetApiState());
     } catch (error) {
       console.log("error", error);
     }

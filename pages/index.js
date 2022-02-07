@@ -5,7 +5,6 @@ import AddPostForm from "../components/AddPostForm";
 import useAuthMe from "../hooks/useAutMe";
 import Loader from "../components/Loader";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { reset } from "../redux/posts/postsSlice";
 
 import {
   getRunningOperationPromises,
@@ -21,7 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../redux";
 
 function App() {
-  const postsData = useSelector(({ posts }) => posts);
+  const { posts: postsData, nextUrl } = useSelector(({ posts }) => posts);
+
   const [createPost, { isLoading: isLoadingCreatePost }] =
     useCreatePostMutation();
   const [deletePost, { isLoading: isLoadingDeletePost }] =
@@ -42,10 +42,6 @@ function App() {
     };
   }, []);
 
-  function getNextPosts() {
-    dispatch(getAllPosts.initiate(nextCursor));
-  }
-
   const handleDeletePost = async (id) => {
     await deletePost(id);
   };
@@ -58,19 +54,18 @@ function App() {
     await createPost(post);
   };
 
-  if (!posts || !(postsData && postsData.posts)) {
+  if (!posts || !postsData) {
     return null;
   }
 
-  const { data: nextPosts, links } = posts;
-  const nextCursor = links.next
-    ? links.next.match(/cursor=(\w+)/)[1]
-    : links.next;
+  function getNextPosts() {
+    dispatch(getAllPosts.initiate(nextCursor));
+  }
+
+  const nextCursor = nextUrl && nextUrl.match(/cursor=(\w+)/)[1];
 
   const isLoadingPost =
     isLoadingCreatePost || isLoadingDeletePost || isLoadingUpdatePost;
-
-  console.log("nextPosts.length", nextPosts.length);
 
   return (
     <Layout title="Home page">
@@ -81,7 +76,7 @@ function App() {
         <div className="border-black border-l border-r w-full max-w-screen-md	">
           {isLoggedIn && <AddPostForm onCreate={handleSavePost} />}
           <InfiniteScroll
-            dataLength={nextPosts.length}
+            dataLength={postsData.length}
             hasMore={nextCursor}
             next={getNextPosts}
           >
@@ -89,14 +84,14 @@ function App() {
               <Loader />
             ) : (
               <PostsList
-                posts={postsData.posts}
+                posts={postsData}
                 onUpdate={handleUpdatePost}
                 onDelete={handleDeletePost}
               />
             )}
           </InfiniteScroll>
         </div>
-        {nextPosts && nextPosts.length < 1 && (
+        {postsData && postsData.length < 1 && (
           <Empty className="pt-44" description="No posts" />
         )}
       </div>
