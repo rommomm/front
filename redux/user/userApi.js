@@ -8,10 +8,13 @@ export const userApi = createApi({
   endpoints(build) {
     return {
       allUsers: build.query({
-        query: (page) => ({
-          url: `users?page=${page}`,
-          method: "GET",
-        }),
+        query: ({ username, page, limit = 10 }) => {
+          console.log("username", username);
+          return {
+            url: `users?username=${username}&limit=${limit}&page=${page}`,
+            method: "GET",
+          };
+        },
       }),
       searchUser: build.query({
         query: (query) => ({
@@ -24,3 +27,5 @@ export const userApi = createApi({
 });
 
 export const { useAllUsersQuery, useSearchUserQuery } = userApi;
+
+export const { allUsers, searchUser } = userApi.endpoints;

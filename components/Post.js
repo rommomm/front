@@ -6,8 +6,10 @@ import useFormateDate from "../hooks/useFormatDate";
 import PostEditForm from "./PostEditForm";
 import CommentsCount from "./CommentsCount";
 import useAuthMe from "../hooks/useAutMe";
+import MentionContent from "./MentionContent";
 
 function Post({ post, onDelete, onUpdate }) {
+  console.log("post", post);
   const [editMode, setEditMode] = useState(false);
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   function handleUpdatePost(value) {
@@ -34,6 +36,17 @@ function Post({ post, onDelete, onUpdate }) {
     post.updated_at,
     "dd LLL yyyy HH:mm:ss"
   );
+
+  const mentionedUsers =
+    post.mentionedUsers &&
+    post.mentionedUsers.length &&
+    post.mentionedUsers.map((user) => user.username);
+
+  const content = (
+    <MentionContent mentions={mentionedUsers} content={post.content} />
+  );
+
+  console.log("content", content);
 
   return (
     <div>

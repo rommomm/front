@@ -25,6 +25,11 @@ instance.interceptors.response.use(
     return response.data;
   },
   async function (error) {
+    if (error.response.status === 401) {
+      Cookies.remove("token");
+      message.error(error.response.data.message);
+      router.reload();
+    }
     throw error.response.data;
   }
 );

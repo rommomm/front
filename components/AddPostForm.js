@@ -1,20 +1,56 @@
+import { Button } from "antd";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
 import { postValidationSchema } from "../validationSchema/post";
+import MentionInput from "./MentionInput";
 
 function AddPostForm({ onCreate }) {
-  function handleCreate(values, actions) {
-    onCreate(values);
-    actions.resetForm();
-  }
+  const formik = useFormik({
+    initialValues: {
+      content: "",
+    },
 
-  const formInitialValues = {
-    content: "",
-  };
+    validationSchema: postValidationSchema,
+    enableReinitialize: true,
+    validateOnChange: false,
+    onSubmit: (values, formikHelpers) => {
+      onCreate(values);
+      formikHelpers.resetForm();
+    },
+  });
+
+  // function handleCreate(values, actions) {
+  //   onCreate(values);
+  //   actions.resetForm();
+  // }
+
+  // const formInitialValues = {
+  //   content: "",
+  // };
 
   return (
     <div className=" w-full border-black border-b ">
       <div className="col-md-8 offset-md-2">
-        <Formik
+        <form autoComplete="off" onSubmit={formik.handleSubmit}>
+          <MentionInput
+            value={formik.values.content}
+            onChange={(value) => formik.setFieldValue("content", value)}
+          />
+          {formik.errors.content ? (
+            <div className="text-danger">{formik.errors.content}</div>
+          ) : null}
+          <div className="flex justify-end pt-2.5 pr-2 pb-2">
+            <div>
+              <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                Create
+              </button>
+            </div>
+          </div>
+        </form>
+
+        {/* <Formik
           initialValues={formInitialValues}
           validationSchema={postValidationSchema}
           onSubmit={handleCreate}
@@ -42,7 +78,7 @@ function AddPostForm({ onCreate }) {
               </div>
             </div>
           </Form>
-        </Formik>
+        </Formik> */}
       </div>
     </div>
   );
