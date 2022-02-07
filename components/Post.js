@@ -9,7 +9,6 @@ import useAuthMe from "../hooks/useAutMe";
 import MentionContent from "./MentionContent";
 
 function Post({ post, onDelete, onUpdate }) {
-  console.log("post", post);
   const [editMode, setEditMode] = useState(false);
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
   function handleUpdatePost(value) {
@@ -45,8 +44,6 @@ function Post({ post, onDelete, onUpdate }) {
   const content = (
     <MentionContent mentions={mentionedUsers} content={post.content} />
   );
-
-  console.log("content", content);
 
   return (
     <div>
