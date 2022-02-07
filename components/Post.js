@@ -44,7 +44,7 @@ function Post({ post, onDelete, onUpdate }) {
   const content = (
     <MentionContent mentions={mentionedUsers} content={post.content} />
   );
-
+  console.log("content", content);
   return (
     <div>
       <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">

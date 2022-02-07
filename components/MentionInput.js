@@ -1,9 +1,8 @@
 import { Mentions } from "antd";
+import { Option } from "antd/lib/mentions";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { allUsers } from "../redux/user/userApi";
-
-const { Option } = Mentions;
 
 function MentionInput({ value, onChange }) {
   const [searchData, setSearchData] = useState([]);

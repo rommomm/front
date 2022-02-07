@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
 
 export default function Mention({ username }) {
+  console.log("username", username);
   const router = useRouter();
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.stopPropagation();
     router.push(`/${username}`);
   };
 
