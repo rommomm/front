@@ -11,7 +11,10 @@ export const userApi = createApi({
         query: ({ username, page, limit = 10 }) => {
           console.log("username", username);
           return {
-            url: `users?username=${username}&limit=${limit}&page=${page}`,
+            url:
+              page && username
+                ? `users?username=${username}&limit=${limit}&page=${page}`
+                : "users",
             method: "GET",
           };
         },

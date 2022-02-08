@@ -41,10 +41,27 @@ function Post({ post, onDelete, onUpdate }) {
     post.mentionedUsers.length &&
     post.mentionedUsers.map((user) => user.username);
 
-  const content = (
-    <MentionContent mentions={mentionedUsers} content={post.content} />
+  const contentTyper = (
+    <MentionContent mentions={"@test"} content={post.content} />
   );
-  console.log("content", content);
+
+  const postData = post.content.split(/([@\w\.]+)/).map((element) => {
+    console.log("element", element);
+    if (element.startsWith("@")) {
+      return (
+        <span className="btn text-info p-0 text-gray-500">
+          <Link href={`/${element.slice(1)}`}>
+            <a> @{element.slice(1)} </a>
+          </Link>
+        </span>
+      );
+    }
+    return element;
+  });
+
+  const prikol = post.content.split(/([@\w\.]+)/);
+  console.log("prikol", prikol);
+
   return (
     <div>
       <div className=" flex  justify-between p-2 cursor-pointer border-b border-gray-700">
@@ -87,7 +104,7 @@ function Post({ post, onDelete, onUpdate }) {
                   setEditMode={setEditMode}
                 />
               ) : (
-                <p className="break-words break-all">{post.content}</p>
+                <p className="break-words break-all">{postData}</p>
               )}
             </div>
           </div>

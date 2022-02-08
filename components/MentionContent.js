@@ -1,17 +1,21 @@
+import Link from "next/link";
 import React from "react";
-import Mention from "./Mention";
 
 function MentionContent({ content, mentions }) {
-  console.log("content", content);
-  console.log("mentions", mentions);
-  return content.split(/([@\w\.]+)/).map((part, id) => {
-    console.log("part", part);
-    console.log("id", id);
-    if (part.startsWith("@") && mentions.includes(part.slice(1))) {
-      return <Mention username={part.slice(1)} key={content + id} />;
+  if (!mentions) {
+    return content;
+  }
+  return content.split(/([@\w\.]+)/).map((element) => {
+    if (element.startsWith("@") && mentions.includes(element.slice(1))) {
+      return (
+        <span className="btn text-info p-0 text-gray-500">
+          <Link href={`/${element.slice(1)}`}>
+            <a>@{element.slice(1)}</a>
+          </Link>
+        </span>
+      );
     }
-
-    return part;
+    return element;
   });
 }
 

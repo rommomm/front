@@ -13,9 +13,10 @@ function Search() {
   const { data: user, isFetching } = useSearchUserQuery(searchUser, {
     skip: !searchUser,
   });
-  const { data: users, isLoading: isLoadingUsers } =
-    useAllUsersQuery(currentPage);
-
+  const { data: users, isLoading: isLoadingUsers } = useAllUsersQuery({
+    page: currentPage,
+  });
+  console.log("users", users);
   function perPage(page) {
     setCurrentPage(page);
   }
