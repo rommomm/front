@@ -13,7 +13,7 @@ export const userApi = createApi({
           return {
             url:
               page && username
-                ? `users?username=${username}&limit=${limit}&page=${page}`
+                ? `users?user_name=${username}&limit=${limit}&page=${page}`
                 : "users",
             method: "GET",
           };
