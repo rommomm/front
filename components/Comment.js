@@ -6,6 +6,7 @@ import useFormateDate from "../hooks/useFormatDate";
 import CommentEditForm from "./CommentEditForm";
 import CommentLikes from "./CommentLikes";
 import useAuthMe from "../hooks/useAutMe";
+import Content from "./Content";
 
 function Comment({ comment, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -33,6 +34,12 @@ function Comment({ comment, onDelete, onUpdate }) {
     comment.updated_at,
     "dd LLL yyyy HH:mm:ss"
   );
+
+  const mentions =
+    comment &&
+    comment.mentioned &&
+    comment.mentioned.length &&
+    comment.mentioned.map((user) => user.user_name);
 
   return (
     <div className=" flex  justify-between p-2 cursor-pointer border-gray-500 border-b">
@@ -77,11 +84,8 @@ function Comment({ comment, onDelete, onUpdate }) {
                 setEditMode={setEditMode}
               />
             ) : (
-              <p
-                className="break-words break-all text-xs	
-              "
-              >
-                {comment.content}
+              <p className="break-words break-all text-xs">
+                <Content content={comment.content} mentions={mentions} />
               </p>
             )}
           </div>

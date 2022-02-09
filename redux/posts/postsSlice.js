@@ -30,14 +30,14 @@ export const postsSlice = createSlice({
     builder.addMatcher(
       postsApi.endpoints.getUserPosts.matchFulfilled,
       (state, { payload }) => {
-        if (!payload.prev_page_url) {
+        if (!payload.links.prev) {
           state.posts = payload.data;
-          state.nextUrl = payload.next_page_url;
+          state.nextUrl = payload.links.next;
         } else {
           state.posts = state.posts
             ? current(state.posts).concat(payload.data)
             : payload.data;
-          state.nextUrl = payload.next_page_url;
+          state.nextUrl = payload.links.next;
         }
       }
     );

@@ -1,10 +1,10 @@
 import { Mentions } from "antd";
 import { Option } from "antd/lib/mentions";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { allUsers } from "../redux/user/userApi";
+import { allUsers, userApi } from "../redux/user/userApi";
 
-function MentionInput({ value, onChange }) {
+function MentionInput({ value, onChange, rows }) {
   const [searchData, setSearchData] = useState([]);
   const dispatch = useDispatch();
 
@@ -32,10 +32,15 @@ function MentionInput({ value, onChange }) {
       );
     });
 
+  useEffect(() => {
+    dispatch(userApi.util.resetApiState());
+  });
+
   return (
     <div>
       <Mentions
-        rows={6}
+        placeholder="Content"
+        rows={rows}
         onChange={onChange}
         value={value}
         prefix={["@"]}

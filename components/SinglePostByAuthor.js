@@ -4,9 +4,8 @@ import Link from "next/link";
 import { EllipsisOutlined } from "@ant-design/icons/lib/icons";
 import useFormateDate from "../hooks/useFormatDate";
 import PostEditForm from "./PostEditForm";
-import CommentsCount from "./CommentsCount";
-import CommentsSystem from "./CommentsSystem";
 import useAuthMe from "../hooks/useAutMe";
+import Content from "./Content";
 
 function SinglePostByAuthor({ post, onDelete, onUpdate }) {
   if (!post) {
@@ -38,6 +37,12 @@ function SinglePostByAuthor({ post, onDelete, onUpdate }) {
     post.updated_at,
     "dd LLL yyyy HH:mm:ss"
   );
+
+  const mentions =
+    post &&
+    post.mentioned &&
+    post.mentioned.length &&
+    post.mentioned.map((user) => user.user_name);
 
   return (
     <div>
@@ -81,7 +86,9 @@ function SinglePostByAuthor({ post, onDelete, onUpdate }) {
                   setEditMode={setEditMode}
                 />
               ) : (
-                <p className="break-words break-all text-lg">{post.content}</p>
+                <p className="break-words break-all text-base">
+                  <Content content={post.content} mentions={mentions} />
+                </p>
               )}
             </div>
           </div>

@@ -88,14 +88,12 @@ export const postsApi = createApi({
                 "getUserPosts",
                 username,
                 (draft) => {
-                  if (data.prev_page_url) {
+                  if (data.links.prev) {
                     draft.data.push(...data.data);
-                    draft.next_page_url = data.next_page_url;
-                    draft.prev_page_url = data.prev_page_url;
+                    draft.links = data.links;
                   } else {
                     draft.data = data.data;
-                    draft.next_page_url = data.next_page_url;
-                    draft.prev_page_url = data.prev_page_url;
+                    draft.links = data.links;
                   }
                 }
               )

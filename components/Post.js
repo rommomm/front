@@ -6,7 +6,7 @@ import useFormateDate from "../hooks/useFormatDate";
 import PostEditForm from "./PostEditForm";
 import CommentsCount from "./CommentsCount";
 import useAuthMe from "../hooks/useAutMe";
-import MentionContent from "./MentionContent";
+import Content from "./Content";
 
 function Post({ post, onDelete, onUpdate }) {
   const [editMode, setEditMode] = useState(false);
@@ -36,31 +36,11 @@ function Post({ post, onDelete, onUpdate }) {
     "dd LLL yyyy HH:mm:ss"
   );
 
-  const mentionedUsers =
-    post.mentionedUsers &&
-    post.mentionedUsers.length &&
-    post.mentionedUsers.map((user) => user.username);
-
-  const contentTyper = (
-    <MentionContent mentions={"@test"} content={post.content} />
-  );
-
-  const postData = post.content.split(/([@\w\.]+)/).map((element) => {
-    console.log("element", element);
-    if (element.startsWith("@")) {
-      return (
-        <span className="btn text-info p-0 text-gray-500">
-          <Link href={`/${element.slice(1)}`}>
-            <a> @{element.slice(1)} </a>
-          </Link>
-        </span>
-      );
-    }
-    return element;
-  });
-
-  const prikol = post.content.split(/([@\w\.]+)/);
-  console.log("prikol", prikol);
+  const mentions =
+    post &&
+    post.mentioned &&
+    post.mentioned.length &&
+    post.mentioned.map((user) => user.user_name);
 
   return (
     <div>
@@ -104,7 +84,9 @@ function Post({ post, onDelete, onUpdate }) {
                   setEditMode={setEditMode}
                 />
               ) : (
-                <p className="break-words break-all">{postData}</p>
+                <p className="break-words break-all">
+                  <Content content={post.content} mentions={mentions} />
+                </p>
               )}
             </div>
           </div>
