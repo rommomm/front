@@ -1,10 +1,31 @@
 import { EnvironmentOutlined } from "@ant-design/icons/lib/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useAuthMe from "../hooks/useAutMe";
+import { useFollowersQuery, useFollowingsQuery } from "../redux/user/userApi";
+import FollowersModal from "./FollowersModal";
+import FollowingsModal from "./FollowingsModal";
 
-function UserHeader({ author, postsCount }) {
+function UserHeader({ author, postsCount, onFollow, onUnFollow }) {
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
+  const { data: followers } = useFollowingsQuery(
+    { username: user.data.user_name, page: 1 },
+    { skip: !author }
+  );
 
+  function handleFollow() {
+    onFollow(author.user_name);
+  }
+  function handleUnFollow() {
+    onUnFollow(author.user_name);
+  }
+
+  const controlFollow =
+    followers &&
+    followers.data &&
+    followers.data.length &&
+    followers.data.some((i) => i.user_name.includes(author.user_name));
+  console.log("controlFollow", author);
+  console.log("followers.data", user.data);
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-1 px-1  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
@@ -41,9 +62,21 @@ function UserHeader({ author, postsCount }) {
                   </button>
                 </div>
                 <div>
-                  <button className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded">
-                    Follow
-                  </button>
+                  {!controlFollow ? (
+                    <button
+                      className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded"
+                      onClick={handleFollow}
+                    >
+                      Follow
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded"
+                      onClick={handleUnFollow}
+                    >
+                      Unfollow
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -65,14 +98,9 @@ function UserHeader({ author, postsCount }) {
                 </span>
               </div>
 
-              <div>
-                <span className="text-base ">
-                  <span className="text-xl pr-1 font-bold">420</span>Following
-                </span>
-                <span className="text-base ">
-                  <span className="text-xl pl-5 pr-1 font-bold">400</span>
-                  Followers
-                </span>
+              <div className="flex">
+                <FollowersModal author={author} />
+                <FollowingsModal author={author} />
               </div>
             </div>
           </div>

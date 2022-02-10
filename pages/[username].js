@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import { Empty } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeStore } from "../redux";
+import { useFollowMutation, useUnFollowMutation } from "../redux/user/userApi";
 
 function Profile() {
   const { posts: postsData, nextUrl } = useSelector(({ posts }) => posts);
@@ -31,6 +32,9 @@ function Profile() {
     useDeletePostMutation();
   const [updatePost, { isLoading: isLoadingUpdatePost }] =
     useUpdatePostMutation();
+
+  const [follow] = useFollowMutation();
+  const [unFollow] = useUnFollowMutation();
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -62,6 +66,14 @@ function Profile() {
 
   const handleSavePost = async (post) => {
     await createPost(post);
+  };
+
+  const handleFollow = async (followUsername) => {
+    await follow(followUsername);
+  };
+
+  const handleUnfollow = async (UnFollowUsername) => {
+    await unFollow(UnFollowUsername);
   };
 
   if (!(posts && author)) {
@@ -97,7 +109,12 @@ function Profile() {
   return (
     <Layout title={author.data.user_name}>
       <div className="border-black border-l border-r w-full max-w-screen-md	">
-        <UserHeader author={author.data} postsCount={postsWithAuthor.length} />
+        <UserHeader
+          author={author.data}
+          postsCount={postsWithAuthor.length}
+          onFollow={handleFollow}
+          onUnFollow={handleUnfollow}
+        />
         {showAddPost && <AddPostForm onCreate={handleSavePost} />}
         <InfiniteScroll
           dataLength={postsWithAuthor.length}
