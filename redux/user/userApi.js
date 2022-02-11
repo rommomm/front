@@ -37,7 +37,6 @@ export const userApi = createApi({
           };
         },
         async onQueryStarted(username, { dispatch, queryFulfilled }) {
-          console.log("username", username);
           try {
             dispatch(
               postsApi.util.updateQueryData(
@@ -45,6 +44,7 @@ export const userApi = createApi({
                 username,
                 (draft) => {
                   ++draft.data.followers_count;
+                  draft.data.following = true;
                 }
               )
             );
@@ -59,7 +59,6 @@ export const userApi = createApi({
           method: "DELETE",
         }),
         async onQueryStarted(username, { dispatch, queryFulfilled }) {
-          console.log("username", username);
           try {
             dispatch(
               postsApi.util.updateQueryData(
@@ -67,6 +66,7 @@ export const userApi = createApi({
                 username,
                 (draft) => {
                   --draft.data.followers_count;
+                  draft.data.following = false;
                 }
               )
             );

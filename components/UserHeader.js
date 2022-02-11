@@ -7,25 +7,7 @@ import FollowingsModal from "./FollowingsModal";
 
 function UserHeader({ author, postsCount, onFollow, onUnFollow }) {
   const { data: user, isSuccess: isLoggedIn } = useAuthMe();
-  const { data: followers } = useFollowingsQuery(
-    { username: user.data.user_name, page: 1 },
-    { skip: !author }
-  );
 
-  function handleFollow() {
-    onFollow(author.user_name);
-  }
-  function handleUnFollow() {
-    onUnFollow(author.user_name);
-  }
-
-  const controlFollow =
-    followers &&
-    followers.data &&
-    followers.data.length &&
-    followers.data.some((i) => i.user_name.includes(author.user_name));
-  console.log("controlFollow", author);
-  console.log("followers.data", user.data);
   return (
     <>
       <div className="text-[#d9d9d9] flex items-center sm:justify-between py-1 px-1  top-0 z-50  border-b border-gray-700 sticky bg-gray-700 text-white">
@@ -62,17 +44,17 @@ function UserHeader({ author, postsCount, onFollow, onUnFollow }) {
                   </button>
                 </div>
                 <div>
-                  {!controlFollow ? (
+                  {!author.following ? (
                     <button
                       className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded"
-                      onClick={handleFollow}
+                      onClick={() => onFollow(author.user_name)}
                     >
                       Follow
                     </button>
                   ) : (
                     <button
                       className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded"
-                      onClick={handleUnFollow}
+                      onClick={() => onUnFollow(author.user_name)}
                     >
                       Unfollow
                     </button>

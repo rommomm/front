@@ -7,12 +7,14 @@ import { profileApi } from "./profile/profileApi";
 import { userApi } from "./user/userApi";
 import postsSlice from "./posts/postsSlice";
 import commentsSlice from "./comments/commentsSlice";
+import userSlice from "./user/userSlice";
 
 let store;
 
 const createStore = (preloadedState) => {
   return configureStore({
     reducer: {
+      users: userSlice,
       posts: postsSlice,
       comments: commentsSlice,
       [userApi.reducerPath]: userApi.reducer,

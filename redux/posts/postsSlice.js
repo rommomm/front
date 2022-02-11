@@ -43,6 +43,21 @@ export const postsSlice = createSlice({
     );
 
     builder.addMatcher(
+      postsApi.endpoints.getFeedPosts.matchFulfilled,
+      (state, { payload }) => {
+        console.log("payload", payload);
+        if (!payload.links.prev) {
+          state.feed = payload.data;
+          state.nextUrl = payload.links.next;
+        } else {
+          state.feed = state.feed
+            ? current(state.feed).concat(payload.data)
+            : payload.data;
+          state.nextUrl = payload.links.next;
+        }
+      }
+    );
+    builder.addMatcher(
       postsApi.endpoints.createPost.matchFulfilled,
       (state, { payload }) => {
         state.posts = [payload.data, ...current(state.posts)];

@@ -1,17 +1,15 @@
 import React from "react";
-import { useFollowersQuery } from "../redux/user/userApi";
+import { useSelector } from "react-redux";
 import FollowUserInfo from "./FollowUserInfo";
 
-function FollowersList({ author }) {
-  const { data: followers } = useFollowersQuery(
-    { username: author.user_name, page: 1 },
-    { skip: !author }
-  );
+function FollowersList() {
+  const { followers } = useSelector(({ users }) => users);
+
   return (
     <div>
-      {followers && followers.data && followers.data.length
-        ? followers.data.map((data) => (
-            <FollowUserInfo key={data.id} data={data} />
+      {followers && followers.length
+        ? followers.map((follower) => (
+            <FollowUserInfo key={follower.id} data={follower} />
           ))
         : null}
     </div>

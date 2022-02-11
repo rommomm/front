@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 function UserPreview({ user }) {
+  console.log("user", user);
   return (
     <Link href={`/${user.user_name}`}>
       <a>
@@ -14,7 +15,7 @@ function UserPreview({ user }) {
               alt=""
             />
             <div
-              className="w-full flex justify-center relative"
+              className="w-full flex justify-end pr-10 relative"
               style={{ marginTop: "-5rem" }}
             >
               <img
@@ -22,19 +23,6 @@ function UserPreview({ user }) {
                 src={user.profile_avatar || "/default/avatar.png"}
                 alt=""
               />
-
-              <div className="absolute bottom-0 buttons flex justify-end font-bold right-0 space-x-0 my-3.5 mr-3 ">
-                <div className="pr-4">
-                  <button className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded ">
-                    Message
-                  </button>
-                </div>
-                <div>
-                  <button className="bg-blue-500 hover:bg-gray-700 text-white  py-1.5 px-4  rounded">
-                    Follow
-                  </button>
-                </div>
-              </div>
             </div>
             <div style={{ marginTop: "-4rem" }}>
               <div class="buttons left-0 space-x-0 my-3.5 ml-3 text-black ">
@@ -52,16 +40,6 @@ function UserPreview({ user }) {
                   <EnvironmentOutlined />
                   <span class=" pl-1 inline-block align-bottom text-xs">
                     {user.user_location || "Запорожье"}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-base ">
-                    <span className="text-xl pr-1 font-bold">420</span>
-                    Following
-                  </span>
-                  <span className="text-base ">
-                    <span className="text-xl pl-5 pr-1 font-bold">400</span>
-                    Followers
                   </span>
                 </div>
               </div>

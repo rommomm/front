@@ -29,7 +29,9 @@ function Settings() {
 }
 
 export async function getServerSideProps(ctx) {
-  if (!ctx.req.cookies.token) {
+  const { token } = ctx.req.cookies;
+
+  if (!token) {
     return {
       redirect: {
         permanent: false,

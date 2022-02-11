@@ -103,6 +103,44 @@ export const postsApi = createApi({
           }
         },
       }),
+      getFeedPosts: build.query({
+        query: (cursor) => {
+          return {
+            url: cursor ? `feed?cursor=${cursor}` : "feed",
+            method: "GET",
+          };
+        },
+        providesTags: (result) => {
+          return result
+            ? [
+                ...result.data.map(({ id }) => ({ type: "Posts", id })),
+                { type: "Posts", id: "LIST" },
+              ]
+            : [{ type: "Posts", id: "LIST" }];
+        },
+        async onQueryStarted(id, { dispatch, queryFulfilled }) {
+          try {
+            const { data } = await queryFulfilled;
+            dispatch(
+              postsApi.util.updateQueryData(
+                "getFeedPosts",
+                undefined,
+                (draft) => {
+                  if (data.links.prev) {
+                    draft.data.push(...data.data);
+                    draft.links = data.links;
+                  } else {
+                    draft.data = data.data;
+                    draft.links = data.links;
+                  }
+                }
+              )
+            );
+          } catch (error) {
+            console.error("error", error);
+          }
+        },
+      }),
 
       getSinglePost: build.query({
         query: (id) => {
@@ -156,6 +194,7 @@ export const postsApi = createApi({
 });
 
 export const {
+  useGetFeedPostsQuery,
   useGetSinglePostQuery,
   useGetAuthorByPostsQuery,
   useGetUserPostsQuery,
@@ -166,4 +205,4 @@ export const {
   util: { getRunningOperationPromises },
 } = postsApi;
 
-export const { getAllPosts, getUserPosts } = postsApi.endpoints;
+export const { getAllPosts, getUserPosts, getFeedPosts } = postsApi.endpoints;

@@ -6,6 +6,7 @@ import {
   ProfileOutlined,
   MailOutlined,
   SettingOutlined,
+  ContainerOutlined,
 } from "@ant-design/icons/lib/icons";
 import useAuthMe from "../hooks/useAutMe";
 
@@ -23,6 +24,11 @@ function Sidebar() {
           {isLoggedIn && (
             <>
               <SidebarLink text="Messages" Icon={MailOutlined} />
+              <Link href="/feed">
+                <a>
+                  <SidebarLink text="Feed" Icon={ContainerOutlined} />
+                </a>
+              </Link>
               <Link href="/users">
                 <a>
                   <SidebarLink text="Users" Icon={UserOutlined} />
