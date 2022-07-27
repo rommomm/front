@@ -1,20 +1,26 @@
 import { Fragment } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import api from "../libs/api";
 import Link from "next/link";
 import router from "next/router";
 import { signUpValidationSchema } from "../validationSchema/signUp";
 import { handleErrors } from "../helpers/handleError";
-import API from "../api";
+import { useDispatch } from "react-redux";
+import { signUp } from "../redux/auth/actions";
+import { message } from "antd";
+import AuthLayout from "../components/AuthLayout";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
+
   async function handleFormSubmit(values, actions) {
     try {
-      await API.auth.signUp(values);
+      await dispatch(signUp(values));
+      message.success("SUCCESSFUL REGISTRATION");
       router.push("/sign-in");
     } catch (error) {
       const errors = handleErrors(error.errors);
       actions.setErrors(errors);
+      console.log(error);
     }
   }
 
@@ -28,7 +34,7 @@ const SignUp = () => {
   };
 
   return (
-    <div>
+    <AuthLayout>
       <div className="bg-grey-lighter min-h-screen flex flex-col">
         <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center">
           <div className="bg-white  px-6 py-8 rounded border text-black w-full">
@@ -141,7 +147,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

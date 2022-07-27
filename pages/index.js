@@ -1,45 +1,31 @@
-import React, { useContext, useState } from "react";
 import PostsList from "../components/PostsList";
 import Layout from "../components/Layout";
-import UserContext from "../components/UserContext";
+import React from "react";
+import { withRedux } from "../redux";
+import {
+  getAllPosts,
+  createPost,
+  deletePost,
+  updatePost,
+} from "../redux/posts/actions";
+import { useDispatch, useSelector } from "react-redux";
 import AddPostForm from "../components/AddPostForm";
-import API from "../api";
 
-function App({ initialPosts = [] }) {
-  const { isLoggedIn } = useContext(UserContext);
-  const [posts, setPosts] = useState(initialPosts);
+function App() {
+  const { all: posts } = useSelector(({ posts }) => posts);
+  const { isLoggedIn, user } = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
 
-  async function handleDeletePost(id) {
-    try {
-      await API.posts.DeletePost(id);
-      setPosts(posts.filter((p) => p.id !== id));
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  const handleDeletePost = async (id) => {
+    dispatch(deletePost(id));
+  };
+  const handleUpdatePost = async (id, updatedData) => {
+    dispatch(updatePost(id, updatedData));
+  };
 
-  async function handleUpdatePost(id, updatedData) {
-    try {
-      const response = await API.posts.updatePost(id, updatedData);
-      setPosts(
-        posts.map((post) =>
-          post.id === id ? { ...post, ...response.data } : post
-        )
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async function handleSavePost(content) {
-    try {
-      const response = await API.posts.createPost({ content });
-      const newPost = { ...response.data };
-      setPosts([newPost, ...posts]);
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  const handleSavePost = async (post) => {
+    dispatch(createPost(post));
+  };
 
   return (
     <Layout title="Home page">
@@ -61,9 +47,11 @@ function App({ initialPosts = [] }) {
   );
 }
 
-export async function getServerSideProps() {
-  const response = await API.posts.getAllPosts();
+export const getServerSideProps = withRedux(async (context, store) => {
+  await store.dispatch(getAllPosts());
+  return {
+    props: {},
+  };
+});
 
-  return { props: { initialPosts: response.data } };
-}
 export default App;
